@@ -1,0 +1,12 @@
+///
+// Arquivo partial sass que coleta todos os componentes da estrutura
+// responsável por mixins globais, funções, seletores de ajuda. Utilitários
+// usado por toda a aplicação em geral
+//
+///
+
+@import 'color-palette',
+        'vertical-rhythm',
+        'extends',
+        'links',
+        'responsive';

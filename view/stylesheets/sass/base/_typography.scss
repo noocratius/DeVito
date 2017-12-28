@@ -1,0 +1,52 @@
+///
+//   Configura a tipografia do projeto
+//
+//   Define variáveis usada pela arquitetura ou por outros frameworks
+// importados. As variáveis importadas tem as seguintes funcionalidades:
+//     * Declara e define type-face padrão
+//     * Define tamanho do grid vertical
+//     * Configura o toolkit modular-scale
+//
+//   O typesetting configura o toolkit modular-scale que define unidades na
+// qual o tamanho dos componentes e tipografia podem possuir. O typesetting foi
+// baseado no seguinte artigo em
+// @link https://alistapart.com/article/more-meaningful-typography
+//
+// --------------------------- TypeSetting ----------------------------------
+//
+//
+// @author: Peter Leiva
+// e-mail: pleiva@id.uff.br
+// Date:   24 fevereiro 2017
+//
+// 1rem    @ 1:1.618
+// veja mais em @link http://www.modularscale.com/?1&rem&1.618
+//
+///
+
+/// importa tipo de letra, Mukta Vaani, pela api do google fonts
+@import 'https://fonts.googleapis.com/css?family=Mukta+Vaani:400,500,700';
+
+/// tamanho de letra do projeto que caiba dentro do grid vertical
+$base-font-size: 1rem !default;
+
+/// escala baseada em $base-font-size que define o grid vertical
+$base-line-ratio: 1.5 !default;
+
+/// base double-strand configurada em @link http://www.modularscale.com/
+$ms-base: 1rem;
+
+/// configura modular-scale, define proporção modular (1:618) para cada unidade
+$ms-ratio: $golden;
+
+/// tamanho do grid, line-height, em rem, compõe a distância entre linha vertical
+$base-line-height: $base-font-size * $base-line-ratio;
+
+/// tamanho base para o corpo do texto
+$base-body-size: ms(1) !default;
+
+/// tamanho base para letra dos componentes de âncora
+$base-link-size: ms(0) !default;
+
+/// família de letra base do projeto, importado pela api do google
+$base-font-family: 'Mukta Vaani', Verdana !default;

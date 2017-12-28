@@ -1,0 +1,27 @@
+////
+/// Utilitários globais para abordagem responsiva da aplicação
+///
+///
+////
+
+///
+/// Lê breakpoint pelo seu nome
+///
+///   Cada breakpoint possui um nome em um objeto sass maps definido em
+/// `base/variables`. A função lê do mapa de breakpoints seu valor e o retorna
+///
+/// @throws Mensagem de erro caso o nome não exista
+///
+/// @param {String} $bp-name - nome do breakpoint insensível a caixa
+/// @return {Number}
+///
+@function get-breakpoint($bp-name) {
+
+  $bp: map-get($breakpoints, to-lower-case($bp-name));
+
+  @if not $bp {
+    @error "Breakpoing \'#{$bp-name}\' doesn't exist";
+  }
+
+  @return $bp;
+}

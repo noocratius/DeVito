@@ -1,0 +1,18 @@
+///
+// Partials aplicado aos elementos de âncora da aplicação
+//
+//
+///
+
+//
+// Faz com que os links se pareçam e comportem como o texto que os contêm
+//
+//
+@mixin unstyled-link {
+  color: inherit;
+  text-decoration: inherit;
+  cursor: inherit;
+  &:active, &:focus {
+    outline: none;
+  }
+}

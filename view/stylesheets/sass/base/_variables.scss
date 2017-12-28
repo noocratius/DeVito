@@ -1,0 +1,52 @@
+///
+//  Módulo que define variáveis globais usado por toda a aplicação,
+// principalmente por utilitários para obter cores, breakpoints. Também define
+// namespace, transparência de componentes e valores padrões para animações
+//
+///
+
+/// namespace para seletores css
+$ns: bmc !default;
+
+/// mapa contendo nomes e valores dos breakpoints
+$breakpoints: (
+  alpha: 1080px,
+  beta: 4096px,
+  gamma: 8192px
+);
+
+// Paleta de cores, veja mais em @link https://goo.gl/BnWVxY
+$colors: (
+
+  primary: #54d197,
+  accent: #000,
+  secondary: #28cbe0,
+
+  foreground: #292b2c,
+  background: #fff
+);
+
+// níveis de opacidade, veja mais em @link https://goo.gl/Zujexc
+$opacity-levels: (
+
+  // tipografia
+  primary: .87,
+  secondary: .54,
+
+  // componentes
+  disabled: .38, // para texto desabilitado, hint, ícones
+  divider: .12, // divisores
+
+  // ícones
+  active-icon: 1,
+  inactive-icon: .5
+);
+
+/// duração padrão de animações
+$animation-duration: 0.2s !default;
+
+/// atraso padrão para início das animações
+$animation-delay: 0s !default;
+
+/// tamanho padrão aplicado as bordas
+$base-border-width: .0625rem !default;

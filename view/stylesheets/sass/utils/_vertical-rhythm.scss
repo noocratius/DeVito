@@ -1,0 +1,209 @@
+////
+///
+/// Utilitários que estabelecem um ritmo vertical dos elementos html. Para isso
+/// ele depende do framework Bourbon para algunas de suas funcionalidades
+///
+///
+////
+
+///
+/// Configura elemento raíz que define um ritmo vertical do projeto
+///
+/// Para que o projeto sass mantenha um ritmo vertical deve-se incluir esse
+/// mixin na raiz do documento
+///
+///
+@mixin type-setting() {
+
+  html {
+    @include adjust-font-size;
+    font-family: $base-font-family;
+    box-sizing: border-box;
+  }
+
+  *, *:after, *:before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+}
+
+
+///
+/// Cálcula tamanho da linhas mínima para manter o ritmo vertical
+///
+/// A quantidade de linhas requisitada pelo um tamanho de fonte passada em rem
+/// é calculada e retornada em rem também.
+///
+/// @todo TODO: melhorar descrição
+/// @param {Number} $font-size
+/// @return {Number}
+///
+@function line-height-rhythm($font-size: $base-font-size) {
+  $lines: lines-required($font-size);
+
+  @return line-rhythm($lines);
+}
+
+///
+/// Cálcula a quantidade de linhas necessárias para abrigar um tamanho de letra
+///
+/// @param {Number} [$base-font-size] - Tamanho da letra a ser calculada, em rem
+/// @return {Number}
+///
+@function lines-required($font-size: $base-font-size) {
+  @return ceil($font-size/$base-line-height);
+}
+
+///
+/// Ajusta o grid para tamanho da font em rem
+///
+/// @param {Number} $font-size - Tamanho da fonte a ser ajustado
+///
+@mixin adjust-font-size($font-size: $base-font-size) {
+  font-size: $font-size;
+  line-height: line-height-rhythm($font-size);
+}
+
+///
+/// Aplica ritmo vertical em elemento
+///
+///
+///
+/// Necessita de border-box
+///
+/// @example
+///   a {
+///     @include vertical-rhythm(1.2rem, $use-height: true, $bottom-rows: 1);
+///   }
+///
+/// @todo TODO: uso de px no font-size
+/// @param {$font-size} - Tamanho do elemento
+/// @param {$scale} [1] - Em quantas vezes o elemento deve escalar em linhas
+/// @param {$use-height} [false] - Indica se elemento usa height para cálculo
+/// @param {$top-rows} [0] - Quantidade de linhas que a margem superior ocupa
+/// @param {$bottom-rows} [0] - Quantidade de linhas que a margem inferior ocupa
+///
+@mixin vertical-rhythm($font-size: $base-font-size, $scale: 1,
+                $use-height: false, $top-rows: 0, $bottom-rows: 0, $border: null
+){
+
+  // verifica passagem de argumentos
+  @if $scale < 1 {
+    @error "Objects can't scale down only upwards";
+    $scale: 1;
+  }
+
+  // quantidade de linhas necessárias para o tamanho da letra
+  $min-lines: lines-required($font-size);
+
+  // altura que o elemento ocupa
+  $e-height: line-rhythm($min-lines * $scale);
+
+  // altura, em rem, do container
+  $height: line-rhythm(ceil($min-lines * $scale));
+
+  // tamanho de linhas, em rem, que margens ocupam
+  $top-size: line-rhythm($top-rows);
+  $bottom-size: line-rhythm($bottom-rows);
+
+  border-width: if($border, $border, 0);
+
+  @if $use-height {
+    // sobras para que o elemento ocupe o número inteiro de linhas verticais
+    $leftover: $height - $e-height;
+    $pad: $leftover/2;
+    height: $e-height;
+    margin-top: $top-size + $pad;
+    margin-bottom: $bottom-size + $pad;
+  }
+
+  // elementos baseado em texto
+  @else {
+    ///   ajusta height + margin para ocupar a quantidade de linha definida
+    $line-height: line-rhythm($min-lines);
+    font-size: $font-size;
+    line-height: $line-height;
+
+    // espaço em branco
+    $ws: ($e-height - $line-height)/2;
+    $leftover: ($height - $e-height)/2;
+    padding-top: $ws - $border;
+    padding-bottom: $ws - $border;
+    // preencher o resto com margin
+    margin-top: $leftover + $top-size;
+    margin-bottom: $leftover + $bottom-size;
+  }
+}
+
+///
+/// Calcula o tamanho do grid para quantidade de linhas passada
+///
+/// @param {Number} $lines [1] - Quantidade de linhas
+/// @return {Number} - tamanho da linha em rem
+///
+@function line-rhythm($lines: 1) {
+  @return $lines * $base-line-height;
+}
+
+///
+/// Aplica um ritmo vertical as direções do padding
+///
+/// @param {List} $direction - Lista com direções para aplicar padding
+///
+@mixin padding-vr($direction: ()) {
+
+  // cria lista vazia
+  $dir-list: ();
+
+  @if length($direction) == 0 {
+    @error "List shouldn't be empty";
+  }
+
+  // aplica tamanho de lista a cada um de seus elementos
+  @each $dir in $direction {
+    $dir-list: if($dir, append($dir-list, line-rhythm($dir)), $dir);
+  }
+
+  // faz uso do framework bourbon para aplicar o direcional
+  @include padding($dir-list);
+}
+
+///
+/// Aplica um ritmo vertical as direções das margens do elemento
+///
+/// @throws Erro caso a lista esteja vazia
+/// @param {List} $direction [()] - Lista com direções para aplicar margin
+///
+@mixin margin-vr($direction: ()) {
+  // cria lista vazia
+  $dir-list: ();
+
+  @if length($direction) == 0 {
+    @error "List shouldn't be empty";
+  }
+
+  // aplica tamanho de lista a cada um de seus elementos
+  @each $dir in $direction {
+    $dir-list: if($dir, append($dir-list, line-rhythm($dir)), $dir);
+  }
+
+  // faz uso do framework bourbon para aplicar o direcional
+  @include margin($dir-list);
+}
+
+///
+/// Aplica um grid vertical de cor escolhida
+///
+/// @param {Color} $v-grid [#000] - Cor do grid vertical
+///
+@mixin debug-vertical-grid($v-grid: #000) {
+  // background-image: -webkit-linear-gradient( left , rgba(102, 102, 255, 0.25), rgba(179, 179, 255, 0.25) 80%, transparent 80%), -webkit-linear-gradient( top , $v-grid 1px, transparent 1px);
+  // background-image: linear-gradient(to right, rgba(102, 102, 255, 0.25), rgba(179, 179, 255, 0.25) 80%, transparent 80%), linear-gradient(to bottom, $v-grid 1px, transparent 1px);
+  // background-size: 8.47458%, 100% 1.333rem;
+  // background-origin: content-box, border-box;
+  // background-clip: content-box, border-box;
+  // background-position: left top;
+}

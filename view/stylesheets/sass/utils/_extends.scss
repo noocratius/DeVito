@@ -1,0 +1,40 @@
+///
+//
+// Extende algumas funcionalidades de propriedades comuns do css
+//
+///
+
+///
+/// Define transparência de um elemento
+///
+///   Define nível de transparência de acordo com o seu nome ou seu valor
+/// numérico. Os nomes para os níveis de transparência são definidos em
+/// base/_typography
+///
+/// @param {String | Number} $opacity [1] - Nível de transparência
+///
+///
+@mixin opacity($opacity: 1) {
+  $opacity-level: opacity($opacity);
+
+  @if $opacity-level {
+    opacity: $opacity-level;
+  }
+}
+
+//
+// Define transparência de um elemento
+//
+//   Define nível de transparência de acordo com o seu nome ou seu valor
+// numérico. Os nomes para os níveis de transparência são definidos em
+// base/_typography
+//
+// @param {String | Number} $opacity [1] - Nível de transparência
+//
+//
+@function opacity($opacity: 1) {
+  $opacity-level: if(type-of($opacity) == 'Number', $opacity,
+                                            map-get($opacity-levels, $opacity));
+
+  @return $opacity-level;
+}

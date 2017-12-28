@@ -1,0 +1,29 @@
+@charset "UTF-8";
+/**
+  * Arquivo de boot da arquitetura SASS
+  *
+  * Toda a arquitetura do projeto sass começa por esse arquivo. Sua função
+  * consiste em importar os frameworks e bibliotecas necessários para o
+  * desenvolvimento do projeto e também realiza qualquer configuração necessária
+  * além de importar a arquitetura do projeto
+  *
+  */
+@import "http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css";
+/*!
+ * Arquivo partial sass que coleta todos os componentes da estrutura
+ * responsável por estilos de terceiros
+ *
+ */
+@import "https://fonts.googleapis.com/css?family=Mukta+Vaani:400,500,700";
+/*!
+ * Arquivo partial sass que coleta todos os componentes da estrutura
+ * responsável por estilos para diferentes temas
+ *
+ */
+/*!
+ * Arquivo partial sass que coleta todos os componentes da estrutura
+ * responsável por estilos de página específica
+ *
+ */
+
+/*# sourceMappingURL=app.css.map */
