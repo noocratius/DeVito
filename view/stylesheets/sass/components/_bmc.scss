@@ -1,0 +1,43 @@
+///
+// Componente Business Model Canvas define os estilos que deine um painel
+// de modelo de negócios
+//
+//
+//
+///
+
+@include type-setting;
+
+@supports (display: grid) {
+  .business-model-canvas {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 70% 30%;
+    background: susy-svg-grid() no-repeat scroll;
+
+    > .canvas-column {
+      @include padding-vr(.5);
+      // background: get-color('background');
+    }
+
+    // blocos do canvas que estão aninhados
+    > .canvas-column:nth-child(2), .canvas-column:nth-child(4) {
+      display: grid;
+    }
+
+    // o último bloco do canvas, na sua parte inferior
+    > .canvas-column:nth-child(6) {
+      display: grid;
+      grid-column: 1 /span 5;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .canvas-element {
+
+      h1 {
+        @include vertical-rhythm($scale: 2);
+      }
+    }
+  }
+}

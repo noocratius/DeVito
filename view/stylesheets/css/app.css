@@ -15,6 +15,42 @@
  *
  */
 @import "https://fonts.googleapis.com/css?family=Mukta+Vaani:400,500,700";
+html {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-family: "Mukta Vaani", Verdana;
+  box-sizing: border-box; }
+
+*, *:after, *:before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box; }
+
+@supports (display: grid) {
+  .business-model-canvas {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 70% 30%;
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="url(%23susy-svg-gradient)" width="100%" %3E%3Cdefs%3E%3ClinearGradient spreadMethod="pad" id="susy-svg-gradient" x1="0%" y1="0%" x2="100%" y2="0%"%3E%3Cstop offset="0%" style="stop-color:rgba(64, 191, 64, 0.5);" /%3E%3Cstop offset="100%" style="stop-color:rgba(159, 223, 159, 0.5);" /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x="0" width="calc(((100% - 8px) / 5 * 1))" height="100%"/%3E%3Crect x="calc(2px + ((100% - 8px) / 5 * 1))" width="calc(((100% - 8px) / 5 * 1))" height="100%"/%3E%3Crect x="calc(4px + ((100% - 8px) / 5 * 2))" width="calc(((100% - 8px) / 5 * 1))" height="100%"/%3E%3Crect x="calc(6px + ((100% - 8px) / 5 * 3))" width="calc(((100% - 8px) / 5 * 1))" height="100%"/%3E%3Crect x="calc(8px + ((100% - 8px) / 5 * 4))" width="calc(((100% - 8px) / 5 * 1))" height="100%"/%3E%3C/svg%3E') no-repeat scroll; }
+    .business-model-canvas > .canvas-column {
+      padding: 0.75rem; }
+    .business-model-canvas > .canvas-column:nth-child(2), .business-model-canvas .canvas-column:nth-child(4) {
+      display: grid; }
+    .business-model-canvas > .canvas-column:nth-child(6) {
+      display: grid;
+      grid-column: 1 /span 5;
+      grid-template-columns: repeat(2, 1fr); }
+    .business-model-canvas .canvas-element h1 {
+      border-width: 0;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      margin-top: 0rem;
+      margin-bottom: 0rem; } }
 /*!
  * Arquivo partial sass que coleta todos os componentes da estrutura
  * responsável por estilos para diferentes temas

@@ -87,7 +87,7 @@
 /// @param {$bottom-rows} [0] - Quantidade de linhas que a margem inferior ocupa
 ///
 @mixin vertical-rhythm($font-size: $base-font-size, $scale: 1,
-                $use-height: false, $top-rows: 0, $bottom-rows: 0, $border: null
+                $use-height: false, $top-rows: 0, $bottom-rows: 0, $border: 0
 ){
 
   // verifica passagem de argumentos
@@ -168,7 +168,8 @@
   }
 
   // faz uso do framework bourbon para aplicar o direcional
-  @include padding($dir-list);
+  // @include padding($dir-list);
+  padding: $dir-list;
 }
 
 ///
