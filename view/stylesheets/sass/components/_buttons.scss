@@ -12,13 +12,12 @@ $button-text-color: white !default;
 
 // estrutura de estilo principal dos botões
 %button {
-  @include margin-vr(.5 0);
   width: 100%;
   border-width: $button-border-width;
   border-style: solid;
-  text-transform: uppercase;
-  color: $button-text-color;
   border-radius: $button-border-radius;
+  padding-left: line-rhythm(1);
+  text-align: left;
 
 }
 
@@ -40,10 +39,6 @@ $button-text-color: white !default;
   @extend %button;
   @include adjust-font-size($button-font-size * $scale);
   border-color: $color;
-  background: $color;
-
-  &:hover {
-    color: $color;
-    background: transparent;
-  }
+  color: $color;
+  background: transparent;
 }

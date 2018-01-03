@@ -14,6 +14,7 @@
  * responsável por estilos de terceiros
  *
  */
+@import "https://use.fontawesome.com/releases/v5.0.2/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Mukta+Vaani:400,500,700";
 .business-model-canvas .canvas-element .post-it {
   border-radius: 5px;
@@ -21,13 +22,12 @@
   margin: 0.375rem; }
 
 button {
-  margin: 0.75rem 0rem;
   width: 100%;
   border-width: 2px;
   border-style: solid;
-  text-transform: uppercase;
-  color: white;
-  border-radius: 4px; }
+  border-radius: 4px;
+  padding-left: 1.5rem;
+  text-align: left; }
 
 html {
   font-size: 1rem;
@@ -63,17 +63,18 @@ html {
       float: right;
       margin-right: 0; }
   .business-model-canvas .upper-column {
-    height: 70%; }
+    height: 70%;
+    margin-bottom: 2.0408163265%; }
     .business-model-canvas .upper-column > .canvas-column {
-      width: 19.5266272189%;
+      width: 18.3673469388%;
       float: left;
-      margin-right: 0.5917159763%; }
+      margin-right: 2.0408163265%; }
   .business-model-canvas .bottom-column {
     height: 30%; }
     .business-model-canvas .bottom-column > .canvas-column {
-      width: 49.7041420118%;
+      width: 48.9795918367%;
       float: left;
-      margin-right: 0.5917159763%; }
+      margin-right: 2.0408163265%; }
   .business-model-canvas .canvas-element h1 {
     border-width: 0;
     font-size: 1rem;
@@ -82,26 +83,23 @@ html {
     padding-bottom: 0.75rem;
     margin-top: 0rem;
     margin-bottom: 0rem; }
+    .business-model-canvas .canvas-element h1 .fas {
+      font-size: 1.5rem;
+      line-height: 1.5rem;
+      float: right; }
   .business-model-canvas .canvas-element .canvas-body-element {
     overflow: auto; }
   .business-model-canvas .canvas-element .post-it {
-    border-width: 0;
     font-size: 1rem;
     line-height: 1.5rem;
-    padding-top: 0rem;
-    padding-bottom: 0rem;
-    margin-top: 0rem;
-    margin-bottom: 0rem;
     background: #FFE079; }
 
 button {
   font-size: 0.6180339845rem;
   line-height: 1.5rem;
   border-color: black;
-  background: black; }
-  button:hover {
-    color: black;
-    background: transparent; }
+  color: black;
+  background: transparent; }
 
 /*!
  * Arquivo partial sass que coleta todos os componentes da estrutura

@@ -5,15 +5,15 @@
 
 $post-it-color: #FFE079 !default;
 $post-it-radius: 5px !default;
-$post-it-space: line-rhythm(1/4) !default;
+$post-it-space: 1/4 !default;
 
 //
 // Estrutura núcleo que todos post-it devem seguir
 //
 %post-it {
   border-radius: $post-it-radius;
-  padding: $post-it-space;
-  margin: $post-it-space;
+  @include padding-vr($post-it-space);
+  @include margin-vr($post-it-space);
 }
 
 //
@@ -26,6 +26,6 @@ $post-it-space: line-rhythm(1/4) !default;
 //
 @mixin apply-post-it($color: $post-it-color, $size: 0) {
   @extend %post-it;
-  @include vertical-rhythm($font-size: ms($size));
+  @include adjust-font-size($font-size: ms($size));
   background: $color;
 }

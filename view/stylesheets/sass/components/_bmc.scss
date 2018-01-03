@@ -22,7 +22,15 @@
     // coluna superior do canvas
     .upper-column {
       height: 70%;
-      > .canvas-column { @include span(2) }
+      margin-bottom: gutter();
+      > .canvas-column {
+        @include span(2);
+
+        // adiciona espaçamento na coluna do canvas com dois blocos de elementos
+        > .canvas-element {
+          // margin-bottom: gutter();
+        }
+      }
 
     }
 
@@ -36,6 +44,11 @@
 
       h1 {
         @include vertical-rhythm($scale: 2);
+
+        .fas {
+          @include adjust-font-size(line-rhythm(1));
+          float: right;
+        }
       }
 
       .canvas-body-element { overflow: auto; }

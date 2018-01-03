@@ -6,13 +6,13 @@
 
 @import 'modular-scale/modular-scale',
         // 'susy/sass/susy';
-        '/Users/pleiva/node_modules/susy/sass/susy';
+        '/Users/pleiva/node_modules/susy/sass/susy',
+        'https://use.fontawesome.com/releases/v5.0.2/css/all.css';
 
 
 // configuração global do susy
 $susy: (
   global-box-sizing: border-box,
-  gutters: 1/16,
   debug: (
     // image: show
   )
