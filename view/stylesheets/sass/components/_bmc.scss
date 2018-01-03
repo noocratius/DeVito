@@ -55,7 +55,7 @@
 
       .post-it {   @include apply-post-it }
     }
-  }
 
-  button { @include apply-button; }
+    button { @include apply-button; }
+  }
 }

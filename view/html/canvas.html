@@ -1,3 +1,9 @@
+<div class="add-widget">
+  <div class="container">
+    <textarea class="post-it">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
+    <button type="button">salvar</button>
+  </div>
+</div>
 <link rel="stylesheet" type="text/css" href="../stylesheets/css/app.css">
 <article class="business-model-canvas">
   <div class="upper-column">
@@ -145,6 +151,11 @@
       $('.bottom-column .canvas-body-element').css('height', bottomHeight - extraHeight);
 
     });
+
+    // adiciona comportamento para fechar/abrir janela de adição de post-it's
+    $('.canvas-element-add-button').click(function (){ $('.add-widget').fadeIn(200); })
+    $('.add-widget .post-it').click(function(e){ e.stopPropagation(); })
+    $('.add-widget').click(function(e){ $(this).fadeOut(200); })
   });
 
 

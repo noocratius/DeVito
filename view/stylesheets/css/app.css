@@ -16,12 +16,12 @@
  */
 @import "https://use.fontawesome.com/releases/v5.0.2/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Mukta+Vaani:400,500,700";
-.business-model-canvas .canvas-element .post-it {
+.business-model-canvas .canvas-element .post-it, .add-widget .container textarea.post-it {
   border-radius: 5px;
   padding: 0.375rem;
   margin: 0.375rem; }
 
-button {
+.business-model-canvas button {
   width: 100%;
   border-width: 2px;
   border-style: solid;
@@ -93,13 +93,33 @@ html {
     font-size: 1rem;
     line-height: 1.5rem;
     background: #FFE079; }
+  .business-model-canvas button {
+    font-size: 0.6180339845rem;
+    line-height: 1.5rem;
+    border-color: black;
+    color: black;
+    background: transparent; }
 
-button {
-  font-size: 0.6180339845rem;
-  line-height: 1.5rem;
-  border-color: black;
-  color: black;
-  background: transparent; }
+.add-widget {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: none; }
+  .add-widget .container {
+    margin: 0 auto;
+    width: 20%;
+    margin-top: 10%; }
+    .add-widget .container textarea.post-it {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      background: #FFE079;
+      height: 9rem;
+      width: 100%;
+      border: none;
+      display: block;
+      outline: none; }
 
 /*!
  * Arquivo partial sass que coleta todos os componentes da estrutura

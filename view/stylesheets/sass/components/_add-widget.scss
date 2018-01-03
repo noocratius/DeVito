@@ -1,0 +1,35 @@
+//
+// Componente de widget que faz adicionar novos post-its
+//
+//
+
+$bg-color: rgba(0, 0, 0, .7);
+
+.add-widget {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: $bg-color;
+  z-index: 1000;
+  display: none;
+
+  .container {
+    margin: 0 auto;
+    width: 20%;
+    margin-top: 10%;
+
+    textarea.post-it {
+      @include apply-post-it;
+      height: line-rhythm(6);
+      width: 100%;
+      border: none;
+      display: block;
+      outline: none;
+    }
+
+    button {
+
+    }
+
+  }
+}
