@@ -2,6 +2,9 @@
 //  Importa componentes autocontidos da arquitetura. Carrega todos os
 // componentes que vivem sobre `/components`
 //
+// Cada componente além de possuir a definição do componente UI também possui
+// variáveis para valores padrões dos componentes assim como mixins e/ou funções
+// para o seu uso
 ///
 
-@import 'bmc';
+@import 'post-it', 'buttons', 'bmc';

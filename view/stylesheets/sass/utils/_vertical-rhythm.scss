@@ -192,7 +192,7 @@
   }
 
   // faz uso do framework bourbon para aplicar o direcional
-  @include margin($dir-list);
+  margin: $dir-list;
 }
 
 ///

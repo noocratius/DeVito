@@ -1,0 +1,49 @@
+//
+// Componente UI para definições de botões
+//
+//
+
+// padrões para cores e tamanho de botões
+$button-font-size: ms(-1) !default;
+$button-border-width: 2px !default;
+$button-border-radius: 4px !default;
+$button-color: black !default;
+$button-text-color: white !default;
+
+// estrutura de estilo principal dos botões
+%button {
+  @include margin-vr(.5 0);
+  width: 100%;
+  border-width: $button-border-width;
+  border-style: solid;
+  text-transform: uppercase;
+  color: $button-text-color;
+  border-radius: $button-border-radius;
+
+}
+
+//
+// Aplica estilo ao elemento de botão especificando sua escala e cor
+//
+// Estilos ao componente de interface de usuário são aplicado definindo em quantas
+// vezes o botão deve aumentar. Logo qualquer valor maior que zero pode ser usado.
+// Também é aplicado cor ao elemento, fazendo com que se torne um botão vazado e longo
+//
+// @param {color} [$button-color] - Cor dominante do botão
+// @param {number} [$scale] - Em quantas vezes deve aumenta o elemento
+//
+@mixin apply-button($color: $button-color, $scale: 1) {
+  @if $scale <= 0 {
+    @error "$scale: #{$scale}. Elemento botão deve ser maior que 0";
+  }
+
+  @extend %button;
+  @include adjust-font-size($button-font-size * $scale);
+  border-color: $color;
+  background: $color;
+
+  &:hover {
+    color: $color;
+    background: transparent;
+  }
+}

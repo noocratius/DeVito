@@ -4,4 +4,16 @@
  *
  */
 
-@import 'modular-scale/modular-scale';
+@import 'modular-scale/modular-scale',
+        // 'susy/sass/susy';
+        '/Users/pleiva/node_modules/susy/sass/susy';
+
+
+// configuração global do susy
+$susy: (
+  global-box-sizing: border-box,
+  gutters: 1/16,
+  debug: (
+    // image: show
+  )
+);

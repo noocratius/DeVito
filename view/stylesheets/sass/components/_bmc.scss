@@ -8,29 +8,28 @@
 
 @include type-setting;
 
-@supports (display: grid) {
+@include with-layout (10) {
   .business-model-canvas {
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: 70% 30%;
-    background: susy-svg-grid() no-repeat scroll;
+    @include container;
+    @include adjust-font-size;
+    @include margin-vr(1);
 
-    > .canvas-column {
-      @include padding-vr(.5);
-      // background: get-color('background');
+    > .upper-column, .bottom-column {
+      @include full;
+      > .canvas-column:last-child { @include last; }
     }
 
-    // blocos do canvas que estão aninhados
-    > .canvas-column:nth-child(2), .canvas-column:nth-child(4) {
-      display: grid;
+    // coluna superior do canvas
+    .upper-column {
+      height: 70%;
+      > .canvas-column { @include span(2) }
+
     }
 
-    // o último bloco do canvas, na sua parte inferior
-    > .canvas-column:nth-child(6) {
-      display: grid;
-      grid-column: 1 /span 5;
-      grid-template-columns: repeat(2, 1fr);
+    // coluna inferior do canvas
+    .bottom-column {
+      height: 30%;
+      > .canvas-column { @include span(5) }
     }
 
     .canvas-element {
@@ -38,6 +37,12 @@
       h1 {
         @include vertical-rhythm($scale: 2);
       }
+
+      .canvas-body-element { overflow: auto; }
+
+      .post-it {   @include apply-post-it }
     }
   }
+
+  button { @include apply-button; }
 }

@@ -13,17 +13,6 @@
 @import 'http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css';
 
 
-// importa frameworks e bibliotecas que o projeto depende
-@import '/Users/pleiva/node_modules/susy/sass/susy';
-@import '/Users/pleiva/node_modules/susy/sass/plugins/svg-grid';
-
-// configuração do susy
-$susy: (
-  columns: susy-repeat(5),
-  gutters: 2px,
-  global-box-sizing: border-box,
-);
-
 // toolkit css para ícones, veja mais em @link http://fontawesome.io
 // @import 'font-awesome';
 

@@ -1,0 +1,31 @@
+//
+// Componente UI que define um post-it (lembrete)
+//
+//
+
+$post-it-color: #FFE079 !default;
+$post-it-radius: 5px !default;
+$post-it-space: line-rhythm(1/4) !default;
+
+//
+// Estrutura núcleo que todos post-it devem seguir
+//
+%post-it {
+  border-radius: $post-it-radius;
+  padding: $post-it-space;
+  margin: $post-it-space;
+}
+
+//
+// Aplica estilos do post-it a um elemento. Definindo sua cor e o tamanho da fonte
+// do texto dentro do post-it. A variável $size é definida de acordo com o ritmo
+// vertical. Fazendo uso do módulo module-scale para aumento do tamanho da fonte
+//
+// @param {color} $color [$post-it-color] - cor de fundo do post-it
+// @param {color} $size [0] - tamanho da fonte dentro do post-it
+//
+@mixin apply-post-it($color: $post-it-color, $size: 0) {
+  @extend %post-it;
+  @include vertical-rhythm($font-size: ms($size));
+  background: $color;
+}
