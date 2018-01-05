@@ -4,7 +4,6 @@
     <button type="button">salvar</button>
   </div>
 </div>
-<link rel="stylesheet" type="text/css" href="../stylesheets/css/app.css">
 <article class="business-model-canvas">
   <div class="upper-column">
     <div class="canvas-column canvas-element">
@@ -120,7 +119,10 @@
     return property.match(/\d+/)[0];
   }
 
+  console.log('loaded0');
   $.when( $.ready ).then(function () {
+
+    console.log('loaded1');
 
     // objeto que lida com business model canvas
     var $canvas, $upper, $bottom, lineHeight, upperHeight, bottomHeight, headerHeight, buttonHeight;

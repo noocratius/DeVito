@@ -6,13 +6,18 @@
 //
 ///
 
+$bg-color: white;
+
 @include type-setting;
 
 @include with-layout (10) {
   .business-model-canvas {
     @include container;
     @include adjust-font-size;
-    @include margin-vr(1);
+    @include padding-vr(1);
+    background: $bg-color;
+    height: 100%;
+    width: 100%;
 
     > .upper-column, .bottom-column {
       @include full;

@@ -5,8 +5,10 @@
   "height": 600,
 
   "dependencies": [
-
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
   ],
+
+  "plugin": "plugin.js",
 
   "icon": "business_model_canvas.png",
 
