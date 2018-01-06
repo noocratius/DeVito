@@ -7,6 +7,13 @@ var businessModelCanvas = SAGE2_App.extend({
   init: function (data) {
     this.SAGE2Init('div', data);
 
+    console.log(data);
+
+    // cria o business model Canvas
+    
+
+
+    // chama a função que carrega o app no SAGE2
     this.applicationRPC({
       view: 'canvas',
       style: 'app',

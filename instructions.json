@@ -5,7 +5,8 @@
   "height": 600,
 
   "dependencies": [
-    "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js",
+    "scripts/BMCanvas.js"
   ],
 
   "plugin": "plugin.js",
