@@ -21,14 +21,6 @@
   padding: 0.375rem;
   margin: 0.375rem; }
 
-.business-model-canvas button {
-  width: 100%;
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 4px;
-  padding-left: 1.5rem;
-  text-align: left; }
-
 html {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -48,8 +40,8 @@ html {
   margin-right: auto;
   font-size: 1rem;
   line-height: 1.5rem;
-  padding: 1.5rem;
-  background: white;
+  padding: 0.75rem;
+  background: #ededed;
   height: 100%;
   width: 100%; }
   .business-model-canvas:after {
@@ -58,50 +50,60 @@ html {
     clear: both; }
   .business-model-canvas > .upper-column, .business-model-canvas .bottom-column {
     clear: both;
-    width: 100%;
+    width: 99.4117647059%;
     float: left;
-    margin-left: 0;
-    margin-right: 0; }
-    .business-model-canvas > .upper-column > .canvas-column:last-child, .business-model-canvas .bottom-column > .canvas-column:last-child {
-      float: right;
-      margin-right: 0; }
+    margin-left: 0.2941176471%;
+    margin-right: 0.2941176471%; }
+    .business-model-canvas > .upper-column > .canvas-column, .business-model-canvas .bottom-column > .canvas-column {
+      height: 100%; }
   .business-model-canvas .upper-column {
-    height: 70%;
-    margin-bottom: 2.0408163265%; }
+    margin-bottom: 0.9803921569%;
+    height: 69.0196078431%; }
     .business-model-canvas .upper-column > .canvas-column {
-      width: 18.3673469388%;
+      width: 19.4117647059%;
       float: left;
-      margin-right: 2.0408163265%; }
+      margin-left: 0.2941176471%;
+      margin-right: 0.2941176471%; }
+      .business-model-canvas .upper-column > .canvas-column > .canvas-element {
+        height: 50%; }
+        .business-model-canvas .upper-column > .canvas-column > .canvas-element:first-child {
+          margin-bottom: 2.9411764706%;
+          height: 48.5294117647%; }
   .business-model-canvas .bottom-column {
     height: 30%; }
     .business-model-canvas .bottom-column > .canvas-column {
-      width: 48.9795918367%;
+      width: 49.4117647059%;
       float: left;
-      margin-right: 2.0408163265%; }
-  .business-model-canvas .canvas-element h1 {
-    border-width: 0;
-    font-size: 1rem;
-    line-height: 1.5rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-    margin-top: 0rem;
-    margin-bottom: 0rem; }
-    .business-model-canvas .canvas-element h1 .fas {
-      font-size: 1.5rem;
-      line-height: 1.5rem;
-      float: right; }
-  .business-model-canvas .canvas-element .canvas-body-element {
+      margin-left: 0.2941176471%;
+      margin-right: 0.2941176471%; }
+  .business-model-canvas .canvas-element {
+    background: rgba(45, 185, 230, 0.87);
+    border-radius: 5px;
+    padding: 0rem 0.375rem;
     overflow: auto; }
-  .business-model-canvas .canvas-element .post-it {
-    font-size: 1rem;
-    line-height: 1.5rem;
-    background: #FFE079; }
-  .business-model-canvas button {
-    font-size: 0.6180339845rem;
-    line-height: 1.5rem;
-    border-color: black;
-    color: black;
-    background: transparent; }
+    .business-model-canvas .canvas-element:hover {
+      background: #2db9e6;
+      cursor: pointer; }
+    .business-model-canvas .canvas-element h1 {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      margin: 0.75rem 0rem;
+      margin-right: 1.5rem;
+      position: relative; }
+      @media (min-width: 1600px) {
+        .business-model-canvas .canvas-element h1 {
+          font-size: 1.618034rem;
+          line-height: 3rem; } }
+      .business-model-canvas .canvas-element h1 .fas {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        position: absolute;
+        top: 0;
+        right: -1.5rem; }
+    .business-model-canvas .canvas-element .post-it {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      background: #FFE079; }
 
 .add-widget {
   position: fixed;

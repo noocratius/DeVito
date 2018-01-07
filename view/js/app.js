@@ -22,8 +22,7 @@
     upperHeight = unitlessAttr($upper.css('height'));
     bottomHeight = unitlessAttr($bottom.css('height'));
     headerHeight = Number(unitlessAttr($('.canvas-element h1', $upper).css('height')));
-    buttonHeight = Number(unitlessAttr($('.canvas-element button', $upper).css('height')));
-    var extraHeight = headerHeight + buttonHeight;
+    var extraHeight = headerHeight;
 
     $('.canvas-element > .canvas-body-element', $upper).css('height', upperHeight/2 - extraHeight);
     $('.canvas-column > .canvas-body-element', $upper).css('height', upperHeight - extraHeight);

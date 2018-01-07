@@ -3,37 +3,45 @@
 // de modelo de negócios
 //
 //
-//
 ///
 
-$bg-color: white;
+$bg-color: get-color('background', $level: .7);
+$radius: 5px;
+$columns: 10;
 
 @include type-setting;
 
-@include with-layout (10) {
+@include with-layout ($columns 1/16 split) {
   .business-model-canvas {
     @include container;
     @include adjust-font-size;
-    @include padding-vr(1);
+    @include padding-vr(.5);
     background: $bg-color;
     height: 100%;
     width: 100%;
 
     > .upper-column, .bottom-column {
       @include full;
-      > .canvas-column:last-child { @include last; }
+      > .canvas-column { height: 100%; }
     }
 
     // coluna superior do canvas
     .upper-column {
-      height: 70%;
-      margin-bottom: gutter();
+      margin-bottom: gutter(3);
+      height: 70% - gutter(3);
+
       > .canvas-column {
         @include span(2);
 
-        // adiciona espaçamento na coluna do canvas com dois blocos de elementos
+        // bloco do canvas com blocos aninhados (colunas 2 e 4 do topo superior)
         > .canvas-element {
-          // margin-bottom: gutter();
+          height: 50%;
+
+          &:first-child {
+            margin-bottom: gutter(1);
+            height: 50% - gutter(2);
+          }
+
         }
       }
 
@@ -42,25 +50,40 @@ $bg-color: white;
     // coluna inferior do canvas
     .bottom-column {
       height: 30%;
-      > .canvas-column { @include span(5) }
+      > .canvas-column {
+        @include span(5);
+      }
     }
 
     .canvas-element {
+      background: get-color('foreground', $opacity: primary);
+      border-radius: $radius;
+      @include padding-vr(0 1/4);
+      overflow: auto;
 
-      h1 {
-        @include vertical-rhythm($scale: 2);
-
-        .fas {
-          @include adjust-font-size(line-rhythm(1));
-          float: right;
-        }
+      &:hover {
+        background: get-color('foreground');
+        cursor: pointer;
       }
 
-      .canvas-body-element { overflow: auto; }
+      h1 {
+        @include adjust-font-size();
+        @include margin-vr(.5 0);
+        margin-right: line-rhythm(1);
+        position: relative;
 
+        @media (min-width: get-breakpoint(alpha)) { @include adjust-font-size(ms(1)); }
+
+        // ícones do cabeçalho
+        .fas {
+          @include adjust-font-size();
+          position: absolute;
+          top: 0;
+          right: -(line-rhythm(1));
+        }
+      }
+      
       .post-it {   @include apply-post-it }
     }
-
-    button { @include apply-button; }
   }
 }

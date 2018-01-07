@@ -7,21 +7,17 @@ var businessModelCanvas = SAGE2_App.extend({
   init: function (data) {
     this.SAGE2Init('div', data);
 
-    console.log(data);
-
+    console.log(this);
     // cria o business model Canvas
-    
+    this.canvas = new BMCanvas.Canvas();
 
-
-    // chama a função que carrega o app no SAGE2
-    this.applicationRPC({
-      view: 'canvas',
-      style: 'app',
-      script: 'app'
-    }, 'loadView', false);
-
-    // trata os eventos SAGE2Pointer como um evento normal do Javascript
+    // habilidade tratar eventos do SAGE2 normalmente
     this.passSAGE2PointerAsMouseEvents = true;
+
+    // cria a interface de usuário do SAGE2
+    // this.controls.addTextInput({defaultText: "", id: "AttachNote", caption: "add"});
+    // this.controls.addButton({type:"plus", identifier: "AttachPostIt", position: 4});
+    // this.controls.finishedAddingControls();
   },
 
   load: function (date) {
@@ -30,6 +26,12 @@ var businessModelCanvas = SAGE2_App.extend({
 
   draw: function (date) {
 
+    // chama a função que carrega o app no SAGE2
+    this.applicationRPC({
+      view: 'canvas',
+      style: 'app',
+      script: 'app'
+    }, 'loadView', false);
   },
 
   startResize: function (date) {
@@ -41,7 +43,16 @@ var businessModelCanvas = SAGE2_App.extend({
   },
 
   event: function (type, position, user, data, date) {
-    console.log("método 'event' chamado");
+    console.log(arguments);
+
+    if (type == 'widgetEvent') {
+      console.log(arguments);
+      // - descobre id do bloco em que foi chamado o evento
+      // - se o texto inserido não estiver vazio
+      // - insere o lembrete no bloco identificado
+    } else if (type == "pointerMove") {
+      console.log(arguments);
+    }
   },
 
   quit: function () {
@@ -70,6 +81,16 @@ var businessModelCanvas = SAGE2_App.extend({
     document.getElementsByTagName('head')[0].appendChild(style);
     // executa o script carregado
     eval(view.script);
+
+    $('.canvas-element').dblclick(function (e) {
+      $(this).css('background', 'red');
+      console.log('duplo', e);
+    });
+
+    document.getElementsByClassName('canvas-element')[0].addEventListener('dblclick', function (e) {
+      console.log(e);
+      this.style.background = red;
+    });
   },
 
 });

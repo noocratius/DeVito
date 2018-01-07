@@ -18,7 +18,7 @@ var BMCanvas = (function () {
    * @param {string} name - Nome do usuário
    * @param {string} email - Email do usuário
    */
-  var _User = function (name, email) {
+  function _User(name, email) {
     this.name = name;
     this.email = email || '';
   }
@@ -30,7 +30,7 @@ var BMCanvas = (function () {
    * @param {string} title - Título do canvas
    * @param {string} description - descrição do canvas
    */
-  var _Canvas = function (title, description) {
+  function _Canvas(title, description) {
     this.title = title || '';
     this.description = description || '';
     this.createdAt = new Date();
@@ -40,15 +40,15 @@ var BMCanvas = (function () {
     this.canvasElements = new Array(9);
 
     // cria os elementos do canvas
-    this.canvasElements.push(new CanvasElement(1, 'parcerias chave'));
-    this.canvasElements.push(new CanvasElement(2, 'atividades chave'));
-    this.canvasElements.push(new CanvasElement(3, 'recursos chave'));
-    this.canvasElements.push(new CanvasElement(4, 'proposta de Valor'));
-    this.canvasElements.push(new CanvasElement(5, 'relação com o cliente'));
-    this.canvasElements.push(new CanvasElement(6, 'canais'));
-    this.canvasElements.push(new CanvasElement(7, 'segmentos de mercado'));
-    this.canvasElements.push(new CanvasElement(8, 'estruturas de custos'));
-    this.canvasElements.push(new CanvasElement(9, 'fontes de renda'));
+    this.canvasElements[0] = new _CanvasElement(1, 'parcerias chave');
+    this.canvasElements[1] = new _CanvasElement(2, 'atividades chave');
+    this.canvasElements[2] = new _CanvasElement(3, 'recursos chave');
+    this.canvasElements[3] = new _CanvasElement(4, 'proposta de Valor');
+    this.canvasElements[4] = new _CanvasElement(5, 'relação com o cliente');
+    this.canvasElements[5] = new _CanvasElement(6, 'canais');
+    this.canvasElements[6] = new _CanvasElement(7, 'segmentos de mercado');
+    this.canvasElements[7] = new _CanvasElement(8, 'estruturas de custos');
+    this.canvasElements[8] = new _CanvasElement(9, 'fontes de renda');
   }
 
   /**
@@ -60,7 +60,7 @@ var BMCanvas = (function () {
    */
   _Canvas.prototype.attachStickyNote = function (blockIdentifier, note) {
     if (blockIdentifier >= 0 && blockIdentifier < this.canvasElements.length) {
-      this.canvasElements[blockIdentifier].attachPostIt(note);
+      this.canvasElements[blockIdentifier - 1].attachPostIt(note);
     }
   };
 
@@ -71,7 +71,7 @@ var BMCanvas = (function () {
    * @param {int} id - Identificador do bloco
    * @param {string} name - Nome do elemento do bloco
    */
-  var _CanvasElement = function (id, name) {
+  function _CanvasElement(id, name) {
     this.id = id;
     this.name = name;
     this.postIts = new Array();
@@ -94,7 +94,7 @@ var BMCanvas = (function () {
    * @param {int} color - Cor do post-it
    * @param {_User} author - Autor do Post-it
    */
-  var _PostIt = function (note, color, author) {
+  function _PostIt(note, color, author) {
     this.note = note || '';
     this.color = color || FFE079;
     this.createdAt = new Date();
