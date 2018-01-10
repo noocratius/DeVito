@@ -11,7 +11,7 @@
 
   "plugin": "plugin.js",
 
-  "icon": "business_model_canvas.png",
+  "icon": "bmc.png",
 
   "title": "Business Model Canvas",
   "version": "0.1.0",
