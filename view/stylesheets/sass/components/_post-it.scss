@@ -12,6 +12,7 @@ $post-it-space: 1/4 !default;
 //
 %post-it {
   border-radius: $post-it-radius;
+  word-wrap: break-word;
   @include padding-vr($post-it-space);
   @include margin-vr($post-it-space);
 }
