@@ -47,7 +47,6 @@ var businessModelCanvas = SAGE2_App.extend({
   },
 
   event: function (type, position, user, data, date) {
-
     this.author.name = user.label;
 
     if (type == 'widgetEvent') {
@@ -91,10 +90,8 @@ var businessModelCanvas = SAGE2_App.extend({
       Widget.open($(this).data('id'));
     });
 
-    Widget.close();
-
     _this = this;
-    $('.add-widget').on('save', function (event, data) {
+    $(this.element).on('save', function (event, data) {
       _this.attachStickyNote(data['block-id'], data['post-it']);
 
     });
@@ -124,7 +121,7 @@ var businessModelCanvas = SAGE2_App.extend({
   },
 
   /**
-   * carrega o post-it no canvas, no elemento especificado
+   * carrega o post-it no canvas, no bloco especifico de acordo com o id do post-it
    *
    * @param {object} view - Encapsula os dados passados via broadcast
    * @param {string} view.content - Elemento carregado

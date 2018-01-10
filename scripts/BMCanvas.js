@@ -92,7 +92,6 @@ var BMCanvas = (function () {
    */
   _Canvas.prototype.getPostIt = function (id) {
     var postIt = null;
-    console.log(id);
     for (var block of this.canvasElements) {
 
       if ((postIt = block.getPostIt(id)) != null)
