@@ -79,7 +79,7 @@ var BMCanvas = (function () {
    *
    */
   _Canvas.prototype.attachStickyNote = function (blockIdentifier, note) {
-    if (blockIdentifier >= 0 && blockIdentifier < this.canvasElements.length) {
+    if (blockIdentifier > 0 && blockIdentifier <= this.canvasElements.length) {
       this.canvasElements[blockIdentifier - 1].attachPostIt(note);
     }
   };
@@ -92,7 +92,7 @@ var BMCanvas = (function () {
    */
   _Canvas.prototype.getPostIt = function (id) {
     var postIt = null;
-
+    console.log(id);
     for (var block of this.canvasElements) {
 
       if ((postIt = block.getPostIt(id)) != null)

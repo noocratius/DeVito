@@ -105,7 +105,7 @@ var businessModelCanvas = SAGE2_App.extend({
    * Anexa um post-it ao canvas
    *
    * @param {int} blockID - Identificador do bloco do canvas
-   * @param {BMCanvas.PostIt} blockID - Post-It a ser anexado
+   * @param {BMCanvas.PostIt} postIt - Post-It a ser anexado
    */
   attachStickyNote: function (blockId, postIt) {
 
