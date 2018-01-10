@@ -3,33 +3,28 @@
 //
 //
 
-$bg-color: rgba(0, 0, 0, .7);
+$bg-color: get-color('background', 1, disabled);
 
 .add-widget {
   position: fixed;
   height: 100%;
   width: 100%;
   background: $bg-color;
-  z-index: 1000;
+  z-index: 2000;
   display: none;
 
   .container {
     margin: 0 auto;
-    width: 20%;
+    width: 40%;
     margin-top: 10%;
 
     textarea.post-it {
       @include apply-post-it;
-      height: line-rhythm(6);
+      height: line-rhythm(10);
       width: 100%;
       border: none;
       display: block;
       outline: none;
     }
-
-    button {
-
-    }
-
   }
 }

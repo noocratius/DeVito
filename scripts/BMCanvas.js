@@ -12,6 +12,26 @@
 var BMCanvas = (function () {
 
   /**
+   * Gerador de números aleatório para identificação de entidade
+   *
+   */
+  var Identifier = (function () {
+    var _base = 0;
+    var _prefix = 'id_';
+
+    return {
+
+      setPrefix: function (prefix) {
+        _prefix = prefix;
+      },
+
+      generateNext: function () {
+        return _prefix + _base++;
+      }
+    };
+  })();
+
+  /**
    * Representa um usuário da aplicação
    *
    * @constructor
@@ -65,6 +85,25 @@ var BMCanvas = (function () {
   };
 
   /**
+   * Retorna um post-it de acordo com o seu identificador
+   *
+   * @param {int} postIt - Identificador do post-it a ser procurado
+   * @return {_PostIt}
+   */
+  _Canvas.prototype.getPostIt = function (id) {
+    var postIt = null;
+
+    for (var block of this.canvasElements) {
+
+      if ((postIt = block.getPostIt(id)) != null)
+        return postIt;
+    }
+
+    return postIt;
+  }
+
+
+  /**
    * Representa um dos 9 elementos de bloco do canvas
    *
    * @constructor
@@ -84,7 +123,22 @@ var BMCanvas = (function () {
    */
   _CanvasElement.prototype.attachPostIt = function(note) {
     this.postIts.push(note);
+    note.block = this;
   };
+
+  /**
+   * Retorna um post-it de acordo com o seu identificador ou null caso não exista
+   *
+   * @param {int} id - Identificador do post-it
+   * @return {_PostIt | null}
+   */
+  _CanvasElement.prototype.getPostIt = function (id) {
+    for (var postIt of this.postIts) {
+      if (postIt.id == id) return postIt;
+    }
+
+    return null;
+  }
 
   /**
    * Representa um Post-it, lembrete que é anexado ao canvas
@@ -93,13 +147,17 @@ var BMCanvas = (function () {
    * @param {string} note - Texto do post-it
    * @param {int} color - Cor do post-it
    * @param {_User} author - Autor do Post-it
+   * @param {_CanvasElement} block - Elemento de Canvas no qual foi anexado
    */
-  function _PostIt(note, color, author) {
+  function _PostIt(note, color, author, block) {
     this.note = note || '';
     this.color = color || FFE079;
     this.createdAt = new Date();
     this.lastModified = new Date();
     this.author = author || null;
+    this.id = Identifier.generateNext();
+    this.block = block || null;
+
   }
 
   return {

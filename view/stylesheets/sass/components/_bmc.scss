@@ -5,7 +5,7 @@
 //
 ///
 
-$bg-color: get-color('background', $level: .7);
+$bg-color: get-color('background');
 $radius: 5px;
 $columns: 10;
 
@@ -56,13 +56,13 @@ $columns: 10;
     }
 
     .canvas-element {
-      background: get-color('foreground', $opacity: primary);
+      background: get-color('foreground');
       border-radius: $radius;
       @include padding-vr(0 1/4);
       overflow: auto;
 
       &:hover {
-        background: get-color('foreground');
+        background: get-color('foreground', $level: .4);
         cursor: pointer;
       }
 
@@ -82,7 +82,7 @@ $columns: 10;
           right: -(line-rhythm(1));
         }
       }
-      
+
       .post-it {   @include apply-post-it }
     }
   }

@@ -16,18 +16,23 @@ var fs = require('fs');
 // módulo path de caminho do node
 var path = require('path');
 
+
+// encoding usado pelos arquivos carregado
+const ENCODING = 'utf8';
+
 // caminho para a arquitetura dos tipos de arquivos necessário
 const HTML_PATH    = path.join(path.dirname(__filename), 'view', 'html');
 const JS_PATH      = path.join(path.dirname(__filename), 'view', 'js');
 const CSS_PATH     = path.join(path.dirname(__filename), 'view',
                                                           'stylesheets', 'css');
-
 function processRequest(wsio, data, config) {
 
   // nome dos arquivos a serem carregados
   var view = data.query.view || 'index';
   var script = data.query.script || '';
   var style = data.query.style || '';
+  // dados anexado do procedimento a ser chamado
+  var args = data.query.data || {};
 
   // dados enviados via broadcast, definido pelo framework SAGE2
   var broadcastData = {
@@ -36,7 +41,8 @@ function processRequest(wsio, data, config) {
     data: {
       content: '',
       script:  '',
-      style: ''
+      style: '',
+      data: args
     }
   };
 
@@ -46,13 +52,24 @@ function processRequest(wsio, data, config) {
   style = path.join(CSS_PATH, style) + '.css';
   script = path.join(JS_PATH, script) + '.js';
 
-  fs.readFile(view, 'utf8', function (err, content) {
+  fs.readFile(view, ENCODING, function (err, content) {
     if (!err) {
       broadcastData.data.content = content;
-    }
 
-    broadcastData.data.style = fs.readFileSync(style, 'utf8');
-    broadcastData.data.script = fs.readFileSync(script, 'utf8');
+      try {
+
+        broadcastData.data.style = fs.readFileSync(style, ENCODING);
+
+      } catch (err) {
+        broadcastData.data.style = '';
+      }
+
+      try {
+        broadcastData.data.script = fs.readFileSync(script, ENCODING);
+      } catch (err) {
+        broadcastData.data.script = '';
+      }
+    }
 
     // envia a mensagem via broadcast pelo SAGE2
     if (data.broadcast == true) {

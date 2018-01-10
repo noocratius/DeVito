@@ -41,7 +41,7 @@ html {
   font-size: 1rem;
   line-height: 1.5rem;
   padding: 0.75rem;
-  background: #ededed;
+  background: #f6f6f6;
   height: 100%;
   width: 100%; }
   .business-model-canvas:after {
@@ -77,12 +77,12 @@ html {
       margin-left: 0.2941176471%;
       margin-right: 0.2941176471%; }
   .business-model-canvas .canvas-element {
-    background: rgba(45, 185, 230, 0.87);
+    background: #e8e8e8;
     border-radius: 5px;
     padding: 0rem 0.375rem;
     overflow: auto; }
     .business-model-canvas .canvas-element:hover {
-      background: #2db9e6;
+      background: #dfdfdf;
       cursor: pointer; }
     .business-model-canvas .canvas-element h1 {
       font-size: 1rem;
@@ -109,18 +109,18 @@ html {
   position: fixed;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
+  background: rgba(167, 167, 167, 0.442);
+  z-index: 2000;
   display: none; }
   .add-widget .container {
     margin: 0 auto;
-    width: 20%;
+    width: 40%;
     margin-top: 10%; }
     .add-widget .container textarea.post-it {
       font-size: 1rem;
       line-height: 1.5rem;
       background: #FFE079;
-      height: 9rem;
+      height: 15rem;
       width: 100%;
       border: none;
       display: block;

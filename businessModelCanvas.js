@@ -7,21 +7,24 @@ var businessModelCanvas = SAGE2_App.extend({
   init: function (data) {
     this.SAGE2Init('div', data);
 
-    console.log(this);
     // cria o business model Canvas
     this.canvas = new BMCanvas.Canvas();
+
+    // autor da anotação
+    this.author = new BMCanvas.User('guest');
 
     // habilidade tratar eventos do SAGE2 normalmente
     this.passSAGE2PointerAsMouseEvents = true;
 
+
     // cria a interface de usuário do SAGE2
-    // this.controls.addTextInput({defaultText: "", id: "AttachNote", caption: "add"});
+    this.controls.addTextInput({id: "AttachNote", caption: "add"});
     // this.controls.addButton({type:"plus", identifier: "AttachPostIt", position: 4});
-    // this.controls.finishedAddingControls();
+    this.controls.finishedAddingControls();
   },
 
   load: function (date) {
-    console.log("método 'load' chamado");
+
   },
 
   draw: function (date) {
@@ -30,8 +33,9 @@ var businessModelCanvas = SAGE2_App.extend({
     this.applicationRPC({
       view: 'canvas',
       style: 'app',
-      script: 'app'
+      script: 'components/widget'
     }, 'loadView', false);
+
   },
 
   startResize: function (date) {
@@ -43,15 +47,15 @@ var businessModelCanvas = SAGE2_App.extend({
   },
 
   event: function (type, position, user, data, date) {
-    console.log(arguments);
+
+    this.author.name = user.label;
 
     if (type == 'widgetEvent') {
-      console.log(arguments);
-      // - descobre id do bloco em que foi chamado o evento
-      // - se o texto inserido não estiver vazio
-      // - insere o lembrete no bloco identificado
+
+    // se o tipo do evento for de adição de post-it
+    // carregue o post-it no canvas
     } else if (type == "pointerMove") {
-      console.log(arguments);
+
     }
   },
 
@@ -70,8 +74,8 @@ var businessModelCanvas = SAGE2_App.extend({
    * @param {string} view.style - Elemento DOM contendo a folha de estilo
    */
   loadView: function (view) {
-
     var style;
+    var _this;
 
     // insere html dentro do elemento
     this.element.innerHTML = view.content;
@@ -82,15 +86,63 @@ var businessModelCanvas = SAGE2_App.extend({
     // executa o script carregado
     eval(view.script);
 
-    $('.canvas-element').dblclick(function (e) {
-      $(this).css('background', 'red');
-      console.log('duplo', e);
+
+    $('.canvas-element').on('click', function () {
+      Widget.open($(this).data('id'));
     });
 
-    document.getElementsByClassName('canvas-element')[0].addEventListener('dblclick', function (e) {
-      console.log(e);
-      this.style.background = red;
+    Widget.close();
+
+    _this = this;
+    $('.add-widget').on('save', function (event, data) {
+      _this.attachStickyNote(data['block-id'], data['post-it']);
+
     });
+
   },
+
+  /**
+   * Anexa um post-it ao canvas
+   *
+   * @param {int} blockID - Identificador do bloco do canvas
+   * @param {BMCanvas.PostIt} blockID - Post-It a ser anexado
+   */
+  attachStickyNote: function (blockId, postIt) {
+
+    var stickyNote = new BMCanvas.PostIt(postIt['note'], postIt['color'], this.author);
+
+    this.canvas.attachStickyNote(blockId, stickyNote);
+
+    // adiciona post-it ao bloco do canvas
+    this.applicationRPC({
+      view: 'post-it',
+      data: {
+        'post-it-id': stickyNote.id
+      }
+    }, 'loadPostIt', false);
+
+  },
+
+  /**
+   * carrega o post-it no canvas, no elemento especificado
+   *
+   * @param {object} view - Encapsula os dados passados via broadcast
+   * @param {string} view.content - Elemento carregado
+   * @param {string} view.data.postItId - Identificador do post-it anexado
+   */
+  loadPostIt: function (view) {
+
+    var postItDOM = $(view.content);
+    var postIt = this.canvas.getPostIt(view.data['post-it-id']);
+
+    // preenche os dados na view do post-it
+    postItDOM.text(postIt.note);
+    postItDOM.css('background-color', postIt.color);
+
+    // anexa o post-it ao bloco do canvas correspondente
+    var block = $(".canvas-element[data-id = '" + postIt.block.id + "']")
+    $('.canvas-body-element', block).append(postItDOM);
+
+  }
 
 });
