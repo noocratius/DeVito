@@ -21,6 +21,20 @@ var businessModelCanvas = SAGE2_App.extend({
     this.controls.addTextInput({id: "AttachNote", caption: "add"});
     // this.controls.addButton({type:"plus", identifier: "AttachPostIt", position: 4});
     this.controls.finishedAddingControls();
+
+    // eventos do canvas
+    var _this = this;
+
+    // salva uma anotação no canvas
+    $(this.element).on('save', function (event, data) {
+      _this.attachStickyNote(data['block-id'], data['post-it']);
+
+    });
+
+    // edita um post-it do canvas com um identificador passado
+    $(this.element).on('edit', function (event, noteIdentifier) {
+      _this.editSickyNote(noteIdentifier);
+    });
   },
 
   load: function (date) {
@@ -74,7 +88,6 @@ var businessModelCanvas = SAGE2_App.extend({
    */
   loadView: function (view) {
     var style;
-    var _this;
 
     // insere html dentro do elemento
     this.element.innerHTML = view.content;
@@ -88,12 +101,6 @@ var businessModelCanvas = SAGE2_App.extend({
 
     $('.canvas-element').on('click', function () {
       Widget.open($(this).data('id'));
-    });
-
-    _this = this;
-    $(this.element).on('save', function (event, data) {
-      _this.attachStickyNote(data['block-id'], data['post-it']);
-
     });
 
   },
@@ -113,10 +120,51 @@ var businessModelCanvas = SAGE2_App.extend({
     // adiciona post-it ao bloco do canvas
     this.applicationRPC({
       view: 'post-it',
+      script: 'components/post-it',
       data: {
         'post-it-id': stickyNote.id
       }
     }, 'loadPostIt', false);
+
+  },
+
+  /**
+   * Modifica dados da anotação
+   *
+   * @param {int} id - Identificador do post-it
+   */
+  editSickyNote: function (id) {
+    var editWidget, widgetDetails, widgetNote;
+    var postIt;
+
+    editWidget = $('.add-widget', this.element);
+    widgetDetails = $('.details', editWidget);
+    widgetNote = $('.post-it', editWidget);
+
+    postIt = this.canvas.getPostIt(id);
+
+    // preenche os dados do widget
+    widgetNote.val(postIt.note);
+    widgetNote.css('background-color', postIt.color);
+
+    $('.author', widgetDetails).text(postIt.author.name);
+
+    // formata a data
+    var dateTimeFormat = new Intl.DateTimeFormat('pt-BR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    var createdAt = dateTimeFormat.format(postIt.createdAt);
+    var lastModified = dateTimeFormat.format(postIt.lastModified);
+
+    $('.created-at', widgetDetails).text(createdAt);
+    $('.last-modified', widgetDetails).text(lastModified);
+
+    widgetDetails.show();
 
   },
 
@@ -126,6 +174,7 @@ var businessModelCanvas = SAGE2_App.extend({
    * @param {object} view - Encapsula os dados passados via broadcast
    * @param {string} view.content - Elemento carregado
    * @param {string} view.data.postItId - Identificador do post-it anexado
+   * @param {string} view.script - Script do Componente
    */
   loadPostIt: function (view) {
 
@@ -133,12 +182,15 @@ var businessModelCanvas = SAGE2_App.extend({
     var postIt = this.canvas.getPostIt(view.data['post-it-id']);
 
     // preenche os dados na view do post-it
-    postItDOM.text(postIt.note);
+    postItDOM.data('id', postIt.id);
+    $('.text', postItDOM).text(postIt.note);
     postItDOM.css('background-color', postIt.color);
 
     // anexa o post-it ao bloco do canvas correspondente
     var block = $(".canvas-element[data-id = '" + postIt.block.id + "']")
     $('.canvas-body-element', block).append(postItDOM);
+
+    eval(view.script);
 
   }
 

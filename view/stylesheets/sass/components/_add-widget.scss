@@ -3,7 +3,7 @@
 //
 //
 
-$bg-color: get-color('background', 1, disabled);
+$bg-color: get-color('background', 7, disabled);
 
 .add-widget {
   position: fixed;
@@ -25,6 +25,20 @@ $bg-color: get-color('background', 1, disabled);
       border: none;
       display: block;
       outline: none;
+    }
+
+    .details {
+      @include adjust-font-size(ms(-1));
+      @include padding-vr(.5);
+      color: get-color('background', 1);
+      text-align: right;
+      display: none;
+
+      > .author {
+        @include margin-vr(0 1/4);
+        padding: 3px;
+        background: get-color('background', 9);
+      }
     }
   }
 }
