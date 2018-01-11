@@ -17,10 +17,14 @@ var PostIt = (function ($) {
   })
   .on('mouseleave', function () {
     $(edit, this).css('visibility', 'hidden');
-  })
+  });
 
-  .click(function () {
-    var id = $(this).data('id');
+  // envia evento de edição caso o botão tenha de edição tenha sido pressionado
+  $(edit, _postIt).click(function () {
+
+    // identificador do post-it
+    var id = $(this).parent('.post-it').data('id');
+    // envia o evento de edição
     $(this).trigger('edit', id);
   });
 

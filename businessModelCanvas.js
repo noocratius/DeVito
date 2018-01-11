@@ -27,7 +27,11 @@ var businessModelCanvas = SAGE2_App.extend({
 
     // salva uma anotação no canvas
     $(this.element).on('save', function (event, data) {
-      _this.attachStickyNote(data['block-id'], data['post-it']);
+      // atualiza o post-it caso ele já exista
+      if (data['post-it'].id)
+        _this.updateStickyNote(data['post-it'].id);
+      else
+        _this.attachStickyNote(data['block-id'], data['post-it']);
 
     });
 
@@ -129,7 +133,7 @@ var businessModelCanvas = SAGE2_App.extend({
   },
 
   /**
-   * Modifica dados da anotação
+   * Modifica dados da anotação preenchendo o widget
    *
    * @param {int} id - Identificador do post-it
    */
@@ -142,6 +146,9 @@ var businessModelCanvas = SAGE2_App.extend({
     widgetNote = $('.post-it', editWidget);
 
     postIt = this.canvas.getPostIt(id);
+
+    // define identificador da anotação sendo editada
+    editWidget.data('note-id', postIt.id);
 
     // preenche os dados do widget
     widgetNote.val(postIt.note);
@@ -165,6 +172,43 @@ var businessModelCanvas = SAGE2_App.extend({
     $('.last-modified', widgetDetails).text(lastModified);
 
     widgetDetails.show();
+
+  },
+
+  /**
+   * Atualiza os dados de um post-it na view correspondete
+   *
+   * @param {int} id - Identificador do post-it
+   */
+  updateStickyNote: function (id) {
+    var postIt, postItDOM, editWidget, postitWidget;
+
+    postIt = this.canvas.getPostIt(id);
+    editWidget = $('.add-widget', this.element);
+    postitWidget = $('.post-it', editWidget);
+
+    // não modificado caso o texto seja igual
+    if (postIt.note == postitWidget.val())
+      return;
+
+    // atualiza o valor de última modificação
+    postIt.lastModified = new Date();
+    postIt.color = postitWidget.css('background-color');
+    postIt.note = postitWidget.val();
+
+    // apaga o elemento e esconde os detalhes
+    $('.details', editWidget).hide();
+    postitWidget.val('');
+    editWidget.data('note-id', null);
+
+    // lê o elemento na view do post-it
+    postItDOM = $('.canvas-element .post-it').filter(function () {
+      return $(this).data('id') == id;
+    });
+
+    // atualiza os valores
+    postItDOM.css('background-color', postIt.color);
+    $('.text', postItDOM).text(postIt.note);
 
   },
 

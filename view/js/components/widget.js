@@ -32,6 +32,7 @@ var Widget = (function ($) {
       _component.trigger('save', {
         'block-id': _component.data('block-id'),
         'post-it': {
+          'id': _component.data('note-id'),
           'color': _postIt.css('background-color'),
           'note': note
         }
