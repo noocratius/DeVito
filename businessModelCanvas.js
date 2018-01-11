@@ -22,7 +22,7 @@ var businessModelCanvas = SAGE2_App.extend({
     // this.controls.addButton({type:"plus", identifier: "AttachPostIt", position: 4});
     this.controls.finishedAddingControls();
 
-    // eventos do canvas
+
     var _this = this;
 
     // salva uma anotação no canvas
@@ -181,15 +181,14 @@ var businessModelCanvas = SAGE2_App.extend({
    * @param {int} id - Identificador do post-it
    */
   updateStickyNote: function (id) {
-    var postIt, postItDOM, editWidget, postitWidget;
+    var postIt, postItDOM, editWidget, postitWidget, detailsWidget;
 
     postIt = this.canvas.getPostIt(id);
     editWidget = $('.add-widget', this.element);
     postitWidget = $('.post-it', editWidget);
+    detailsWidget = $('.details', editWidget);
 
-    // não modificado caso o texto seja igual
-    if (postIt.note == postitWidget.val())
-      return;
+    $('.details', editWidget).hide();
 
     // atualiza o valor de última modificação
     postIt.lastModified = new Date();
@@ -197,7 +196,6 @@ var businessModelCanvas = SAGE2_App.extend({
     postIt.note = postitWidget.val();
 
     // apaga o elemento e esconde os detalhes
-    $('.details', editWidget).hide();
     postitWidget.val('');
     editWidget.data('note-id', null);
 
