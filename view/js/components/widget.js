@@ -13,8 +13,8 @@ var Widget = (function ($) {
   var _postIt = $('.post-it', _component);
 
   // mostra o widget e define o identificador do bloco do canvas que disparou
-  _component.on('open', function (e, blockIdentifier) {
-    _component.data('block-id', blockIdentifier);
+  _component.on('open', function (e, data) {
+    _component.data(data);
     _component.show();
   });
 
@@ -35,7 +35,8 @@ var Widget = (function ($) {
           'id': _component.data('note-id'),
           'color': _postIt.css('background-color'),
           'note': note
-        }
+        },
+        'author': _component.data('author')
       });
 
       // apaga as anotações

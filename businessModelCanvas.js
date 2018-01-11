@@ -16,7 +16,6 @@ var businessModelCanvas = SAGE2_App.extend({
     // habilidade tratar eventos do SAGE2 normalmente
     this.passSAGE2PointerAsMouseEvents = true;
 
-
     // cria a interface de usuário do SAGE2
     this.controls.addTextInput({id: "AttachNote", caption: "add"});
     // this.controls.addButton({type:"plus", identifier: "AttachPostIt", position: 4});
@@ -31,7 +30,7 @@ var businessModelCanvas = SAGE2_App.extend({
       if (data['post-it'].id)
         _this.updateStickyNote(data['post-it'].id);
       else
-        _this.attachStickyNote(data['block-id'], data['post-it']);
+        _this.attachStickyNote(data['block-id'], data['post-it'], data['author']);
 
     });
 
@@ -56,16 +55,7 @@ var businessModelCanvas = SAGE2_App.extend({
 
   },
 
-  startResize: function (date) {
-    console.log("método 'startResize' chamado");
-  },
-
-  startMove: function (date) {
-    console.log("método 'startMove' chamado");
-  },
-
   event: function (type, position, user, data, date) {
-    this.author.name = user.label;
 
     if (type == 'widgetEvent') {
 
@@ -73,6 +63,8 @@ var businessModelCanvas = SAGE2_App.extend({
     // carregue o post-it no canvas
     } else if (type == "pointerMove") {
 
+    } else if (type == 'pointerPress') {
+      this.author.name = user.label;
     }
   },
 
@@ -103,8 +95,12 @@ var businessModelCanvas = SAGE2_App.extend({
     eval(view.script);
 
 
+    var _this = this;
     $('.canvas-element').on('click', function () {
-      Widget.open($(this).data('id'));
+      Widget.open({
+        'block-id': $(this).data('id'),
+        'author': _this.author
+      });
     });
 
   },
@@ -114,10 +110,11 @@ var businessModelCanvas = SAGE2_App.extend({
    *
    * @param {int} blockID - Identificador do bloco do canvas
    * @param {BMCanvas.PostIt} postIt - Post-It a ser anexado
+   * @param {BMCanvas.User} author - Criador do post-it
    */
-  attachStickyNote: function (blockId, postIt) {
-
-    var stickyNote = new BMCanvas.PostIt(postIt['note'], postIt['color'], this.author);
+  attachStickyNote: function (blockId, postIt, author) {
+    var stickyNoteAuthor = new BMCanvas.User(author.name);
+    var stickyNote = new BMCanvas.PostIt(postIt['note'], postIt['color'], stickyNoteAuthor);
 
     this.canvas.attachStickyNote(blockId, stickyNote);
 
@@ -188,8 +185,6 @@ var businessModelCanvas = SAGE2_App.extend({
     postitWidget = $('.post-it', editWidget);
     detailsWidget = $('.details', editWidget);
 
-    $('.details', editWidget).hide();
-
     // atualiza o valor de última modificação
     postIt.lastModified = new Date();
     postIt.color = postitWidget.css('background-color');
@@ -198,6 +193,8 @@ var businessModelCanvas = SAGE2_App.extend({
     // apaga o elemento e esconde os detalhes
     postitWidget.val('');
     editWidget.data('note-id', null);
+    detailsWidget.hide();
+
 
     // lê o elemento na view do post-it
     postItDOM = $('.canvas-element .post-it').filter(function () {
