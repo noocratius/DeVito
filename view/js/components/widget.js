@@ -11,6 +11,7 @@ var Widget = (function ($) {
 
   var _component = $('.add-widget');
   var _postIt = $('.post-it', _component);
+  var _closeButton = $('.close', _component);
 
   // mostra o widget e define o identificador do bloco do canvas que disparou
   _component.on('open', function (e, data) {
@@ -20,6 +21,10 @@ var Widget = (function ($) {
 
   // fecha o widget
   _component.on('close', function () {
+    _component.hide();
+  });
+
+  _component.on('cancel', function () {
     _component.hide();
   });
 
@@ -50,6 +55,12 @@ var Widget = (function ($) {
   });
   _postIt.click(function (e) {
     e.stopPropagation();
+  });
+
+  // fecha o widget quando clicar no botão para fechar
+  _closeButton.on('click', function (event) {
+    event.stopPropagation();
+    _component.trigger('cancel');
   });
 
   return {

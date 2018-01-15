@@ -41,4 +41,12 @@ $bg-color: get-color('background', 7, disabled);
       }
     }
   }
+
+  // botão de fechar o widget
+  .close {
+    @include adjust-font-size(ms(1));
+    color: get-color('background');
+    float: right;
+    margin-bottom: line-rhythm(1);
+  }
 }

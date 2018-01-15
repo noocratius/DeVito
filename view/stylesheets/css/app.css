@@ -141,6 +141,12 @@ html {
         margin: 0rem 0.375rem;
         padding: 3px;
         background: #191919; }
+  .add-widget .close {
+    font-size: 1.618034rem;
+    line-height: 3rem;
+    color: #f6f6f6;
+    float: right;
+    margin-bottom: 1.5rem; }
 
 .clear-fix {
   clear: both; }
