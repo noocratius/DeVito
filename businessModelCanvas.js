@@ -32,11 +32,14 @@ var businessModelCanvas = SAGE2_App.extend({
       else
         _this.attachStickyNote(data['block-id'], data['post-it'], data['author']);
 
-    });
-
+    })
     // edita um post-it do canvas com um identificador passado
-    $(this.element).on('edit', function (event, noteIdentifier) {
+    .on('edit', function (event, noteIdentifier) {
       _this.editSickyNote(noteIdentifier);
+    })
+    // remove um post-it do canvas
+    .on('delete', function (event, noteIdentifier) {
+      _this.deleteStickyNote(noteIdentifier);
     });
   },
 
@@ -205,6 +208,31 @@ var businessModelCanvas = SAGE2_App.extend({
     postItDOM.css('background-color', postIt.color);
     $('.text', postItDOM).text(postIt.note);
 
+  },
+
+  /**
+   * Remove um post-it do canvas dado pelo identificador passado
+   *
+   * A remoção é realizada em duas etapas, o lembrete no respectivo canvas é
+   * removido e no modelo de canvas dado por this.canvas também é removido
+   *
+   * @param {int} id - Identificador do post-it
+   */
+  deleteStickyNote: function (id) {
+    var postit;
+
+    postit = this.canvas.getPostIt(id);
+
+    // remove o post-it do bloco de canvas
+    $('.canvas-element .post-it').filter(function () {
+      return $(this).data('id') == id;
+    })
+    .remove();
+
+    // remove do canvas
+    this.canvas.deletePostIt(postit);
+
+    // envia alerta dizendo que o lembrete foi removido
   },
 
   /**

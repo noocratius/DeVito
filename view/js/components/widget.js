@@ -13,6 +13,15 @@ var Widget = (function ($) {
   var _postIt = $('.post-it', _component);
   var _closeButton = $('.close', _component);
   var _colorOption = $('.colors-options .color', _component);
+  var _removeButton = $('.details > .remove', _component);
+
+  // reseta os dados do componente
+  function reset() {
+    _component.data('block-id', null);
+    _component.data('post-it', null);
+    _component.data('note-id', null);
+    $('.details', _component).hide();
+  }
 
   // mostra o widget e define o identificador do bloco do canvas que disparou
   _component.on('open', function (e, data) {
@@ -88,6 +97,17 @@ var Widget = (function ($) {
     _postIt.css('background-color', color);
   });
 
+  // comportamento para remover o post-it
+  _removeButton.on('click', function (event) {
+    event.stopPropagation();
+    var noteId = _component.data('note-id');
+    _component
+    .trigger('cancel')
+    .trigger('delete', noteId);
+    reset();
+
+  });
+
   return {
 
     /**
@@ -97,6 +117,13 @@ var Widget = (function ($) {
      */
     open: function (blockIdentifier) {
       _component.trigger('open', blockIdentifier);
+    },
+
+    /**
+     * Reseta todas as informações do widget
+     */
+    reset: function () {
+      reset();
     }
   }
 

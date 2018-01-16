@@ -1,6 +1,6 @@
 {
   "main_script": "businessModelCanvas.js",
-  "resize": "proportional",
+  "resize": "free",
   "width": 800,
   "height": 600,
 

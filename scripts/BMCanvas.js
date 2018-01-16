@@ -101,6 +101,15 @@ var BMCanvas = (function () {
     return postIt;
   }
 
+  /**
+   * Remove um post-it pelo seu identificador
+   *
+   * @param {_PostIt} postit - Identificador do post-it
+   */
+  _Canvas.prototype.deletePostIt = function (postit) {
+    this.canvasElements[postit.block.id - 1].deletePostIt(postit.id);
+  }
+
 
   /**
    * Representa um dos 9 elementos de bloco do canvas
@@ -137,6 +146,21 @@ var BMCanvas = (function () {
     }
 
     return null;
+  }
+
+  /**
+   * Remove um post-it pelo seu identificador
+   *
+   * @param {int} id - Identiicador do Post-it
+   */
+  _CanvasElement.prototype.deletePostIt = function (id) {
+
+    // lê a posição do post-it
+    for (var i = 0; i < this.postIts.length; i++) {
+      if (this.postIts[i].id == id) {
+        this.postIts.splice(i, 1);
+      }
+    }
   }
 
   /**
