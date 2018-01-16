@@ -120,7 +120,8 @@ html {
   .add-widget .container {
     margin: 0 auto;
     width: 40%;
-    margin-top: 10%; }
+    margin-top: 10%;
+    position: relative; }
     .add-widget .container textarea.post-it {
       font-size: 1rem;
       line-height: 1.5rem;
@@ -141,6 +142,34 @@ html {
         margin: 0rem 0.375rem;
         padding: 3px;
         background: #191919; }
+    .add-widget .container .colors-options {
+      position: absolute;
+      top: 1.5rem;
+      left: 0.5rem; }
+      .add-widget .container .colors-options > .color {
+        border-width: 0;
+        height: 1.8rem;
+        width: 1.8rem;
+        margin-top: 0.6rem;
+        margin-bottom: 0.6rem;
+        border-radius: 100%;
+        display: inline-block;
+        margin-right: 8px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: black; }
+        .add-widget .container .colors-options > .color.yellow {
+          background: #fee079; }
+        .add-widget .container .colors-options > .color.green {
+          background: #C4EFE4; }
+        .add-widget .container .colors-options > .color.blue {
+          background: #adcbe7; }
+        .add-widget .container .colors-options > .color.pink {
+          background: #eaa1cc; }
+        .add-widget .container .colors-options > .color.orange {
+          background: #F28F52; }
+        .add-widget .container .colors-options > .color.selected, .add-widget .container .colors-options > .color:hover {
+          border: 2px solid white; }
   .add-widget .close {
     font-size: 1.618034rem;
     line-height: 3rem;

@@ -17,7 +17,9 @@ $bg-color: get-color('background', 7, disabled);
     margin: 0 auto;
     width: 40%;
     margin-top: 10%;
+    position: relative;
 
+    // post-it's
     textarea.post-it {
       @include apply-post-it;
       height: line-rhythm(10);
@@ -27,6 +29,7 @@ $bg-color: get-color('background', 7, disabled);
       outline: none;
     }
 
+    // detalhes sobre autor e datas de criação e modificação
     .details {
       @include adjust-font-size(ms(-1));
       @include padding-vr(.5);
@@ -38,6 +41,34 @@ $bg-color: get-color('background', 7, disabled);
         @include margin-vr(0 1/4);
         padding: 3px;
         background: get-color('background', 9);
+      }
+    }
+
+    // opções de cores
+    .colors-options {
+      position: absolute;
+      top: line-rhythm(1);
+      left: line-rhythm(1/3);
+
+      > .color {
+        @include vertical-rhythm($scale: 1.2, $use-height: true);
+        border-radius: 100%;
+        display: inline-block;
+        margin-right: 8px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: black;
+
+        &.yellow { background: #fee079 }
+        &.green { background: #C4EFE4 }
+        &.blue { background: #adcbe7 }
+        &.pink { background: #eaa1cc }
+        &.orange { background: #F28F52 }
+
+        &.selected, &:hover {
+          border: 2px solid white;
+        }
+
       }
     }
   }

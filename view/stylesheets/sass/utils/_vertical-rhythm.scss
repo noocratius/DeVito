@@ -116,6 +116,7 @@
     $leftover: $height - $e-height;
     $pad: $leftover/2;
     height: $e-height;
+    width: $e-height;
     margin-top: $top-size + $pad;
     margin-bottom: $bottom-size + $pad;
   }
