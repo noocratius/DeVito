@@ -1,0 +1,40 @@
+//
+// Componente de alerta de mensagens
+//
+//
+
+.alert-success {
+   color: #004085;
+   background-color: #cce5ff;
+   border-color: #b8daff;
+}
+
+.alert {
+  @include padding-vr(.5);
+   border: 1px solid transparent;
+   border-radius: 4px;
+   position: absolute;
+   z-index: 2000;
+   width: 50%;
+   left: 25%;
+   display: none;
+}
+
+.close {
+  @include adjust-font-size(ms(1));
+   float: right;
+   font-size: 21px;
+   font-weight: 700;
+   line-height: 1;
+   color: #000;
+   text-shadow: 0 1px 0 #fff;
+   filter: alpha(opacity=20);
+   opacity: .2;
+}
+a {
+   color: #337ab7;
+   text-decoration: none;
+}
+a {
+   background-color: transparent;
+}

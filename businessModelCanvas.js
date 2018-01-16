@@ -106,6 +106,8 @@ var businessModelCanvas = SAGE2_App.extend({
       });
     });
 
+    $(document).trigger('view-loaded');
+
   },
 
   /**
@@ -171,8 +173,6 @@ var businessModelCanvas = SAGE2_App.extend({
     $('.created-at', widgetDetails).text(createdAt);
     $('.last-modified', widgetDetails).text(lastModified);
 
-    widgetDetails.show();
-
   },
 
   /**
@@ -208,6 +208,9 @@ var businessModelCanvas = SAGE2_App.extend({
     postItDOM.css('background-color', postIt.color);
     $('.text', postItDOM).text(postIt.note);
 
+    // envia mensagem dzendo que post-it foi modificado
+    Alert.show('Post-it modificado em \'' + postIt.block.name + '\'');
+
   },
 
   /**
@@ -233,6 +236,7 @@ var businessModelCanvas = SAGE2_App.extend({
     this.canvas.deletePostIt(postit);
 
     // envia alerta dizendo que o lembrete foi removido
+    Alert.show('Post-it removido de  \'' + postit.block.name + '\' com sucesso');
   },
 
   /**
@@ -258,6 +262,8 @@ var businessModelCanvas = SAGE2_App.extend({
     $('.canvas-body-element', block).append(postItDOM);
 
     eval(view.script);
+
+    Alert.show('Post-it anexado em \'' + postIt.block.name + '\'');
 
   }
 

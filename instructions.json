@@ -6,6 +6,7 @@
 
   "dependencies": [
     "scripts/jquery.js",
+    "scripts/alert.js",
     "scripts/BMCanvas.js"
   ],
 
