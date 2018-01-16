@@ -24,8 +24,11 @@ var Widget = (function ($) {
     _component.hide();
   });
 
+  // operação de cancelar um post-it
   _component.on('cancel', function () {
     _component.hide();
+    // apaga o texto no post-it
+    _postIt.val('');
   });
 
   // envia os dados do post-it para ser salvo
