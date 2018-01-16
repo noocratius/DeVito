@@ -12,6 +12,7 @@ var Widget = (function ($) {
   var _component = $('.add-widget');
   var _postIt = $('.post-it', _component);
   var _closeButton = $('.close', _component);
+  var _colorOption = $('.colors-options .color', _component);
 
   // mostra o widget e define o identificador do bloco do canvas que disparou
   _component.on('open', function (e, data) {
@@ -41,7 +42,7 @@ var Widget = (function ($) {
         'block-id': _component.data('block-id'),
         'post-it': {
           'id': _component.data('note-id'),
-          'color': _postIt.css('background-color'),
+          'color': _postIt.data('color'),
           'note': note
         },
         'author': _component.data('author')
@@ -49,6 +50,7 @@ var Widget = (function ($) {
 
       // apaga as anotações
       _postIt.val('');
+
     }
   });
 
@@ -64,6 +66,26 @@ var Widget = (function ($) {
   _closeButton.on('click', function (event) {
     event.stopPropagation();
     _component.trigger('cancel');
+  });
+
+  // seleção de cor do post-it
+  _colorOption.on('click', function (event) {
+    event.stopPropagation();
+    _component.trigger('change-color', $(this).data('color'));
+  });
+
+  // comportamento para o ponteiro sage enquanto seleciona a cor
+  _colorOption.on('mouseenter', function () {
+    $(this).addClass('selected');
+  })
+  .on('mouseout', function () {
+    $(this).removeClass('selected');
+  });
+
+  // muda a cor do post-it para a selecionada
+  _component.on('change-color', function (e, color) {
+    _postIt.data('color', color);
+    _postIt.css('background-color', color);
   });
 
   return {

@@ -149,7 +149,7 @@ var businessModelCanvas = SAGE2_App.extend({
 
     // preenche os dados do widget
     widgetNote.val(postIt.note);
-    widgetNote.css('background-color', postIt.color);
+    editWidget.trigger('change-color', postIt.color);
 
     $('.author', widgetDetails).text(postIt.author.name);
 
