@@ -22,28 +22,27 @@ var businessModelCanvas = SAGE2_App.extend({
 
     var _this = this;
 
-    // salva uma anotação no canvas
-    $(this.element).on('save', function (event, data) {
-      // atualiza o post-it caso ele já exista
-      if (data['post-it'].id)
-        _this.updateStickyNote(data['post-it'].id);
-      else
-        _this.attachStickyNote(data['block-id'], data['post-it'], data['author']);
-
-    })
-    // edita um post-it do canvas
-    .on('edit', function (event, noteIdentifier) {
-      _this.editSickyNote(noteIdentifier);
-    })
-    // remove um post-it do canvas
-    .on('delete', function (event, noteIdentifier) {
-      _this.deleteStickyNote(noteIdentifier);
-    });
+    // Realiza operações no canvas dependendo do evento recebido
+    $(this.element)
+      .on('save', function (event, data) {
+        // atualiza o post-it caso ele já exista
+        if (data['post-it'].id)
+          _this.updateStickyNote(data['post-it'].id);
+        else
+          _this.attachStickyNote(data['block-id'], data['post-it'], data['author']);
+      })
+      .on('edit-mode', function (event, id) {
+        var postit = _this.canvas.getPostIt(id);
+        Attachment.fillNote(postit);
+      })
+      .on('delete', function (event, id) {
+        _this.deleteStickyNote(id);
+      });
   },
 
   draw: function (date) {
 
-    // carrega o canvas dentro do SAGE
+    // carrega o canvas dentro do SAGE por uma chamada via broadcast
     this.applicationRPC({
       view: 'canvas',
       style: 'app'
@@ -83,6 +82,7 @@ var businessModelCanvas = SAGE2_App.extend({
 
     var _this = this;
     $('.canvas-element').on('click', function () {
+
       Attachment.open({
         'block-id': $(this).data('id'),
         'author': _this.author
@@ -95,66 +95,23 @@ var businessModelCanvas = SAGE2_App.extend({
    * Anexa um post-it ao canvas
    *
    * @param {int} blockID - Identificador do bloco do canvas
-   * @param {BMCanvas.PostIt} postIt - Post-It a ser anexado
+   * @param {BMCanvas.PostIt} postit - Post-It a ser anexado
    * @param {BMCanvas.User} author - Criador do post-it
    */
-  attachStickyNote: function (blockId, postIt, author) {
+  attachStickyNote: function (blockId, postit, author) {
     var stickyNoteAuthor = new BMCanvas.User(author.name);
-    var stickyNote = new BMCanvas.PostIt(postIt['note'], postIt['color'], stickyNoteAuthor);
+    var stickyNote = new BMCanvas.PostIt(postit['note'], postit['color'], stickyNoteAuthor);
 
     this.canvas.attachStickyNote(blockId, stickyNote);
 
     // adiciona post-it ao bloco do canvas, via broadcast
     this.applicationRPC({
       view: 'post-it',
-      data: {
-        'id': stickyNote.id
-      }
+      data: { 'id': stickyNote.id }
     }, 'loadStickyNote', false);
 
   },
 
-  /**
-   * Modifica dados da anotação preenchendo o widget
-   *
-   * @param {int} id - Identificador do post-it
-   */
-  editSickyNote: function (id) {
-    var editWidget, widgetDetails, widgetNote;
-    var postIt;
-
-    editWidget = $('.add-widget', this.element);
-    widgetDetails = $('.details', editWidget);
-    widgetNote = $('.post-it', editWidget);
-
-    postIt = this.canvas.getPostIt(id);
-
-    // define identificador da anotação sendo editada
-    editWidget.data('note-id', postIt.id);
-    widgetDetails.show();
-
-    // preenche os dados do widget
-    widgetNote.val(postIt.note);
-    editWidget.trigger('change-color', postIt.color);
-
-    $('.author', widgetDetails).text(postIt.author.name);
-
-    // formata a data
-    var dateTimeFormat = new Intl.DateTimeFormat('pt-BR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-    var createdAt = dateTimeFormat.format(postIt.createdAt);
-    var lastModified = dateTimeFormat.format(postIt.lastModified);
-
-    $('.created-at', widgetDetails).text(createdAt);
-    $('.last-modified', widgetDetails).text(lastModified);
-
-  },
 
   /**
    * Atualiza os dados de um post-it na view correspondete
@@ -162,62 +119,34 @@ var businessModelCanvas = SAGE2_App.extend({
    * @param {int} id - Identificador do post-it
    */
   updateStickyNote: function (id) {
-    var postIt, postItDOM, editWidget, postitWidget, detailsWidget;
 
-    postIt = this.canvas.getPostIt(id);
-    editWidget = $('.add-widget', this.element);
-    postitWidget = $('.post-it', editWidget);
-    detailsWidget = $('.details', editWidget);
+    var stickyNote = this.canvas.getPostIt(id);
 
-    // atualiza o valor de última modificação
-    postIt.lastModified = new Date();
-    postIt.color = postitWidget.css('background-color');
-    postIt.note = postitWidget.val();
-
-    // apaga o elemento e esconde os detalhes
-    postitWidget.val('');
-    editWidget.data('note-id', null);
-    detailsWidget.hide();
-
-
-    // lê o elemento na view do post-it
-    postItDOM = $('.canvas-element .post-it').filter(function () {
-      return $(this).data('id') == id;
-    });
-
-    // atualiza os valores
-    postItDOM.css('background-color', postIt.color);
-    $('.text', postItDOM).text(postIt.note);
+    Attachment.updatePostIt(stickyNote);
+    PostIt.update(stickyNote);
 
     // envia mensagem dzendo que post-it foi modificado
-    Alert.show('Post-it modificado em \'' + postIt.block.name + '\'');
+    Alert.show('Post-it modificado em \'' + stickyNote.block.name + '\'');
 
   },
 
   /**
-   * Remove um post-it do canvas dado pelo identificador passado
-   *
-   * A remoção é realizada em duas etapas, o lembrete no respectivo canvas é
-   * removido e no modelo de canvas dado por this.canvas também é removido
+   * Remove um post-it do canvas dado pelo identificador. O post-it é
+   * do canvas e do modelo, em this.canvas.
    *
    * @param {int} id - Identificador do post-it
    */
   deleteStickyNote: function (id) {
-    var postit;
 
-    postit = this.canvas.getPostIt(id);
+    var stickyNote = this.canvas.getPostIt(id);
 
-    // remove o post-it do bloco de canvas
-    $('.canvas-element .post-it').filter(function () {
-      return $(this).data('id') == id;
-    })
-    .remove();
+    PostIt.remove(stickyNote);
 
     // remove do canvas
-    this.canvas.deletePostIt(postit);
+    this.canvas.deletePostIt(stickyNote);
 
     // envia alerta dizendo que o lembrete foi removido
-    Alert.show('Post-it removido de  \'' + postit.block.name + '\' com sucesso');
+    Alert.show('Post-it removido de  \'' + stickyNote.block.name + '\' com sucesso');
   },
 
   /**

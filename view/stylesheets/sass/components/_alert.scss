@@ -1,40 +1,35 @@
 //
 // Componente de alerta de mensagens
 //
-//
 
-.alert-success {
-   color: #004085;
-   background-color: #cce5ff;
-   border-color: #b8daff;
+// bloco estrutural do alerta, que todos os alertas devem possuir
+%alert {
+  @include padding-vr(.5);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  position: absolute;
+  width: 60%;
+  left: 20%;
+  z-index: 1999;
+  display: none;
+
+  > .close {
+    @include adjust-font-size;
+    float: right;
+  }
+}
+
+// aplica estilos a um elemento de alerta definindo o tipo do alerta e sua cor
+@mixin apply-alert($color: alert,  $type: success) {
+  @extend %alert;
+
+  &-#{$type} {
+    color: get-color($color, 9);
+    background-color: get-color($color);
+    border-color: get-color($color, -3);
+  }
 }
 
 .alert {
-  @include padding-vr(.5);
-   border: 1px solid transparent;
-   border-radius: 4px;
-   position: absolute;
-   z-index: 2000;
-   width: 50%;
-   left: 25%;
-   display: none;
-}
-
-.close {
-  @include adjust-font-size(ms(1));
-   float: right;
-   font-size: 21px;
-   font-weight: 700;
-   line-height: 1;
-   color: #000;
-   text-shadow: 0 1px 0 #fff;
-   filter: alpha(opacity=20);
-   opacity: .2;
-}
-a {
-   color: #337ab7;
-   text-decoration: none;
-}
-a {
-   background-color: transparent;
+  @include apply-alert;
 }

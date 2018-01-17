@@ -24,7 +24,7 @@ jQuery(document).on('postit-loaded', function (e, postitElement) {
     $(_editLabel, _postitWidget).on('click', function (event) {
 
       var id = $(this).parent('.post-it').data('id');
-      $(this).trigger('edit', id);
+      $(this).trigger('edit-mode', id);
     });
 
     return {
@@ -51,6 +51,39 @@ jQuery(document).on('postit-loaded', function (e, postitElement) {
 
         // anexa o post-it no bloco correspondente
         blockWidget.append(_postitWidget);
+      },
+
+      /**
+       * Remove o post-it do canvas
+       *
+       * @param {BMCanvas.PostIt} postit - Post-it a ser removido
+       */
+      remove: function (postit) {
+
+        // remove o post-it do bloco de canvas
+        $('.canvas-element .post-it').filter(function () {
+          return $(this).data('id') == postit.id;
+        })
+        .remove();
+      },
+
+      /**
+       * Atualiza um post-it anexado ao canvas
+       *
+       * @param {BMCanvas.PostIt} postit - Post-it usado para atualização
+       */
+      update: function (postit) {
+        var postitWidget, textWidget;
+
+        postitWidget = $('.canvas-element .post-it').filter(function (index, el) {
+          return $(el).data('id') == postit.id;
+        });
+
+        textWidget = $('.text', postitWidget);
+
+        postitWidget.css('background-color', postit.color);
+        textWidget.text(postit.note);
+
       }
     }
 

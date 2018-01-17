@@ -1,11 +1,11 @@
 /**
- * Widget de janela que anexa anotações a aplicação
+ * evento de create e de edit, diferente
  */
 
 jQuery(document).on('view-loaded', function(e, view){
 
   /**
-   *
+   * Módulo que anexa anotações no canvas
    * @module widget
    */
   window.Attachment = (function ($) {
@@ -15,60 +15,60 @@ jQuery(document).on('view-loaded', function(e, view){
     var _closeButton = $('.close', _component);
     var _colorOption = $('.colors-options .color', _component);
     var _removeButton = $('.details > .remove', _component);
+    var _view = $(view);
+    var _widgetDetails = $('.details', _component);
 
     // reseta os dados do componente
     var reset = function () {
       _component.data('block-id', null);
       _component.data('post-it', null);
       _component.data('note-id', null);
-      $('.details', _component).hide();
+      _widgetDetails.hide();
+      _postIt.val('');
     }
 
     // mostra o widget e define o identificador do bloco do canvas que disparou
-    _component.on('open', function (e, data) {
-     _component.data(data);
-     _component.show();
-    });
-
-    // fecha o widget
-    _component.on('close', function () {
-     _component.hide();
+    _component.on('open', function (event, data) {
+      _component.data(data);
+      _component.show();
     });
 
     // operação de cancelar um post-it
-    _component.on('cancel', function () {
-     _component.hide();
-     // apaga o texto no post-it
-     _postIt.val('');
+    _component.on('cancel', function (event) {
+      event.stopPropagation();
+      reset();
+      $(this).trigger('close');
     });
 
     // envia os dados do post-it para ser salvo
     _component.on('close', function () {
-     var note = _postIt.val();
+      var note = _postIt.val();
+      event.stopPropagation();
+      _component.hide();
 
      // emite evento de 'save' caso o texto de inserção não seja vazio
-     if (note) {
-       _component.trigger('save', {
-         'block-id': _component.data('block-id'),
-         'post-it': {
-           'id': _component.data('note-id'),
-           'color': _postIt.data('color'),
-           'note': note
-         },
-         'author': _component.data('author')
+      if (note) {
+        _view.trigger('save', {
+          'block-id': _component.data('block-id'),
+          'author'  : _component.data('author'),
+          'post-it' : {
+            'id': _component.data('note-id'),
+            'color': _postIt.data('color'),
+            'note': note
+          }
        });
 
-       // apaga as anotações
-       _postIt.val('');
-
-     }
+       reset();
+      }
     });
 
     // define comportamento para fechar o widget
-    _component.click(function () {
+    _component.on('click', function (event) {
+      event.stopPropagation();
       _component.trigger('close');
     });
 
+    // não permite eventos de cliques sejam efetuados no post-it do widget
     _postIt.click(function (e) {
       e.stopPropagation();
     });
@@ -86,12 +86,13 @@ jQuery(document).on('view-loaded', function(e, view){
     });
 
     // comportamento para o ponteiro sage enquanto seleciona a cor
-    _colorOption.on('mouseenter', function () {
-      $(this).addClass('selected');
-    })
-    .on('mouseout', function () {
-      $(this).removeClass('selected');
-    });
+    _colorOption
+      .on('mouseenter', function () {
+        $(this).addClass('selected');
+      })
+      .on('mouseout', function () {
+        $(this).removeClass('selected');
+      });
 
     // muda a cor do post-it para a selecionada
     _component.on('change-color', function (e, color) {
@@ -103,10 +104,10 @@ jQuery(document).on('view-loaded', function(e, view){
     _removeButton.on('click', function (event) {
       event.stopPropagation();
       var noteId = _component.data('note-id');
-      _component
-        .trigger('cancel')
-        .trigger('delete', noteId);
-        reset();
+
+      _component.trigger('cancel');
+
+      _view.trigger('delete', noteId);
 
     });
 
@@ -117,15 +118,59 @@ jQuery(document).on('view-loaded', function(e, view){
       *
       * @param {int} blockIdentifier - Identificador do canvas que abre
       */
-      open: function (blockIdentifier) {
-        _component.trigger('open', blockIdentifier);
+      open: function (data) {
+        _component.trigger('open', data);
       },
 
       /**
-      * Reseta todas as informações do widget
-      */
-      reset: function () {
-       reset();
+       * Preenche os dados do widget com o post-it passado como argumento
+       *
+       * @param {BMCanvas.PostIt} postit - Post-it que será preenchido
+       */
+      fillNote: function (postit) {
+        var author, createdAt, createdAtWidget, lastModified, lastModifiedWidget;
+
+        author = $('.author', _widgetDetails);
+        createdAtWidget = $('.created-at', _widgetDetails);
+        lastModifiedWidget = $('.last-modified', _widgetDetails);
+
+        _component.data('note-id', postit.id);
+
+        _widgetDetails.show();
+
+        // atualiza os valores no widget
+        _postIt.val(postit.note);
+        _component.trigger('change-color', postit.color);
+        author.text(postit.author.name);
+
+        // formata a data
+        var dateTimeFormat = new Intl.DateTimeFormat('pt-BR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+
+        var createdAt = dateTimeFormat.format(postit.createdAt);
+        var lastModified = dateTimeFormat.format(postit.lastModified);
+
+        createdAtWidget.text(createdAt);
+        lastModifiedWidget.text(lastModified);
+
+      },
+
+      /**
+       * Atualiza o post-it com os dados do widget, no modo edição
+       *
+       * @param {BMCanvas.PostIt} postit - Post-it que será atualizado
+       */
+      updatePostIt: function (postit) {
+        postit.color = _postIt.css('background-color');
+        postit.note = _postIt.val();
+        postit.lastModified = new Date();
+
       }
 
     }

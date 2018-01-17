@@ -182,39 +182,24 @@ html {
     float: right;
     margin-bottom: 1.5rem; }
 
-.alert-success {
-  color: #004085;
-  background-color: #cce5ff;
-  border-color: #b8daff; }
-
 .alert {
   padding: 0.75rem;
   border: 1px solid transparent;
   border-radius: 4px;
   position: absolute;
-  z-index: 2000;
-  width: 50%;
-  left: 25%;
+  width: 60%;
+  left: 20%;
+  z-index: 1999;
   display: none; }
+  .alert > .close {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    float: right; }
 
-.close {
-  font-size: 1.618034rem;
-  line-height: 3rem;
-  float: right;
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 1;
-  color: #000;
-  text-shadow: 0 1px 0 #fff;
-  filter: alpha(opacity=20);
-  opacity: .2; }
-
-a {
-  color: #337ab7;
-  text-decoration: none; }
-
-a {
-  background-color: transparent; }
+.alert-success {
+  color: #111216;
+  background-color: #aeb2da;
+  border-color: #c6c9e5; }
 
 .clear-fix {
   clear: both; }
