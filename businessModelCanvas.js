@@ -1,4 +1,7 @@
 /**
+ * Bootstrap da aplicação. Todo o framework do SAGE2 inicializa extendendo
+ * uma aplicação SAGE2_App. Cada função é executada em um momento da execução
+ * da aplicação
  *
  */
 
@@ -7,19 +10,14 @@ var businessModelCanvas = SAGE2_App.extend({
   init: function (data) {
     this.SAGE2Init('div', data);
 
-    // cria o business model Canvas
+    // cria o módulo business model canvas
     this.canvas = new BMCanvas.Canvas();
 
-    // autor da anotação
+    // modelo dos autores das anotações
     this.author = new BMCanvas.User('guest');
 
-    // habilidade tratar eventos do SAGE2 normalmente
+    // habilidade tratar eventos do SAGE2 como eventos DOM
     this.passSAGE2PointerAsMouseEvents = true;
-
-    // cria a interface de usuário do SAGE2
-    this.controls.addTextInput({id: "AttachNote", caption: "add"});
-    // this.controls.addButton({type:"plus", identifier: "AttachPostIt", position: 4});
-    this.controls.finishedAddingControls();
 
 
     var _this = this;
@@ -33,7 +31,7 @@ var businessModelCanvas = SAGE2_App.extend({
         _this.attachStickyNote(data['block-id'], data['post-it'], data['author']);
 
     })
-    // edita um post-it do canvas com um identificador passado
+    // edita um post-it do canvas
     .on('edit', function (event, noteIdentifier) {
       _this.editSickyNote(noteIdentifier);
     })
@@ -43,70 +41,53 @@ var businessModelCanvas = SAGE2_App.extend({
     });
   },
 
-  load: function (date) {
-
-  },
-
   draw: function (date) {
 
-    // chama a função que carrega o app no SAGE2
+    // carrega o canvas dentro do SAGE
     this.applicationRPC({
       view: 'canvas',
-      style: 'app',
-      script: 'components/widget'
+      style: 'app'
     }, 'loadView', false);
 
   },
 
   event: function (type, position, user, data, date) {
 
-    if (type == 'widgetEvent') {
-
-    // se o tipo do evento for de adição de post-it
-    // carregue o post-it no canvas
-    } else if (type == "pointerMove") {
-
-    } else if (type == 'pointerPress') {
+    // rastreia o autor das anotações sempre que houver um clique no canvas
+    if (type == 'pointerPress')
       this.author.name = user.label;
-    }
-  },
-
-  quit: function () {
-    console.log("método 'quit' chamado");
   },
 
   /**
-   * Carrega uma view dentro de um elemento DOM
-   *
-   * @todo verificar outra forma de carregar script sem usar eval
+   * Carrega uma view do canvas dentro do sage2, o método é chamado via broadcast
+   * pelo framework onde é carregado seu html e estilo correspondente que são
+   * então inseridos dentro do elemento DOM correspondente.
    *
    * @param {object} view - Encapsula os dados da chamada via broadcast
-   * @param {string} view.content - Conteúdo em HTML
-   * @param {string} view.script - Script da view
-   * @param {string} view.style - Elemento DOM contendo a folha de estilo
+   * @param {string} view.content - Conteúdo em HTML do canvas
+   * @param {string} view.style - Conteúdo da folha de estilo carregada
    */
   loadView: function (view) {
     var style;
 
-    // insere html dentro do elemento
+    // insere html no elemento dom do SAGE
     this.element.innerHTML = view.content;
-    // cria elemento para incorporar a folha de estilos
+
+    // cria elemento que incorpora folha de estilo e adiciona ao documento
     style = document.createElement('style');
     style.innerHTML = view.style;
     document.getElementsByTagName('head')[0].appendChild(style);
-    // executa o script carregado
-    eval(view.script);
 
+    // envia evento ao documento indicando que canvas foi carregado
+    $(document).trigger('view-loaded', this.element);
 
     var _this = this;
     $('.canvas-element').on('click', function () {
-      Widget.open({
+      Attachment.open({
         'block-id': $(this).data('id'),
         'author': _this.author
       });
     });
-
-    $(document).trigger('view-loaded');
 
   },
 
@@ -123,14 +104,13 @@ var businessModelCanvas = SAGE2_App.extend({
 
     this.canvas.attachStickyNote(blockId, stickyNote);
 
-    // adiciona post-it ao bloco do canvas
+    // adiciona post-it ao bloco do canvas, via broadcast
     this.applicationRPC({
       view: 'post-it',
-      script: 'components/post-it',
       data: {
-        'post-it-id': stickyNote.id
+        'id': stickyNote.id
       }
-    }, 'loadPostIt', false);
+    }, 'loadStickyNote', false);
 
   },
 
@@ -241,30 +221,25 @@ var businessModelCanvas = SAGE2_App.extend({
   },
 
   /**
-   * carrega o post-it no canvas, no bloco especifico de acordo com o id do post-it
+   * carrega o post-it no canvas, no bloco especifico de acordo com o identificador
+   * do post-it, passado como argumento. Para isso faz uso do módulo PostIt,
+   * para anexar o lembrete no canvas.
    *
    * @param {object} view - Encapsula os dados passados via broadcast
    * @param {string} view.content - Elemento carregado
-   * @param {string} view.data.postItId - Identificador do post-it anexado
-   * @param {string} view.script - Script do Componente
+   * @param {string} view.data.id - Identificador do post-it anexado
    */
-  loadPostIt: function (view) {
+  loadStickyNote: function (view) {
 
-    var postItDOM = $(view.content);
-    var postIt = this.canvas.getPostIt(view.data['post-it-id']);
+    var stickyNote = this.canvas.getPostIt(view.data['id']);
 
-    // preenche os dados na view do post-it
-    postItDOM.data('id', postIt.id);
-    $('.text', postItDOM).text(postIt.note);
-    postItDOM.css('background-color', postIt.color);
+    // envia o elemento DOM da view para o evento que carrega o widget de post-its
+    $(document).trigger('postit-loaded', $(view.content));
 
-    // anexa o post-it ao bloco do canvas correspondente
-    var block = $(".canvas-element[data-id = '" + postIt.block.id + "']")
-    $('.canvas-body-element', block).append(postItDOM);
+    // delega ao módulo PostIt para anexar o post-it
+    PostIt.attach(stickyNote);
 
-    eval(view.script);
-
-    Alert.show('Post-it anexado em \'' + postIt.block.name + '\'');
+    Alert.show('Post-it anexado em \'' + stickyNote.block.name + '\'');
 
   }
 
