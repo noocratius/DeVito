@@ -17,7 +17,7 @@
   "icon": "bmc.png",
 
   "title": "Business Model Canvas",
-  "version": "0.5.0",
+  "version": "0.6.0-alpha.1",
   "description": "Uma ferramenta de gerenciamento estratégico, que permite desenvolver modelos de negócios novos ou existentes.",
   "author": "Peter Leiva <pleiva@id.uff.br>",
 
