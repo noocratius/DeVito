@@ -151,6 +151,7 @@ var businessModelCanvas = SAGE2_App.extend({
 
     // define identificador da anotação sendo editada
     editWidget.data('note-id', postIt.id);
+    widgetDetails.show();
 
     // preenche os dados do widget
     widgetNote.val(postIt.note);

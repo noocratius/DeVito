@@ -5,7 +5,7 @@
 /**
  *  Módulo que trata os componente de interface de widget
  *
- * @module Widget
+ * @module widget
  */
 var Widget = (function ($) {
 
