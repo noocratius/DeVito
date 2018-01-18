@@ -21,6 +21,8 @@
   "description": "Uma ferramenta de gerenciamento estratégico, que permite desenvolver modelos de negócios novos ou existentes.",
   "author": "Peter Leiva <pleiva@id.uff.br>",
 
-  "keywords": ["business", "canvas", "business model", "model"]
+  "keywords": ["business", "canvas", "business model", "model"],
+
+  "license": "MIT"
 
 }
