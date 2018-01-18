@@ -2,16 +2,16 @@
  *
  */
 
-jQuery(document).on('view-loaded', function () {
+jQuery(document).on('view-loaded', function (event, data) {
 
   /**
    * Módulo que alerta mensagens para os usuários
    *
    * @module widget
    */
-  window.Alert = (function ($) {
-
-    var _alert = $('.alert');
+  data.app.Alert = (function ($) {
+    var _view = $(data.view);
+    var _alert = $('.alert', _view);
     var _closeButton = $('.close', _alert);
     var _text = $('.text', _alert);
     var _time = 3000; // tempo em milisegundos que o alerta deve desaparecer

@@ -33,7 +33,7 @@ var businessModelCanvas = SAGE2_App.extend({
       })
       .on('edit-mode', function (event, id) {
         var postit = _this.canvas.getPostIt(id);
-        Attachment.fillNote(postit);
+        _this.Attachment.fillNote(postit);
       })
       .on('delete', function (event, id) {
         _this.deleteStickyNote(id);
@@ -57,11 +57,17 @@ var businessModelCanvas = SAGE2_App.extend({
       this.author.name = user.label;
   },
 
+
+  quit: function () {
+    // @TODO remover estilos e documento dom inserido
+  },
+
   /**
    * Carrega uma view do canvas dentro do sage2, o método é chamado via broadcast
    * pelo framework onde é carregado seu html e estilo correspondente que são
    * então inseridos dentro do elemento DOM correspondente.
    *
+   * @todo melhorar evento do bloco do canvas
    * @param {object} view - Encapsula os dados da chamada via broadcast
    * @param {string} view.content - Conteúdo em HTML do canvas
    * @param {string} view.style - Conteúdo da folha de estilo carregada
@@ -78,12 +84,15 @@ var businessModelCanvas = SAGE2_App.extend({
     document.getElementsByTagName('head')[0].appendChild(style);
 
     // envia evento ao documento indicando que canvas foi carregado
-    $(document).trigger('view-loaded', this.element);
+    $(document).trigger('view-loaded', {
+      app: this,
+      view: this.element
+    });
 
     var _this = this;
-    $('.canvas-element').on('click', function () {
+    $('.canvas-element', _this.element).on('click', function () {
 
-      Attachment.open({
+      _this.Attachment.open({
         'block-id': $(this).data('id'),
         'author': _this.author
       });
@@ -122,11 +131,11 @@ var businessModelCanvas = SAGE2_App.extend({
 
     var stickyNote = this.canvas.getPostIt(id);
 
-    Attachment.updatePostIt(stickyNote);
-    PostIt.update(stickyNote);
+    this.Attachment.updatePostIt(stickyNote);
+    this.PostIt.update(stickyNote);
 
     // envia mensagem dzendo que post-it foi modificado
-    Alert.show('Post-it modificado em \'' + stickyNote.block.name + '\'');
+    this.Alert.show('Post-it modificado em \'' + stickyNote.block.name + '\'');
 
   },
 
@@ -140,13 +149,13 @@ var businessModelCanvas = SAGE2_App.extend({
 
     var stickyNote = this.canvas.getPostIt(id);
 
-    PostIt.remove(stickyNote);
+    this.PostIt.remove(stickyNote);
 
     // remove do canvas
     this.canvas.deletePostIt(stickyNote);
 
     // envia alerta dizendo que o lembrete foi removido
-    Alert.show('Post-it removido de  \'' + stickyNote.block.name + '\' com sucesso');
+    this.Alert.show('Post-it removido de  \'' + stickyNote.block.name + '\' com sucesso');
   },
 
   /**
@@ -163,12 +172,16 @@ var businessModelCanvas = SAGE2_App.extend({
     var stickyNote = this.canvas.getPostIt(view.data['id']);
 
     // envia o elemento DOM da view para o evento que carrega o widget de post-its
-    $(document).trigger('postit-loaded', $(view.content));
+    $(document).trigger('postit-loaded', {
+      app: this,
+      view: this.element,
+      postit: $(view.content)
+    });
 
     // delega ao módulo PostIt para anexar o post-it
-    PostIt.attach(stickyNote);
+    this.PostIt.attach(stickyNote);
 
-    Alert.show('Post-it anexado em \'' + stickyNote.block.name + '\'');
+    this.Alert.show('Post-it anexado em \'' + stickyNote.block.name + '\'');
 
   }
 

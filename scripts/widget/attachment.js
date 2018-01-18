@@ -2,20 +2,19 @@
  * evento de create e de edit, diferente
  */
 
-jQuery(document).on('view-loaded', function(e, view){
+jQuery(document).on('view-loaded', function(e, data){
 
   /**
    * Módulo que anexa anotações no canvas
    * @module widget
    */
-  window.Attachment = (function ($) {
-
-    var _component = $('.add-widget');
+  data.app.Attachment = (function ($) {
+    var _view = $(data.view);
+    var _component = $('.add-widget', _view);
     var _postIt = $('.post-it', _component);
     var _closeButton = $('.close', _component);
     var _colorOption = $('.colors-options .color', _component);
     var _removeButton = $('.details > .remove', _component);
-    var _view = $(view);
     var _widgetDetails = $('.details', _component);
 
     // reseta os dados do componente

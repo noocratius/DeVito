@@ -2,13 +2,14 @@
  * Post-it anexados ao canvas
  */
 
-jQuery(document).on('postit-loaded', function (e, postitElement) {
+jQuery(document).on('postit-loaded', function (e, data) {
 
   /**
    * @module widget
    */
-  window.PostIt = (function ($) {
-    var _postitWidget = $(postitElement);
+  data.app.PostIt = (function ($) {
+    var _view = data.view;
+    var _postitWidget = $(data.postit, _view);
     var _editLabel = '.edit';
 
     // mostra e esconde o botão de edição enquanto navega o post-it
@@ -40,7 +41,7 @@ jQuery(document).on('postit-loaded', function (e, postitElement) {
 
         textWidget = $('.text', _postitWidget);
 
-        blockWidget = $('.canvas-body-element').filter(function (index, element) {
+        blockWidget = $('.canvas-body-element', _view).filter(function (index, element) {
           return $(element).parent('.canvas-element').data('id') == postit.block.id;
         });
 
@@ -61,7 +62,7 @@ jQuery(document).on('postit-loaded', function (e, postitElement) {
       remove: function (postit) {
 
         // remove o post-it do bloco de canvas
-        $('.canvas-element .post-it').filter(function () {
+        $('.canvas-element .post-it', _view).filter(function () {
           return $(this).data('id') == postit.id;
         })
         .remove();
@@ -75,7 +76,7 @@ jQuery(document).on('postit-loaded', function (e, postitElement) {
       update: function (postit) {
         var postitWidget, textWidget;
 
-        postitWidget = $('.canvas-element .post-it').filter(function (index, el) {
+        postitWidget = $('.canvas-element .post-it', _view).filter(function (index, el) {
           return $(el).data('id') == postit.id;
         });
 
