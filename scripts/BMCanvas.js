@@ -1,30 +1,42 @@
 /**
- * Módulo do business canvas módulo que encapsula
+ * @fileoverview Business Model Canvas module which encapsulates its class
  */
 
-"use strict";
-
 /**
- * Módulo do Business Model Canvas
- *
  * @module BMCanvas
  */
 var BMCanvas = (function () {
+  'use strict';
 
   /**
    * Gerador de números aleatório para identificação de entidade
-   *
+   * @module
    */
   var Identifier = (function () {
+    /** @private  identificador que será incrementado a cada chamada */
     var _base = 0;
+
+    /** @private  prefixo de todos os identificadores */
     var _prefix = 'id_';
 
     return {
 
+      /**
+       * Define um novo prefixo
+       *
+       * @param {string} prefix
+       * @return {undefined}
+       */
       setPrefix: function (prefix) {
         _prefix = prefix;
+        return this;
       },
 
+      /**
+       * Gera um novo identificador a cada chamada
+       *
+       * @return {string}
+       */
       generateNext: function () {
         return _prefix + _base++;
       }
@@ -32,11 +44,11 @@ var BMCanvas = (function () {
   })();
 
   /**
-   * Representa um usuário da aplicação
+   * Represents a user
    *
    * @constructor
-   * @param {string} name - Nome do usuário
-   * @param {string} email - Email do usuário
+   * @param {string} name
+   * @param {string} email
    */
   function _User(name, email) {
     this.name = name;
@@ -47,8 +59,8 @@ var BMCanvas = (function () {
    * Representa um Business Model Canvas
    *
    * @constructor
-   * @param {string} title - Título do canvas
-   * @param {string} description - descrição do canvas
+   * @param {string} title - Canvas title
+   * @param {string} description - canvas description
    */
   function _Canvas(title, description) {
     this.title = title || '';

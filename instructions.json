@@ -5,7 +5,7 @@
   "height": 600,
 
   "dependencies": [
-    "scripts/jquery.js",
+    "scripts/libs/jquery.js",
     "scripts/widget/attachment.js",
     "scripts/widget/post-it.js",
     "scripts/widget/alert.js",
