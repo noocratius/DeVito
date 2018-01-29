@@ -6,6 +6,15 @@
 
   "dependencies": [
     "scripts/libs/jquery.js",
+    "scripts/patterns/mixin.js",
+    "scripts/patterns/event-aggregator.js",
+    "scripts/widget/mediator.js",
+    "scripts/widget/widget.js",
+    "scripts/widget/button.js",
+    "scripts/widget/detail-box.js",
+    "scripts/widget/edit-box.js",
+    "scripts/widget/colors.js",
+    "scripts/widget/attachment-box.js",
     "scripts/widget/attachment.js",
     "scripts/widget/post-it.js",
     "scripts/widget/alert.js",

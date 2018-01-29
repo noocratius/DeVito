@@ -20,6 +20,9 @@ var businessModelCanvas = SAGE2_App.extend({
     // enable sage to treat mouse events as sage pointer
     this.passSAGE2PointerAsMouseEvents = true;
 
+    // extends the publish/subscribe pattern
+    EventAggregator.call(this);
+
     // call controller operation depending on received events in canvas
     $(this.element).on('save', function (event, data) {
         // upadte sticky note if already exists an id
@@ -66,6 +69,7 @@ var businessModelCanvas = SAGE2_App.extend({
    * que são então inseridos dentro do elemento DOM correspondente.
    *
    * FIXME -- improve events on canvas elements
+   * FIXME -- style ement should have a id attribute for identification purpose
    * @this Element
    * @param {object} view - Encapsula os dados da chamada via broadcast
    * @param {string} view.content - Conteúdo em HTML do canvas
@@ -85,7 +89,14 @@ var businessModelCanvas = SAGE2_App.extend({
     document.getElementsByTagName('head')[0].appendChild(styleSheet);
 
     // envia evento ao documento indicando que canvas foi carregado
-    $(document).trigger('view-loaded', { app: this, view: this.element });
+    // $(document).trigger('view-loaded', { app: this, view: this.element });
+    $(document).trigger('loaded.view', { app: this, view: this.element });
+
+    new this.AttachmentBox({
+      selector: '.add-widget'
+    })
+    .createWidgets()
+    .open();
 
     $('.canvas-element', _this.element).on('click', function () {
       _this.Attachment.open({

@@ -2,7 +2,7 @@
  * evento de create e de edit, diferente
  */
 
-jQuery(document).on('view-loaded', function(e, data){
+jQuery(document).on('view-loaded', function(_, data){
 
   /**
    * Módulo que anexa anotações no canvas
