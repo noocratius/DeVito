@@ -23,8 +23,10 @@ jQuery(document).on('loaded.view', function (_, data) {
      * @return {Mediator}
      */
     return function Mediator(spec, my) {
-
+      var _this;
       my = my || {};
+
+      _this = this;
 
       // extends EventAggregator pattern
       EventAggregator.call(this);
@@ -43,6 +45,46 @@ jQuery(document).on('loaded.view', function (_, data) {
        */
       var _createWidgets = function _createWidgets() { }
 
+      /**
+       * Defines a getter method for widget element. So receiving a object,
+       * named widget, which is used to define in its inheritance the widgets.
+       * also defining the getters.
+       * @this represents the mediator object
+       * @example usage of method getter
+       *            my.getter({
+       *              'closeButton': _closeButton,
+       *              'removeButton': _removeButton,
+       *              'details': _details,
+       *              'colors': _colors,
+       *              'editBox': _editBox
+       *            });
+       *
+       * @protected
+       * @param {object} widget - specs to build the getters
+       * @return {}
+       */
+      var _getter = function _getter(widgets) {
+
+        my.widgets = widgets;
+
+        for (var property in my.widgets) {
+          // define the getter pattern @example getPropertyName
+          var getterName =
+              'get' + property.charAt(0).toUpperCase() + property.substr(1);
+
+          // bind property name to the actual iteration item
+          (function (property) {
+            _this[getterName] = function () {
+              return my.widgets[property];
+            }
+          })(property);
+        }
+      }
+
+      // define protected interface
+      my.getter = _getter;
+
+      // defines its public interface
       this.app = data.app;
       this.open = _open;
       this.createWidgets = _createWidgets;

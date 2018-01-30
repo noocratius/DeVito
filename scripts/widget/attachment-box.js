@@ -16,18 +16,22 @@ jQuery(document).on('loaded.view', function (_, data) {
      *
      * @extends Mediator
      * @param {object} spec - spec to build the mediator
+     * @param {AttachmentState} [spec.state=NewState] - specify the initial
+     *    box' state
      * @param {string} spec.selector - a selector, in css style, to build the
      *    mediator object defined by the template html object
      * @param {object} [my={}] - shared secrets between inheritance
      * @return {AttachmentBox}
      */
     return function AttachmentBox(spec, my) {
-      var _block, _id, _mode, _this;
-      var _closeButton, _removeButton, _editBox, _details, _colors;
+      var _this, _state;
 
       my = my || {};
 
       Mediator.call(this, spec, my);
+
+      /** @private {AttachmentState} box state according to state pattern */
+      _state = spec.state || new NewState();
 
       my.view = data.view;
       my.$component = $(spec.selector, my.view);
@@ -35,12 +39,11 @@ jQuery(document).on('loaded.view', function (_, data) {
       _this = this;
 
       /**
-       * Open the widget
-       * @param {(PostIt | undefined)} stickyNote - sticky note to be open
+       * Open the widget according to some state
+       * @param {AttachmentState} state - attachment state
        * @return {this}
        */
       var _open = function _open(stickyNote) {
-        // _mo  de = (typeof stickyNote == BMCanvas.PostIt) ? MODE.EDIT : MODE.NEW
         my.$component.show();
 
         return this;
@@ -51,42 +54,52 @@ jQuery(document).on('loaded.view', function (_, data) {
        * @return {this}
        */
       var _createWidgets = function _createWidgets() {
+        var closeButton, removeButton, editBox, details, colors;
 
         // create the widgets
-        _closeButton = new this.app.Button({
+        closeButton = new this.app.Button({
           mediator: this,
           name: 'close',
           selector: '.close',
           container: my.$component
         });
 
-        _removeButton = new this.app.Button({
+        removeButton = new this.app.Button({
           mediator: this,
           name: 'remove',
           selector: '.details > .remove',
           container: my.$component
         });
 
-        _details = new this.app.DetailBox({
+        details = new this.app.DetailBox({
           mediator: this,
           name: 'details',
           selector: '.details',
           container: my.$component
         });
 
-        _colors = new this.app.Colors({
+        colors = new this.app.Colors({
           mediator: this,
           name: 'color',
           selector: '.colors-options .color',
           container: my.$component
         });
 
-        _editBox = new this.app.EditBox({
+        editBox = new this.app.EditBox({
           mediator: this,
           name: 'editbox',
           selector: '.post-it',
           container: my.$component
-        })
+        });
+
+        // define getter method for widgets
+        my.getter({
+          'closeButton': closeButton,
+          'removeButton': removeButton,
+          'details': details,
+          'colors': colors,
+          'editBox': editBox
+        });
 
         // subscribe to events the mediator should operantes on
         this.subscribe('click.close', 'cancel');
@@ -97,7 +110,7 @@ jQuery(document).on('loaded.view', function (_, data) {
         });
 
         this.subscribe('change.color', function (data) {
-          _editBox.setColor(data.color);
+          this.getEditBox().setColor(data.color);
         });
 
         this.subscribe('save', 'save');
@@ -121,12 +134,10 @@ jQuery(document).on('loaded.view', function (_, data) {
        * @return {this}
        */
       var _cancel = function _cancel() {
-        _editBox.setText('');
-        _details.close();
+        this.getEditBox().setText('');
+        this.getDetails().close();
 
         my.$component.hide();
-
-        // reseta os valores
 
         return this;
       }
@@ -141,10 +152,20 @@ jQuery(document).on('loaded.view', function (_, data) {
         return this;
       }
 
+      /**
+       * change the attachment state
+       * @param {AttachmentState} state - new state to be set
+       * @return {this}
+       */
+      var _changeState = function _changeState(state) {
+        _state = state;
+      }
+
       this.open = _open;
       this.createWidgets = _createWidgets;
       this.cancel = _cancel;
       this.save = _save;
+      this.changeState = _changeState;
 
     };
   })(jQuery, data.app.Mediator);
