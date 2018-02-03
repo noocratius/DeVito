@@ -7,6 +7,7 @@ jQuery(document).on('loaded.view', function (_, data) {
   'use strict';
 
   /**
+   * TODO -- implement attachment box method
    * @module widget
    */
   data.app.Mediator = (function () {
@@ -51,13 +52,13 @@ jQuery(document).on('loaded.view', function (_, data) {
        * also defining the getters.
        * @this represents the mediator object
        * @example usage of method getter
-       *            my.getter({
-       *              'closeButton': _closeButton,
-       *              'removeButton': _removeButton,
-       *              'details': _details,
-       *              'colors': _colors,
-       *              'editBox': _editBox
-       *            });
+       *   my.getter({
+       *    'closeButton': _closeButton,
+       *    'removeButton': _removeButton,
+       *    'details': _details,
+       *    'colors': _colors,
+       *     'editBox': _editBox
+       *   });
        *
        * @protected
        * @param {object} widget - specs to build the getters

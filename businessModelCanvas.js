@@ -23,23 +23,42 @@ var businessModelCanvas = SAGE2_App.extend({
     // extends the publish/subscribe pattern
     EventAggregator.call(this);
 
-    // call controller operation depending on received events in canvas
-    $(this.element).on('save', function (event, data) {
-        // upadte sticky note if already exists an id
-      if (data['post-it'].id)
-        _this.updateStickyNote(data['post-it'].id);
-      else
-        _this.attachStickyNote(data['block-id'],
-            data['post-it'], data['author']
-        );
+    // subscribe to events
+    this.subscribe('new.sticky-note', function (data) {
+      this.attachStickyNote(data.block, data.stickyNote);
 
-    }).on('edit-mode', function (event, id) {
-        var postit = _this.canvas.getPostIt(id);
-        _this.Attachment.fillNote(postit);
+    })
+      .subscribe('update.sticky-note', function (data) {
+        this.updateStickyNote(data.stickyNote.id);
+      })
+      .subscribe('delete.sticky-note', function (data) {
+        this.deleteStickyNote(data.id);
+      })
+      .subscribe('edit.sticky-note', function (data) {
+        var _stickyNote = this.canvas.getPostIt(data.id);
 
-    }).on('delete', function (event, id) {
-        _this.deleteStickyNote(id);
-    });
+        this.box.changeState(this.UpdateState.getInstance({
+          stickyNote: _stickyNote
+        })).open();
+      });
+
+    // // call controller operation depending on received events in canvas
+    // $(this.element).on('save', function (event, data) {
+    //     // upadte sticky note if already exists an id
+    //   if (data['post-it'].id)
+    //     _this.updateStickyNote(data['post-it'].id);
+    //   else
+    //     _this.attachStickyNote(data['block-id'],
+    //         data['post-it'], data['author']
+    //     );
+    //
+    // }).on('edit-mode', function (event, id) {
+    //     var postit = _this.canvas.getPostIt(id);
+    //     // _this.Attachment.fillNote(postit);
+    //
+    // }).on('delete', function (event, id) {
+    //     _this.deleteStickyNote(id);
+    // });
   },
 
   draw: function (date) {
@@ -92,17 +111,15 @@ var businessModelCanvas = SAGE2_App.extend({
     // $(document).trigger('view-loaded', { app: this, view: this.element });
     $(document).trigger('loaded.view', { app: this, view: this.element });
 
-    new this.AttachmentBox({
-      selector: '.add-widget'
-    })
-    .createWidgets()
-    .open();
+    // create the attachment box to manages attachments new and updated
+    this.box =
+        new this.AttachmentBox({ selector: '.add-widget' }).createWidgets();
 
-    $('.canvas-element', _this.element).on('click', function () {
-      _this.Attachment.open({
-          'block-id': $(this).data('id'),
-          'author': _this.author
-      });
+    $('.canvas-element', _this.element).on('click', function (_) {
+      _.stopPropagation();
+
+      _this.box.changeState(_this.NewState.getInstance())
+          .open($(this).data('id'));
     });
 
   },
@@ -111,16 +128,15 @@ var businessModelCanvas = SAGE2_App.extend({
    * Anexa um post-it ao canvas
    *
    * @param {int} blockID - Identificador do bloco do canvas
-   * @param {BMCanvas.PostIt} postit - Post-It a ser anexado
-   * @param {BMCanvas.User} author - Criador do post-it
+   * @param {BMCanvas.PostIt} stickyNote - Sticky-note to be inserted
    * @return {undefined}
    */
-  attachStickyNote: function (blockId, postit, author) {
-    var stickyNoteAuthor = new BMCanvas.User(author.name);
-    var stickyNote =
-        new BMCanvas.PostIt(postit['note'],
-            postit['color'],
-            stickyNoteAuthor);
+  attachStickyNote: function (blockId, stickyNote) {
+    // var stickyNoteAuthor = new BMCanvas.User(author.name);
+    // var stickyNote =
+    //     new BMCanvas.PostIt(postit['note'],
+    //         postit['color'],
+    //         stickyNoteAuthor);
 
     this.canvas.attachStickyNote(blockId, stickyNote);
 

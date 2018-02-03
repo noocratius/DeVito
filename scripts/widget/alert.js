@@ -2,7 +2,7 @@
  *
  */
 
-jQuery(document).on('view-loaded', function (event, data) {
+jQuery(document).on('loaded.view', function (event, data) {
 
   /**
    * Módulo que alerta mensagens para os usuários

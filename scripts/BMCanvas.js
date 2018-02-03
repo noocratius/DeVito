@@ -186,7 +186,7 @@ var BMCanvas = (function () {
    */
   function _PostIt(note, color, author, block) {
     this.note = note || '';
-    this.color = color || FFE079;
+    this.color = color || 'FFE079';
     this.createdAt = new Date();
     this.lastModified = new Date();
     this.author = author || null;

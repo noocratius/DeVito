@@ -24,14 +24,22 @@ jQuery(document).on('loaded.view', function (_, data) {
      * @return {AttachmentBox}
      */
     return function AttachmentBox(spec, my) {
-      var _this, _state;
+      var _this, _state, _id;
 
       my = my || {};
 
       Mediator.call(this, spec, my);
 
       /** @private {AttachmentState} box state according to state pattern */
-      _state = spec.state || new NewState();
+      _state = spec.state || new data.app.NewState.getInstance({
+        stickyNote: BMCanvas.PostIt()
+      });
+
+      /** @private {int} identifier of sticky-note currently being used */
+      _id = -1;
+
+      /** @public {int} identifier of block element being edited */
+      this.block = -1;
 
       my.view = data.view;
       my.$component = $(spec.selector, my.view);
@@ -39,15 +47,25 @@ jQuery(document).on('loaded.view', function (_, data) {
       _this = this;
 
       /**
-       * Open the widget according to some state
-       * @param {AttachmentState} state - attachment state
+       * Open the widget according to current state
        * @return {this}
        */
-      var _open = function _open(stickyNote) {
-        my.$component.show();
+      var _open = function _open(block) {
+        this.block = block || -1;
+        _state.open(this);
 
         return this;
       };
+
+      /**
+       * show the attachmento box mediator using the jQuery object to show its
+       * component
+       * @return {this}
+       */
+      var _show = function _show() {
+        my.$component.show();
+        return this;
+      }
 
       /**
        * Creates the widgets and subscribe to its state changes
@@ -102,18 +120,19 @@ jQuery(document).on('loaded.view', function (_, data) {
         });
 
         // subscribe to events the mediator should operantes on
-        this.subscribe('click.close', 'cancel');
-
-        this.subscribe('click.remove', function () {
-          this.publish('click.close');
-          this.app.deleteStickyNote(id);
-        });
-
-        this.subscribe('change.color', function (data) {
-          this.getEditBox().setColor(data.color);
-        });
-
-        this.subscribe('save', 'save');
+        this.subscribe('click.close', function () {
+          this.getEditBox().setText('');
+          this.getDetails().close();
+          this.close();
+        })
+          .subscribe('click.remove', function () {
+            this.publish('click.close');
+            this.app.publish('delete.sticky-note', {id: this.id});
+          })
+          .subscribe('change.color', function (data) {
+            this.getEditBox().setColor(data.color);
+          })
+          .subscribe('save', 'save');
 
         // save the widget' data when clicks inside container
         my.$component.click(function (_) {
@@ -124,30 +143,33 @@ jQuery(document).on('loaded.view', function (_, data) {
         return this;
       }
 
-      // inscreve em um evento quando entrar em modo edição
-      // desinscreve quando salvar
-      // e quando entrar em modo de novo elemento então salva como um novo
-
       /**
-       * Empty all the data inserted in the widget and closes it and the details
-       * box.
+       * Close the component which attachment box belongs to and cancel the data
        * @return {this}
        */
-      var _cancel = function _cancel() {
-        this.getEditBox().setText('');
-        this.getDetails().close();
-
+      var _close = function _close() {
         my.$component.hide();
-
         return this;
       }
 
       /**
        * saves the post-it or update if the text is not empty
+       * FIXME - only saves if text it not empty
        * @return {this}
        */
       var _save = function _save() {
-        this.cancel();
+
+        // save only non empty note
+        if (this.getEditBox().getText()) {
+          _state.save(this);
+        } else {
+          // closes the widget and its details if it's open
+          this.close();
+          this.getDetails().close();
+
+          // alert the user about saving empty note
+          this.app.Alert.show('Can\'t save empty note.');
+        }
 
         return this;
       }
@@ -159,11 +181,16 @@ jQuery(document).on('loaded.view', function (_, data) {
        */
       var _changeState = function _changeState(state) {
         _state = state;
+
+        return this;
       }
 
+
+      this.id = _id;
       this.open = _open;
+      this.show = _show;
       this.createWidgets = _createWidgets;
-      this.cancel = _cancel;
+      this.close = _close;
       this.save = _save;
       this.changeState = _changeState;
 

@@ -1,5 +1,6 @@
 /**
  * Post-it anexados ao canvas
+ * FIXME - improve the code to uml project
  */
 
 jQuery(document).on('postit-loaded', function (e, data) {
@@ -23,9 +24,9 @@ jQuery(document).on('postit-loaded', function (e, data) {
 
     // envia evento de edição caso o botão tenha de edição tenha sido pressionado
     $(_editLabel, _postitWidget).on('click', function (event) {
-
+      event.stopPropagation();
       var id = $(this).parent('.post-it').data('id');
-      $(this).trigger('edit-mode', id);
+      data.app.publish('edit.sticky-note', {'id': id});
     });
 
     return {

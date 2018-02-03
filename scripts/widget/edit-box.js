@@ -29,15 +29,10 @@ jQuery(document).on('loaded.view', function (_, data) {
       var _color;
 
       /** @private string text being edited */
-      var _text = '';
+      var _text;
 
       // extends Widget object
       Widget.call(this, spec, my);
-
-      // prevent bubble events by clicking
-      my.$component.click(function (_) {
-        _.stopPropagation();
-      });
 
       /**
        * sets the color of the box
@@ -47,7 +42,16 @@ jQuery(document).on('loaded.view', function (_, data) {
       var _setColor = function _setColor(color) {
         _color = color;
         my.$component.css('background-color', _color);
+
         return this;
+      }
+
+      /**
+       * gets the color of the box
+       * @return {this}
+       */
+      var _getColor = function _getColor() {
+        return _color;
       }
 
       /**
@@ -58,6 +62,7 @@ jQuery(document).on('loaded.view', function (_, data) {
       var _setText = function _setText(text) {
         _text = text;
         my.$component.val(_text);
+
         return this;
       }
 
@@ -66,10 +71,21 @@ jQuery(document).on('loaded.view', function (_, data) {
        * @return {string}
        */
       var _getText = function _getText() {
+        _text = my.$component.val();
+
         return _text;
       }
 
+      // initializes color
+      _setColor(my.$component.data('color'));
+
+      // prevent bubble events by clicking
+      my.$component.click(function (_) {
+        _.stopPropagation();
+      });
+
       this.setColor = _setColor;
+      this.getColor = _getColor;
       this.setText = _setText;
       this.getText = _getText;
 

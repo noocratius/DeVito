@@ -63,7 +63,7 @@ jQuery(document).on('loaded.view', function (_, data) {
        * @return {this}
        */
       var _setCreatedAt = function _setCreatedAt(createdAt) {
-        _createdAt = dateTimeFormat.format(_createdAt);
+        _createdAt = dateTimeFormat.format(createdAt);
         $('.created-at', my.$component).text(_createdAt);
 
         return this;
