@@ -60,6 +60,12 @@ jQuery(document).on('loaded.view', function (_, data) {
        * @return {this}
        */
       var _save = function _save(box) {
+        var text, color;
+
+        text = box.getEditBox().getText();
+        color = box.getEditBox().getColor();
+
+        // close and empty the edit box
         box.close();
 
         box.getEditBox()
@@ -72,11 +78,19 @@ jQuery(document).on('loaded.view', function (_, data) {
         //FIXME-- verify this code couple
         box.id = -1;
 
-        // set last updated time
-        my.stickyNote.lastModified = new Date();
+        // only update if data didn't change
+        if (text != my.stickyNote.note || color != my.stickyNote.color) {
 
-        console.log(box);
-        box.app.publish('update.sticky-note', {stickyNote: my.stickyNote});
+          // update sticky-note and sends event to sage app
+          my.stickyNote.note = text;
+          my.stickyNote.color = color;
+          my.stickyNote.lastModified = new Date();
+          box.app.publish('update.sticky-note', {stickyNote: my.stickyNote});
+
+        } else {
+          // alert the user what happened
+          box.app.Alert.show('Sticky-note not updated: Data not changed')
+        }
 
         return this;
       }

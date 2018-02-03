@@ -38,9 +38,6 @@ jQuery(document).on('loaded.view', function (_, data) {
       /** @private {int} identifier of sticky-note currently being used */
       _id = -1;
 
-      /** @public {int} identifier of block element being edited */
-      this.block = -1;
-
       my.view = data.view;
       my.$component = $(spec.selector, my.view);
 
@@ -50,8 +47,7 @@ jQuery(document).on('loaded.view', function (_, data) {
        * Open the widget according to current state
        * @return {this}
        */
-      var _open = function _open(block) {
-        this.block = block || -1;
+      var _open = function _open() {
         _state.open(this);
 
         return this;
@@ -124,6 +120,9 @@ jQuery(document).on('loaded.view', function (_, data) {
           this.getEditBox().setText('');
           this.getDetails().close();
           this.close();
+
+          // alert the user widget was closed
+          this.app.Alert.show('Sticky-note closed, nothing was saved');
         })
           .subscribe('click.remove', function () {
             this.publish('click.close');

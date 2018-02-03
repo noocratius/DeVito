@@ -18,8 +18,10 @@
     "scripts/widget/new-state.js",
     "scripts/widget/update-state.js",
     "scripts/widget/attachment-box.js",
+    "scripts/widget/canvas-group.js",
     "scripts/widget/attachment.js",
     "scripts/widget/post-it.js",
+    "scripts/widget/sticky-note.js",
     "scripts/widget/alert.js",
     "scripts/BMCanvas.js"
   ],

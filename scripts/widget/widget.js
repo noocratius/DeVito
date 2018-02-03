@@ -61,9 +61,17 @@ jQuery(document).on('loaded.view', function (_, data) {
         return this;
       }
 
+      /**
+       * returns dom representation of widget
+       * @return {Element}
+       */
+      var _getDOM = function _getDOM() {
+        return my.$component.get(0);
+      }
+
       this.getName = _getName;
       this.notify = _notify;
-
+      this.getDOM = _getDOM;
     };
   })(jQuery);
 });

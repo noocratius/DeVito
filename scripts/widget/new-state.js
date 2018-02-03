@@ -55,8 +55,7 @@ jQuery(document).on('loaded.view', function (_, data) {
         box.close();
 
         box.app.publish('new.sticky-note', {
-            stickyNote: my.stickyNote,
-            block: box.block
+            stickyNote: my.stickyNote
         });
 
         my.stickyNote = new BMCanvas.PostIt();
