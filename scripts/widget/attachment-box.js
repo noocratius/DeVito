@@ -48,6 +48,7 @@ jQuery(document).on('loaded.view', function (_, data) {
        * @return {this}
        */
       var _open = function _open() {
+        this.app.Alert.close();
         _state.open(this);
 
         return this;

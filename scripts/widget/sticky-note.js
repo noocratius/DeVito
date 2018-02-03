@@ -34,8 +34,7 @@ jQuery(document).on('loaded.sticky-note', function (_, data) {
 
       // set jQuery component
       my.$component = $(spec.element);
-      console.log(my.$component);
-
+      
       $note = $('.text', my.$component);
 
 
