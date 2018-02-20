@@ -6,6 +6,7 @@
 
   "dependencies": [
     "scripts/libs/jquery.js",
+    "scripts/libs/require.js",
     "scripts/patterns/mixin.js",
     "scripts/patterns/event-aggregator.js",
     "scripts/widget/mediator.js",

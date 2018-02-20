@@ -11,11 +11,19 @@ var businessModelCanvas = SAGE2_App.extend({
 
     this.SAGE2Init('div', data);
 
-    // create business model canvas model
-    this.canvas = new BMCanvas.Canvas();
+    // configure require.js for script loading, setting up base url
+    require.config({
+      baseUrl: this.resrcPath + 'scripts'
+    });
 
-    // sticky note author
-    this.author = new BMCanvas.User('guest');
+    require(['model/canvas', 'model/user'], function (Canvas, User) {
+
+      // create business model canvas model
+      _this.canvas = new Canvas();
+
+      // set sticky note author
+      _this.author = new User('guest');
+    });
 
     // enable sage to treat mouse events as sage pointer
     this.passSAGE2PointerAsMouseEvents = true;
