@@ -23,15 +23,15 @@ define(['./canvas-element'], function (CanvasElement) {
     this.canvasElements = new Array(9);
 
     // cria os elementos do canvas
-    this.canvasElements[0] = new CanvasElement(1, 'parcerias chave');
-    this.canvasElements[1] = new CanvasElement(2, 'atividades chave');
-    this.canvasElements[2] = new CanvasElement(3, 'recursos chave');
-    this.canvasElements[3] = new CanvasElement(4, 'proposta de Valor');
-    this.canvasElements[4] = new CanvasElement(5, 'relação com o cliente');
-    this.canvasElements[5] = new CanvasElement(6, 'canais');
-    this.canvasElements[6] = new CanvasElement(7, 'segmentos de mercado');
-    this.canvasElements[7] = new CanvasElement(8, 'estruturas de custos');
-    this.canvasElements[8] = new CanvasElement(9, 'fontes de renda');
+    this.canvasElements[0] = new CanvasElement(1, 'Key Partners');
+    this.canvasElements[1] = new CanvasElement(2, 'Key Activities');
+    this.canvasElements[2] = new CanvasElement(3, 'Key Resources');
+    this.canvasElements[3] = new CanvasElement(4, 'Value Propositions');
+    this.canvasElements[4] = new CanvasElement(5, 'Customer Relationships');
+    this.canvasElements[5] = new CanvasElement(6, 'Channels');
+    this.canvasElements[6] = new CanvasElement(7, 'Customer Segments');
+    this.canvasElements[7] = new CanvasElement(8, 'Cost Structure');
+    this.canvasElements[8] = new CanvasElement(9, 'Revenue Streams');
   }
 
   /**
