@@ -5,17 +5,16 @@
 /**
  * @module patterns
  */
-var EventAggregator = (function () {
+define(function () {
 
   /**
    * Constructor that extends into aggregator the publish/subscribe pattern and
    * uses Mixin module to do so
    *
    * @constructor
-   * @param {object} aggregator - aggregator which extends the pattern
    * @return {EventAggregator}
    */
-  return function EventAggregator(aggregator) {
+  return function EventAggregator() {
 
     /**
      * topics registered in aggregator
@@ -95,4 +94,5 @@ var EventAggregator = (function () {
     this.unsubscribe = _unsubscribe;
 
   };
-})(Mixin);
+
+});

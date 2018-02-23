@@ -5,7 +5,7 @@
 /**
  * @module patterns
  */
-var Mixin = (function () {
+define(function () {
 
   /**
    * Augments a object with methods defined in extesion argument using the
@@ -25,4 +25,5 @@ var Mixin = (function () {
     }
     return object;
   }
-})();
+
+});

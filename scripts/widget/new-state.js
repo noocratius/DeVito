@@ -2,13 +2,18 @@
  * @fileoverview defines a state subclass according to state pattern
  */
 
-jQuery(document).on('loaded.view', function (_, data) {
-  'use strict';
+'use strict';
 
-  /**
-   * @module widget
-   */
-  data.app.NewState = (function ($, Widget) {
+/**
+ * @module widget
+ */
+define(
+    [
+      './attachment-state',
+      'model/user',
+      'model/sticky-note'
+    ],
+      function(AttachmentState, User, StickyNote){
 
     /**
      * Represents a state which attachment box can be when a new sticky-note is
@@ -16,7 +21,7 @@ jQuery(document).on('loaded.view', function (_, data) {
      * @constructor
      * @extends AttachmentState
      * @param {object} spec - specs to build the object uses in the inheritance
-     * @param {BMCanvas.PostIt} spec.stickyNote - sticky-note the state works on
+     * @param {StickyNote} spec.stickyNote - sticky-note the state works on
      * @param {object} my - shared secrets between inheritance
      * @return {NewState}
      */
@@ -34,7 +39,7 @@ jQuery(document).on('loaded.view', function (_, data) {
        */
       var _open = function _open(box) {
         box.show();
-        my.stickyNote.author = new BMCanvas.User(box.app.author.name, box.app.author.email);
+        my.stickyNote.author = new User(box.app.author.name, box.app.author.email);
 
         return this;
       }
@@ -58,7 +63,7 @@ jQuery(document).on('loaded.view', function (_, data) {
             stickyNote: my.stickyNote
         });
 
-        my.stickyNote = new BMCanvas.PostIt();
+        my.stickyNote = new StickyNote();
 
         return this;
       }
@@ -85,7 +90,7 @@ jQuery(document).on('loaded.view', function (_, data) {
       getInstance: function (spec, my) {
 
         if (!_instance) {
-          spec.stickyNote = new BMCanvas.PostIt();
+          spec.stickyNote = new StickyNote();
           _instance = new _NewState(spec, my);
 
         }
@@ -96,5 +101,4 @@ jQuery(document).on('loaded.view', function (_, data) {
 
     return _static;
 
-  })(jQuery, data.app.Widget);
 });

@@ -5,24 +5,7 @@
   "height": 600,
 
   "dependencies": [
-    "scripts/libs/jquery.js",
-    "scripts/libs/require.js",
-    "scripts/patterns/mixin.js",
-    "scripts/patterns/event-aggregator.js",
-    "scripts/widget/mediator.js",
-    "scripts/widget/widget.js",
-    "scripts/widget/button.js",
-    "scripts/widget/detail-box.js",
-    "scripts/widget/edit-box.js",
-    "scripts/widget/colors.js",
-    "scripts/widget/attachment-state.js",
-    "scripts/widget/new-state.js",
-    "scripts/widget/update-state.js",
-    "scripts/widget/attachment-box.js",
-    "scripts/widget/canvas-group.js",
-    "scripts/widget/sticky-note.js",
-    "scripts/widget/alert.js",
-    "scripts/BMCanvas.js"
+    "scripts/libs/require.js"
   ],
 
   "plugin": "plugin.js",

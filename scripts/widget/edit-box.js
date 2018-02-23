@@ -2,93 +2,92 @@
  * @fileoverview defines a colleague for sticky note attachment mediator
  */
 
-jQuery(document).on('loaded.view', function (_, data) {
-  'use strict';
+'use strict';
+
+/**
+ * @module widget
+ */
+define(['./widget'], function(Widget){
 
   /**
-   * @module widget
+   * Represents a box for editing purposes, normally represented by a input
+   * element on the DOM. It's a colleague object for the AttachmentBox
+   * mediator
+   *
+   * @constructor
+   * @extends Widget
+   * @param {object} spec - specs to build the object buy its inheritance
+   * @param {object} my - shared secrets between inheritance
+   * @return {EditBox}
    */
-  data.app.EditBox = (function ($, Widget) {
+  return function EditBox(spec, my) {
+
+    my = my || {};
+
+    /** @private {string} color of box, also the sticky note */
+    var _color;
+
+    /** @private string text being edited */
+    var _text;
+
+    // extends Widget object
+    Widget.call(this, spec, my);
 
     /**
-     * Represents a box for editing purposes, normally represented by a input
-     * element on the DOM. It's a colleague object for the AttachmentBox
-     * mediator
-     *
-     * @constructor
-     * @extends Widget
-     * @param {object} spec - specs to build the object buy its inheritance
-     * @param {object} my - shared secrets between inheritance
-     * @return {EditBox}
+     * sets the color of the box
+     * @param {string} color - color to be set
+     * @return {this}
      */
-    return function EditBox(spec, my) {
+    var _setColor = function _setColor(color) {
+      _color = color;
+      my.$component.css('background-color', _color);
 
-      my = my || {};
+      return this;
+    }
 
-      /** @private {string} color of box, also the sticky note */
-      var _color;
+    /**
+     * gets the color of the box
+     * @return {this}
+     */
+    var _getColor = function _getColor() {
+      return _color;
+    }
 
-      /** @private string text being edited */
-      var _text;
+    /**
+     * sets the text in the box
+     * @param {string} text - text to be set
+     * @return {this}
+     */
+    var _setText = function _setText(text) {
+      _text = text;
+      my.$component.val(_text);
 
-      // extends Widget object
-      Widget.call(this, spec, my);
+      return this;
+    }
 
-      /**
-       * sets the color of the box
-       * @param {string} color - color to be set
-       * @return {this}
-       */
-      var _setColor = function _setColor(color) {
-        _color = color;
-        my.$component.css('background-color', _color);
+    /**
+     * returns the text in the box
+     * @return {string}
+     */
+    var _getText = function _getText() {
+      _text = my.$component.val();
 
-        return this;
-      }
+      return _text;
+    }
 
-      /**
-       * gets the color of the box
-       * @return {this}
-       */
-      var _getColor = function _getColor() {
-        return _color;
-      }
+    // initializes color
+    _setColor(my.$component.data('color'));
 
-      /**
-       * sets the text in the box
-       * @param {string} text - text to be set
-       * @return {this}
-       */
-      var _setText = function _setText(text) {
-        _text = text;
-        my.$component.val(_text);
+    // prevent bubble events by clicking
+    my.$component.click(function (_) {
+      _.stopPropagation();
+    });
 
-        return this;
-      }
+    this.setColor = _setColor;
+    this.getColor = _getColor;
+    this.setText = _setText;
+    this.getText = _getText;
 
-      /**
-       * returns the text in the box
-       * @return {string}
-       */
-      var _getText = function _getText() {
-        _text = my.$component.val();
+  };
 
-        return _text;
-      }
-
-      // initializes color
-      _setColor(my.$component.data('color'));
-
-      // prevent bubble events by clicking
-      my.$component.click(function (_) {
-        _.stopPropagation();
-      });
-
-      this.setColor = _setColor;
-      this.getColor = _getColor;
-      this.setText = _setText;
-      this.getText = _getText;
-
-    };
-  })(jQuery, data.app.Widget);
 });

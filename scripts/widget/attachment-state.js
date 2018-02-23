@@ -6,17 +6,17 @@
 /**
  * @module widget
  */
-var AttachmentState = (function () {
+define(function(){
 
   /**
    * Represents a state object for attachment mediator
    * @constructor
    * @param {object} spec - specs to build the state object
-   * @param {BMCanvas.PostIt} spec.stickyNote - sticky-note to work with state
+   * @param {StickyNote} spec.stickyNote - sticky-note to work with state
    * @param {object} [my={}] - secrets shared between inheritance
    * @return {AttachmentState}
    */
-  var _AttachmentState = function _AttachmentState(spec, my) {
+  return function AttachmentState(spec, my) {
     my = my || {};
 
     // set protected variables
@@ -41,7 +41,7 @@ var AttachmentState = (function () {
 
     /**
      * sets sticky-note to be worked its state
-     * @param {BMCanvas.PostIt} stickyNote
+     * @param {StickyNote} stickyNote
      * @return {this}
      */
     var _setStickyNote = function _setStickyNote(stickyNote) {
@@ -56,6 +56,4 @@ var AttachmentState = (function () {
     this.setStickyNote = _setStickyNote;
 
   }
-
-  return _AttachmentState;
-})();
+});

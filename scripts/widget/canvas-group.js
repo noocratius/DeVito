@@ -2,130 +2,138 @@
  * @fileoverview define widget colleage for mediator pattern
  */
 
-jQuery(document).on('loaded.view', function (_, data) {
-  'use strict';
+'use strict';
 
-  /**
-   * @module widget
-   */
-  data.app.CanvasGroup = (function ($, Widget) {
+/**
+ * @module widget
+ */
+define(
+    [
+      'jquery',
+      'sage',
+      './widget',
+      './sticky-note'
+    ],
+      function($, sage, Widget, StickyNote){
 
-    /**
-     * Represents a single canvas element block, a colleague for sage app which
-     * mediates selected block
-     * @constructor
-     * @extends Widget
-     * @param {object} spec - specs to build the object uses in the inheritance
-     * @param {object} my - shared secrets between inheritance
-     * @return {CanvasGroup}
-     */
-    return function CanvasGroup(spec, my) {
-      var _selected;
+        /**
+         * Represents a single canvas element block, a colleague for sage app
+         * which mediates selected block
+         * @constructor
+         * @extends Widget
+         * @param {object} spec - specs to build the object uses in the
+         *    inheritance
+         * @param {object} my - shared secrets between inheritance
+         * @return {CanvasGroup}
+         */
+        return function CanvasGroup(spec, my) {
+          var _selected;
 
-      spec = spec || {};
-      my = my || {};
+          spec = spec || {};
+          my = my || {};
+
+          // extends widget object
+          Widget.call(this, spec, my);
+
+          /**
+           * returns the actual selected canvas block
+           */
+          var _getSelected = function _getSelected() {
+            return _selected;
+          }
+
+          /**
+           * returns the jQuery element repersenting the sticky-note
+           * @private
+           * @param {int} id - identifier to be search for
+           * @return {widget.StickyNote}
+           */
+          var _getStickyNoteWidget = function _getStickyNoteWidget(id) {
+
+            var $stickyNote = $('.post-it', my.$component).filter(function () {
+              return $(this).data('id') === id;
+            });
+
+            return new StickyNote({
+              selector: '.post-it',
+              container: my.$component,
+              name: 'sticky-note',
+              mediator: sage,
+              element: $stickyNote
+            });
+          }
 
 
-      // extends widget object
-      Widget.call(this, spec, my);
+          /**
+           * append a sticky-note to selected block
+           * @param {StickyNote} stickyNote - sticky-note to be appended
+           * @return {this}
+           */
+          var _appendStickyNote = function _appendStickyNote(stickyNote) {
 
-      /**
-       * returns the actual selected canvas block
-       */
-      var _getSelected = function _getSelected() {
-        return _selected;
-      }
+            var $body, stickyNoteWidget;
 
-      /**
-       * returns the jQuery element repersenting the sticky-note
-       * @param {int} id - identifier to be search for
-       * @return {widget.StickyNote}
-       */
-      var _getStickyNoteWidget = function _getStickyNoteWidget(id) {
+            stickyNoteWidget = new StickyNote({
+              selector: '.post-it',
+              container: my.$component,
+              name: 'sticky-note',
+              mediator: sage
+            });
 
-        var $stickyNote = $('.post-it', my.$component).filter(function () {
-          return $(this).data('id') === id;
-        });
+            // fill data in the widget
+            stickyNoteWidget.setNote(stickyNote.note);
+            stickyNoteWidget.setColor(stickyNote.color);
+            stickyNoteWidget.setID(stickyNote.id);
 
-        return new data.app.StickyNote({
-          selector: '.post-it',
-          container: my.$component,
-          name: 'sticky-note',
-          mediator: data.app,
-          element: $stickyNote
-        });
-      }
+            $body =
+                $('.canvas-body-element', my.$component).filter(function (index, element) {
+                  return $(element).parent(my.$component).data('id') == _getSelected();
+                });
 
+            $body.append(stickyNoteWidget.getDOM());
 
-      /**
-       * append a sticky-note to selected block
-       * @param {BMCanvas.PostIt} stickyNote - sticky-note to be appended
-       * @return {this}
-       */
-      var _appendStickyNote = function _appendStickyNote(stickyNote) {
+            return this;
+          }
 
-        var $body, stickyNoteWidget;
+          /**
+           * updates a sticky-note on selected block specify by sticky-note' id
+           * @param {model.StickyNote} stickyNote - sticky-note to be updated
+           * @return {this}
+           */
+          var _updateStickyNote = function _updateStickyNote(stickyNote) {
+            var stickyNoteWidget = _getStickyNoteWidget(stickyNote.id);
 
-        stickyNoteWidget = new data.app.StickyNote({
-          selector: '.post-it',
-          container: my.$component,
-          name: 'sticky-note',
-          mediator: data.app
-        });
+            stickyNoteWidget.setNote(stickyNote.note);
+            stickyNoteWidget.setColor(stickyNote.color);
 
-        // fill data in the widget
-        stickyNoteWidget.setNote(stickyNote.note);
-        stickyNoteWidget.setColor(stickyNote.color);
-        stickyNoteWidget.setID(stickyNote.id);
+            return this;
+          }
 
-        $body = $('.canvas-body-element', my.$component).filter(function (index, element) {
-          return $(element).parent(my.$component).data('id') == _getSelected();
-        });
+          /**
+           * delete a sticky-note by its id
+           * @param {StickyNote} stickyNote - sticky-note to be deleted
+           * @return {this}
+           */
+          var _removeStickyNote = function _removeStickyNote(stickyNote) {
+            $(_getStickyNoteWidget(stickyNote.id).getDOM()).remove();
+            return this;
+          }
 
-        $body.append(stickyNoteWidget.getDOM());
+          var _this = this;
 
-        return this;
-      }
+          // set the selected when jQuery $component receive a click event
+          my.$component.click(function (_) {
+            _.stopPropagation();
+            _selected = $(this).data('id');
+            _this.notify('selected.canvas', {id: _selected});
+          });
 
-      /**
-       * updates a sticky-note on selected block specify by sticky-note' id
-       * @param {BMCanvas.PostIt} stickyNote - sticky-note to be updated
-       * @return {this}
-       */
-      var _updateStickyNote = function _updateStickyNote(stickyNote) {
-        var stickyNoteWidget = _getStickyNoteWidget(stickyNote.id);
+          // set public interface
+          this.getSelected = _getSelected;
+          this.appendStickyNote = _appendStickyNote;
+          this.updateStickyNote = _updateStickyNote;
+          this.removeStickyNote = _removeStickyNote;
 
-        stickyNoteWidget.setNote(stickyNote.note);
-        stickyNoteWidget.setColor(stickyNote.color);
+        };
 
-        return this;
-      }
-
-      /**
-       * delete a sticky-note by a id
-       * @param {BMCanvas.PostIt} stickyNote - sticky-note to be deleted
-       * @return {this}
-       */
-      var _removeStickyNote = function _removeStickyNote(stickyNote) {
-        $(_getStickyNoteWidget(stickyNote.id).getDOM()).remove();
-        return this;
-      }
-
-      var _this = this;
-
-      // set the selected when jQuery $component receive a click event
-      my.$component.click(function (_) {
-        _.stopPropagation();
-        _selected = $(this).data('id');
-        _this.notify('selected.canvas', {id: _selected});
-      });
-
-      // set public interface
-      this.getSelected = _getSelected;
-      this.appendStickyNote = _appendStickyNote;
-      this.updateStickyNote = _updateStickyNote;
-      this.removeStickyNote = _removeStickyNote;
-
-    };
-  })(jQuery, data.app.Widget);
 });

@@ -13,55 +13,71 @@ var businessModelCanvas = SAGE2_App.extend({
 
     // configure require.js for script loading, setting up base url
     require.config({
-      baseUrl: this.resrcPath + 'scripts'
+      baseUrl: this.resrcPath + 'scripts',
+      paths: {
+        jquery: 'libs/jquery-3.3.1.min'
+      }
     });
 
-    require(['model/canvas', 'model/user'], function (Canvas, User) {
+    // define this app to be on its on module
+    define('sage', this);
 
-      // create business model canvas model
-      _this.canvas = new Canvas();
+    require(
+        [
+          'model/canvas',
+          'model/user',
+          'patterns/event-aggregator',
+          'widget/new-state',
+          'widget/update-state'
+        ],
+          function (Canvas, User, EventAggregator, NewState, UpdateState) {
 
-      // set sticky note author
-      _this.author = new User('guest');
-    });
+            // create business model canvas model
+            _this.canvas = new Canvas();
+
+            // set sticky note author
+            _this.author = new User('guest');
+
+            // extends the publish/subscribe pattern on sage app
+            EventAggregator.call(_this);
+
+            // call controller operation depending on received events in canvas
+            _this.subscribe('new.sticky-note', function (data) {
+
+              var group = this.sections.getSelected();
+              this.attachStickyNote(group, data.stickyNote);
+
+            })
+
+              .subscribe('update.sticky-note', function (data) {
+
+                this.updateStickyNote(data.stickyNote.id);
+              })
+
+              .subscribe('delete.sticky-note', function (data) {
+                this.deleteStickyNote(data.id);
+              })
+
+              // edit mode entering on selecting a single sticky-note
+              .subscribe('click.edit', function (data) {
+                var _stickyNote = this.canvas.getPostIt(data.id);
+
+                // set new box attachment state
+                this.box.changeState(UpdateState.getInstance({
+                  stickyNote: _stickyNote
+                })).open();
+              })
+
+              // event to canvas block element selected
+              .subscribe('selected.canvas', function (data) {
+                this.box.changeState(NewState.getInstance()).open(data.id);
+              });
+
+        });
+
 
     // enable sage to treat mouse events as sage pointer
     this.passSAGE2PointerAsMouseEvents = true;
-
-    // extends the publish/subscribe pattern
-    EventAggregator.call(this);
-
-    // call controller operation depending on received events in canvas
-    this.subscribe('new.sticky-note', function (data) {
-
-      var group = this.sections.getSelected();
-      this.attachStickyNote(group, data.stickyNote);
-
-    })
-
-      .subscribe('update.sticky-note', function (data) {
-
-        this.updateStickyNote(data.stickyNote.id);
-      })
-
-      .subscribe('delete.sticky-note', function (data) {
-        this.deleteStickyNote(data.id);
-      })
-
-      // edit mode entering on selecting a single sticky-note
-      .subscribe('click.edit', function (data) {
-        var _stickyNote = this.canvas.getPostIt(data.id);
-
-        // set new box attachment state
-        this.box.changeState(this.UpdateState.getInstance({
-          stickyNote: _stickyNote
-        })).open();
-      })
-
-      // event to canvas block element selected
-      .subscribe('selected.canvas', function (data) {
-        this.box.changeState(_this.NewState.getInstance()).open(data.id);
-      });
 
   },
 
@@ -91,9 +107,7 @@ var businessModelCanvas = SAGE2_App.extend({
    * broadcast pelo framework onde é carregado seu html e estilo correspondente
    * que são então inseridos dentro do elemento DOM correspondente.
    *
-   * FIXME -- improve events on canvas elements
-   * FIXME -- style ement should have a id attribute for identification purpose
-   * @this Element
+   * FIXME -- style element should have a id attribute for identification purpose
    * @param {object} view - Encapsula os dados da chamada via broadcast
    * @param {string} view.content - Conteúdo em HTML do canvas
    * @param {string} view.style - Conteúdo da folha de estilo carregada
@@ -111,37 +125,45 @@ var businessModelCanvas = SAGE2_App.extend({
     styleSheet.innerHTML = view.style;
     document.getElementsByTagName('head')[0].appendChild(styleSheet);
 
-    // envia evento ao documento indicando que canvas foi carregado
-    $(document).trigger('loaded.view', { app: this, view: this.element });
 
     // create the attachment box to manages attachments new and updated
-    this.box =
-        new this.AttachmentBox({ selector: '.add-widget' }).createWidgets();
+    require(
+      [
+        'widget/attachment-box',
+        'widget/canvas-group'
+      ],
+        function (AttachmentBox, CanvasGroup) {
+          _this.box =
+              new AttachmentBox({ selector: '.add-widget' }).createWidgets();
 
-    this.sections = new this.CanvasGroup({
-      mediator: this,
-      selector: '.canvas-element',
-      container: this.element,
-      name: 'canvas-group'
-    });
+          _this.sections = new CanvasGroup({
+            mediator: _this,
+            selector: '.canvas-element',
+            container: _this.element,
+            name: 'canvas-group'
+          });
+        }
+    );
+
   },
 
   /**
    * Attach sticky-note to canvas
    *
-   * @param {int} blockID - Identificador do bloco do canvas
-   * @param {BMCanvas.PostIt} stickyNote - Sticky-note to be inserted
+   * @param {int} blockID - Group identifier of canvas
+   * @param {StickyNote} stickyNote - Sticky-note to be inserted
    * @return {undefined}
    */
   attachStickyNote: function (blockId, stickyNote) {
 
     this.canvas.attachStickyNote(blockId, stickyNote);
 
-    // adiciona post-it ao bloco do canvas, via broadcast
-    this.applicationRPC({
-      view: 'post-it',
-      data: { 'id': stickyNote.id }
-    }, 'loadStickyNote', false);
+    // attach sticky-note to canvas ui
+    this.sections.appendStickyNote(stickyNote);
+
+    require(['widget/alert'], function (alert) {
+      alert.show('sticky-note attached in \'' + stickyNote.block.name + '\'');
+    });
 
   },
 
@@ -154,18 +176,22 @@ var businessModelCanvas = SAGE2_App.extend({
    */
   updateStickyNote: function (id) {
 
-    var stickyNote = this.canvas.getPostIt(id);
+    var stickyNote = this.canvas.getPostIt(id),
+        _this = this;
 
-    if (stickyNote) {
+    require(['widget/alert'], function (alert) {
 
-      this.sections.updateStickyNote(stickyNote);
-      this.Alert.show('Post-it modificado em \'' + stickyNote.block.name + '\'');
-    } else {
-      this.Alert.show('sticky-note doens\'t exists');
-    }
+      if (stickyNote) {
+        _this.sections.updateStickyNote(stickyNote);
+        alert.show('Sticky-note modified in \'' + stickyNote.block.name + '\'');
+      } else {
+        alert.show('sticky-note doens\'t exists');
+      }
 
-    // envia mensagem dzendo que post-it foi modificado
-    this.Alert.show('Post-it modificado em \'' + stickyNote.block.name + '\'');
+      // envia mensagem dzendo que post-it foi modificado
+      alert.show('Sticky-note modified in \'' + stickyNote.block.name + '\'');
+
+    });
 
   },
 
@@ -189,38 +215,17 @@ var businessModelCanvas = SAGE2_App.extend({
       this.canvas.deletePostIt(stickyNote);
 
       // alert the user about the ocurrency
-      this.Alert.show('Post-it removido de  \'' + stickyNote.block.name + '\' com sucesso');
+      require(['widget/alert'], function (alert) {
+        alert.show('sticky-note removed from  \'' +
+            stickyNote.block.name + '\' sucessfully');
+      });
 
     } else {
-      this.Alert.show('Sticky-note doesn\'t exist')
+
+      require(['widget/alert'], function (alert) {
+        alert.show('Sticky-note doesn\'t exist');
+      });
     }
   },
-
-  /**
-   * Carrega o post-it no canvas, no bloco especifico de acordo com o
-   * identificador do post-it, passado como argumento. Para isso faz uso do
-   * módulo PostIt, para anexar o lembrete no canvas.
-   *
-   * @param {object} view - Encapsula os dados passados via broadcast
-   * @param {string} view.content - Elemento carregado
-   * @param {string} view.data.id - Identificador do post-it anexado
-   * @return {undefined}
-   */
-  loadStickyNote: function (view) {
-
-    var stickyNote = this.canvas.getPostIt(view.data.id);
-
-    // sends canvas and sticky-note DOM elements and the sage app to be loaded
-    $(document).trigger('loaded.sticky-note', {
-      element: $(view.content),
-      app: this,
-      view: this.element
-    });
-
-    // attach sticky-note to canvas ui
-    this.sections.appendStickyNote(stickyNote);
-    this.Alert.show('sticky-note attached in \'' + stickyNote.block.name + '\'');
-
-  }
 
 });
