@@ -1,14 +1,17 @@
-# Guia de Uso - Business Model Canvas
+# Usage guide - Business Model Canvas
 
 ![logo](https://github.com/peterleiva/DeVito/blob/develop/bmc.png)
 
-O **Business Model Canvas** ou "*Quadro de Modelo de Negócios*" é uma ferramenta de gerenciamento estratégico, que permite planejar as principais funções de um negócio e suas relações. Ao fornecer uma visão holística e flexível do modelo de negócios, o Quadro auxilia nos processos de criação, diferenciação e inovação do seu modelo de negócios.
-Este projeto implementa o Business Model Canvas para a plataforma de colaboração remota **SAGE2**
+The **Business Model Canvas** is a strategic management tool that allows planning the main activities of a business and its relations. Since it provides and holistic and flexible view of the business model, the Canvas helps with creation processes, differentiation and innovation of your business model. This project implements the Business Model Canvas to the remote collaboration platform **SAGE2**.
 
-## Instalação
+## Installation
 
-O projeto pode ser instalado na própria instalação do SAGE2 em  `<diretório_sage2>/public/uploads/apps`  ou `Documents/SAGE2_Media/apps`  apenas clonando o projeto dentro do diretório,  `git clone https://github.com/peterleiva/DeVito`. Outra forma de instalar é descompactando o `.zip`  do projeto no diretório de escolha
+The project can be installed on SAGE2 own setup on `<sage2_folder>/public/uploads/apps` or `Documents/SAGE2_Media/apps` by simply cloning the project inside the folder,  `git clone https://github.com/peterleiva/DeVito`. Another way of installing it is by unpacking the project's `.zip` file into any folder.
 
-## Rodar
+## Running
 
-Assim que a instalação for concluída a aplicação deve aparecer em **APP Launcher** no painel do SAGE2 ( *Web UI* ) caso não apareça o app pode ser encontrado pelo **Media Browser**. Então pelo APP Launcher será possível encontrar pelo app **Business Model Canvas**.
+As soon as the setup has finished, the application should appear in **APP Launcher** on SAGE2's panel ( *Web UI* ). In case it doesn't show, the app can be found via **Media Browser**. This way, you will be able to find the **Business Model Canvas** app on the APP Launcher.
+
+## Translations
+
+  ![br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) [Brazilian Portuguese](https://github.com/peterleiva/README_pt-br.md)
