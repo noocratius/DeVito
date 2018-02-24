@@ -212,28 +212,31 @@ var businessModelCanvas = SAGE2_App.extend({
    */
   deleteStickyNote: function (id) {
 
-    var stickyNote = this.canvas.getPostIt(id);
+    var stickyNote = this.canvas.getPostIt(id),
+        _this = this;
 
-    if (stickyNote) {
+    require(['widget/alert'], function (alert) {
+      var alertBox = new alert({
+        sage: _this
+      });
 
-      // remove from canvas UI
-      this.sections.removeStickyNote(stickyNote);
+      if (stickyNote) {
 
-      // remove do canvas model
-      this.canvas.deletePostIt(stickyNote);
+        // remove from canvas UI
+        _this.sections.removeStickyNote(stickyNote);
 
-      // alert the user about the ocurrency
-      require(['widget/alert'], function (alert) {
-        new alert({sage: _this}).show('sticky-note removed from  \'' +
+        // remove do canvas model
+        _this.canvas.deletePostIt(stickyNote);
+
+        // alert the user about the ocurrency
+        alertBox.show('sticky-note removed from  \'' +
             stickyNote.block.name + '\' sucessfully');
-      });
 
-    } else {
+      } else {
+        alertBox.show('Sticky-note doesn\'t exist');
+      }
+    });
 
-      require(['widget/alert'], function (alert) {
-        new alert({sage: _this}).show('Sticky-note doesn\'t exist');
-      });
-    }
   },
 
 });

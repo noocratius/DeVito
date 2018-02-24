@@ -141,7 +141,7 @@ define(
             })
               .subscribe('click.remove', function () {
                 this.publish('click.close');
-                this.app.publish('delete.sticky-note', {id: this.id});
+                this.sage.publish('delete.sticky-note', {id: this.id});
               })
               .subscribe('change.color', function (data) {
                 this.getEditBox().setColor(data.color);
