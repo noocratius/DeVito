@@ -8,7 +8,6 @@
   * além de importar a arquitetura do projeto
   *
   */
-@import "http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css";
 /*!
  * Arquivo partial sass que coleta todos os componentes da estrutura
  * responsável por estilos de terceiros

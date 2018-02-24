@@ -39,7 +39,9 @@ define(
        */
       var _open = function _open(box) {
         box.show();
-        my.stickyNote.author = new User(box.app.author.name, box.app.author.email);
+
+        my.stickyNote.author =
+            new User(box.sage.author.name, box.sage.author.email);
 
         return this;
       }
@@ -59,7 +61,7 @@ define(
         box.getEditBox().setText('');
         box.close();
 
-        box.app.publish('new.sticky-note', {
+        box.sage.publish('new.sticky-note', {
             stickyNote: my.stickyNote
         });
 

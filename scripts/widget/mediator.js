@@ -5,9 +5,7 @@
 
 'use strict';
 
-define(
-    ['sage',
-        'patterns/event-aggregator'], function (sage, EventAggregator) {
+define(['patterns/event-aggregator'], function (EventAggregator) {
 
   /**
    * Constructor defines virtual members that all mediator must implement
@@ -17,6 +15,7 @@ define(
    * @constructor
    * @extends EventAggregator
    * @param {object} [spec] - specification to build the mediators
+   * @param {object} [spec.sage] - sage app instance
    * @param {object} [my={}] - shared secrets between extended mediators
    * @return {Mediator}
    */
@@ -83,7 +82,7 @@ define(
     my.getter = _getter;
 
     // defines its public interface
-    this.app = sage;
+    this.sage = spec.sage;
     this.open = _open;
     this.createWidgets = _createWidgets;
 

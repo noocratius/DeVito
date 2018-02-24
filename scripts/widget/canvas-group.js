@@ -10,11 +10,10 @@
 define(
     [
       'jquery',
-      'sage',
       './widget',
       './sticky-note'
     ],
-      function($, sage, Widget, StickyNote){
+      function($, Widget, StickyNote){
 
         /**
          * Represents a single canvas element block, a colleague for sage app
@@ -36,7 +35,7 @@ define(
           Widget.call(this, spec, my);
 
           /**
-           * returns the actual selected canvas block
+           * returns the last selected canvas block
            */
           var _getSelected = function _getSelected() {
             return _selected;
@@ -58,7 +57,7 @@ define(
               selector: '.post-it',
               container: my.$component,
               name: 'sticky-note',
-              mediator: sage,
+              mediator: my.mediator,
               element: $stickyNote
             });
           }
@@ -77,7 +76,7 @@ define(
               selector: '.post-it',
               container: my.$component,
               name: 'sticky-note',
-              mediator: sage
+              mediator: my.mediator
             });
 
             // fill data in the widget

@@ -1,61 +1,81 @@
 /**
- * @fileoverview defines a alert widget
+ * @fileoverview defines a alert widget which shows messages to sage app
  */
 
-// jQuery(document).on('loaded.view', function (event, data) {
 'use strict';
 
 /**
- * Módulo que alerta mensagens para os usuários
- *
  * @module widget
  */
-define(['jquery', 'sage'], function ($, sage) {
+define(['jquery'], function ($) {
 
-  var _view = $(sage.element);
-  var _alert = $('.alert', _view);
-  var _closeButton = $('.close', _alert);
-  var _text = $('.text', _alert);
-  var _time = 3000; // tempo em milisegundos que o alerta deve desaparecer
+  /**
+   * Represents a Alert class to show messages to users
+   *
+   * @param {object} spec - specs to build the alert widget
+   * @param {object} spec.sage - sage app instance
+   * @param {object} [my={}] - shared secrets between inheritance instances
+   * @return {Alert}
+   */
+  function Alert(spec, my) {
+    var $alert, $closeButton, $text, _time;
 
-  // fecha o alerta caso o botão de fechar tenha sido apertado
-  _closeButton.on('click', function (event) {
-    event.stopPropagation();
-    _alert.fadeOut();
-  });
+    /** @private {int} time in miliseconds which alerts should appers */
+    _time = 3000;
 
-  // fecha o alerta no tempo especificado
-  _alert.on('close', function (event, time) {
-    event.stopPropagation();
-    setTimeout(function () {
-      _closeButton.trigger('click');
-    }, time);
-  });
+    /** @private {jquery} jQuery object representing the alert */
+    $alert = $('.alert', spec.sage.element);
 
-  return {
+    /** @private {jquery} jQuery object representing alert' close button */
+    $closeButton = $('.close', $alert);
+
+    /** @private {jquery} jQuery object representing text inside the alert */
+    $text = $('.text', $alert);
+
+    // closes the widget in case the widget is pressed
+    $closeButton.on('click', function (_) {
+      _.stopPropagation();
+      $alert.fadeOut();
+    });
+
+    // closes the button in certain time
+    $alert.on('close', function (_, time) {
+      _.stopPropagation();
+
+      setTimeout(function () {
+        $closeButton.trigger('click');
+      }, time);
+    });
 
     /**
      * mostra a mensagem de alerta no canvas
-     *
-     * @param {string} message - Mensagem a ser exibida
+     * TODO -- implement alert type
+     * @param {string} message - message to show the users
+     * @param {string} type - message type
      */
-    show: function (message) {
-      _text.text(message);
-      _alert.fadeIn();
-      _alert.trigger('close', _time);
-    },
+    var _show = function _show(message, type) {
+      $text.text(message);
+      $alert.fadeIn();
+      $alert.trigger('close', _time);
+    }
 
     /**
      * Fecha o alerta de acordo com o tempo especificado em milisegundos
      *
      * @param {int} time - Tempo, em milisegundos, que deve fechar o alerta
      */
-    close: function (time) {
+    var _close = function _close(time) {
       var timeOut = time || 0;
 
-      _alert.trigger('close', timeOut);
+      $alert.trigger('close', timeOut);
     }
-  };
+
+
+    this.show = _show;
+    this.close = _close;
+
+  }
+
+  return Alert;
 
 });
-// });

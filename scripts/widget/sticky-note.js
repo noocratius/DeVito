@@ -12,10 +12,11 @@ define(
     [
       'jquery',
       'sage',
+      'showdown',
       './widget',
       'patterns/event-aggregator'
     ],
-    function($, sage, Widget, EventAggregator){
+    function($, sage, showdown, Widget, EventAggregator){
 
       /** @const {string} TEMPLATE defines sticky-note template path */
       const TEMPLATE_PATH = sage.resrcPath + 'view/html/post-it.html';
@@ -68,13 +69,16 @@ define(
 
 
         /**
-         * set the sticky-note' note
+         * set the sticky-note' note using markdown module 'showdown'
          * @param {string} note
          * @return {this}
          */
         var _setNote = function _setNote(note) {
-          $note.text(note);
           _note = note;
+
+          // set html according to markdown module
+          var converter = new showdown.Converter();
+          $note.html(converter.makeHtml(_note));
 
           return this;
         }
@@ -85,7 +89,7 @@ define(
          * @return {string}
          */
         var _getNote = function _getNote() {
-          _note = $note.text();
+          _note = $note.html();
 
           return _note;
         }
@@ -142,7 +146,7 @@ define(
         $editButton.click(function (_) {
           _.stopPropagation();
           var id = $(this).parent('.post-it').data('id');
-          sage.publish('click.edit', {'id': id});
+          my.mediator.publish('click.edit', {'id': id});
         })
 
         // appers and hide edit button on mouse hover
@@ -155,7 +159,6 @@ define(
         });
 
         // set public interface
-        this.app = sage;
         this.getID = _getID;
         this.setID = _setID;
         this.getNote = _getNote;

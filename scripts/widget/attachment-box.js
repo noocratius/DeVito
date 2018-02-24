@@ -9,7 +9,6 @@
 define(
     [
       'jquery',
-      'sage',
       'model/sticky-note',
       './mediator',
       './new-state',
@@ -20,7 +19,7 @@ define(
       './edit-box'
     ],
       function(
-          $, sage, StickyNote, Mediator, NewState, alert, Button, Colors,
+          $, StickyNote, Mediator, NewState, alert, Button, Colors,
               DetailBox, EditBox
       ){
 
@@ -53,7 +52,7 @@ define(
           /** @private {int} identifier of sticky-note currently being used */
           _id = -1;
 
-          my.view = sage.element;
+          my.view = this.sage.element;
           my.$component = $(spec.selector, my.view);
 
           _this = this;
@@ -63,7 +62,7 @@ define(
            * @return {this}
            */
           var _open = function _open() {
-            alert.close();
+            new alert({sage: this.sage}).close();
             _state.open(this);
 
             return this;
@@ -138,11 +137,10 @@ define(
               this.close();
 
               // alert the user widget was closed
-              alert.show('Sticky-note closed, nothing was saved');
+              new alert({sage: this.sage}).show('Sticky-note closed, nothing was saved');
             })
               .subscribe('click.remove', function () {
                 this.publish('click.close');
-                console.log(this.id);
                 this.app.publish('delete.sticky-note', {id: this.id});
               })
               .subscribe('change.color', function (data) {
@@ -185,7 +183,7 @@ define(
               this.getDetails().close();
 
               // alert the user about saving empty note
-              alert.show('Can\'t save empty note.');
+              new alert({sage: this.sage}).show('Can\'t save empty note.');
             }
 
             return this;

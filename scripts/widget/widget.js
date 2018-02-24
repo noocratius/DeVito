@@ -8,7 +8,7 @@
 /**
  * @module widget
  */
-define(['jquery', 'sage'], function($, sage){
+define(['jquery'], function($){
 
   /**
    * Constructs a widget object, which all colleagues' mediators should
@@ -17,6 +17,7 @@ define(['jquery', 'sage'], function($, sage){
    *
    * @constructs
    * @param {object} spec - specs to build the widget object
+   * @param {object} spec.sage - sage app instance
    * @param {string} spec.name - widget name
    * @param {Mediator} spec.mediator - mediator to be notified by state change
    * @param {string} spec.selector - selector to build the widget with jQuery
@@ -25,17 +26,16 @@ define(['jquery', 'sage'], function($, sage){
    * @return {Widget}
    */
   return function Widget(spec, my) {
-    var _mediator, _name;
+    var _name;
 
     /** @protected {Mediator} */
-    _mediator = spec.mediator;
+    my.mediator = spec.mediator;
 
     /** @private {string} a widget name */
     _name = spec.name;
 
     my = my || {};
 
-    my.view = sage.element;
     my.$component = $(spec.selector, spec.container);
     my.element = spec.element || null;
 
@@ -56,7 +56,7 @@ define(['jquery', 'sage'], function($, sage){
      * @return {this}
      */
     var _notify = function _notify(topic, data) {
-      _mediator.publish(topic, data);
+      my.mediator.publish(topic, data);
       return this;
     }
 

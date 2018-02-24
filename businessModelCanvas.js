@@ -15,12 +15,16 @@ var businessModelCanvas = SAGE2_App.extend({
     require.config({
       baseUrl: this.resrcPath + 'scripts',
       paths: {
-        jquery: 'libs/jquery-3.3.1.min'
+        jquery: 'libs/jquery-3.3.1.min',
+        showdown: 'libs/showdownjs-showdown-ce5e16b/dist/showdown.min'
       }
     });
 
-    // define this app to be on its on module
+    // define sage as a module
     define('sage', this);
+
+    // enable sage to treat mouse events as sage pointer
+    this.passSAGE2PointerAsMouseEvents = true;
 
     require(
         [
@@ -75,9 +79,6 @@ var businessModelCanvas = SAGE2_App.extend({
 
         });
 
-
-    // enable sage to treat mouse events as sage pointer
-    this.passSAGE2PointerAsMouseEvents = true;
 
   },
 
@@ -134,7 +135,10 @@ var businessModelCanvas = SAGE2_App.extend({
       ],
         function (AttachmentBox, CanvasGroup) {
           _this.box =
-              new AttachmentBox({ selector: '.add-widget' }).createWidgets();
+              new AttachmentBox({
+                selector: '.add-widget',
+                sage: _this
+              }).createWidgets();
 
           _this.sections = new CanvasGroup({
             mediator: _this,
@@ -161,8 +165,9 @@ var businessModelCanvas = SAGE2_App.extend({
     // attach sticky-note to canvas ui
     this.sections.appendStickyNote(stickyNote);
 
+    var _this = this;
     require(['widget/alert'], function (alert) {
-      alert.show('sticky-note attached in \'' + stickyNote.block.name + '\'');
+      new alert({sage: _this}).show('sticky-note attached in \'' + stickyNote.block.name + '\'');
     });
 
   },
@@ -180,16 +185,19 @@ var businessModelCanvas = SAGE2_App.extend({
         _this = this;
 
     require(['widget/alert'], function (alert) {
+      var alertBox = new alert({
+        sage: _this
+      });
 
       if (stickyNote) {
         _this.sections.updateStickyNote(stickyNote);
-        alert.show('Sticky-note modified in \'' + stickyNote.block.name + '\'');
+        alertBox.show('Sticky-note modified in \'' + stickyNote.block.name + '\'');
       } else {
-        alert.show('sticky-note doens\'t exists');
+        alertBox.show('sticky-note doens\'t exists');
       }
 
       // envia mensagem dzendo que post-it foi modificado
-      alert.show('Sticky-note modified in \'' + stickyNote.block.name + '\'');
+      alertBox.show('Sticky-note modified in \'' + stickyNote.block.name + '\'');
 
     });
 
@@ -216,14 +224,14 @@ var businessModelCanvas = SAGE2_App.extend({
 
       // alert the user about the ocurrency
       require(['widget/alert'], function (alert) {
-        alert.show('sticky-note removed from  \'' +
+        new alert({sage: _this}).show('sticky-note removed from  \'' +
             stickyNote.block.name + '\' sucessfully');
       });
 
     } else {
 
       require(['widget/alert'], function (alert) {
-        alert.show('Sticky-note doesn\'t exist');
+        new alert({sage: _this}).show('Sticky-note doesn\'t exist');
       });
     }
   },

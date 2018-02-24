@@ -10,12 +10,11 @@
 define(
     [
       'jquery',
-      'sage',
       './widget',
       './attachment-state',
       './alert'
     ],
-      function($, sage, Widget, AttachmentState, alert){
+      function($, Widget, AttachmentState, alert){
 
   /**
    * Represents a state which attachment box can be when a new sticky-note is
@@ -82,7 +81,7 @@ define(
       box.getDetails()
           .close();
 
-      //FIXME-- verify this code couple
+      //FIXME-- verify this code coupling
       box.id = -1;
 
       // only update if data didn't change
@@ -92,11 +91,11 @@ define(
         my.stickyNote.note = text;
         my.stickyNote.color = color;
         my.stickyNote.lastModified = new Date();
-        sage.publish('update.sticky-note', {stickyNote: my.stickyNote});
+        box.sage.publish('update.sticky-note', {stickyNote: my.stickyNote});
 
       } else {
         // alert the user what happened
-        alert.show('Sticky-note not updated: Data not changed')
+        new alert({sage: box.sage}).show('Sticky-note not updated: Data not changed')
       }
 
       return this;
