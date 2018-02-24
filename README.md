@@ -14,4 +14,4 @@ As soon as the setup has finished, the application should appear in **APP Launch
 
 ## Translations
 
-  ![br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) [Brazilian Portuguese](https://github.com/peterleiva/README_pt-br.md)
+  ![br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) [Brazilian Portuguese](https://github.com/peterleiva/DeVito/blob/master/README_pt-br.md)
