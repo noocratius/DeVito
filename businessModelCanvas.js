@@ -77,6 +77,14 @@ var businessModelCanvas = SAGE2_App.extend({
                 this.box.changeState(NewState.getInstance()).open(data.id);
               });
 
+              _this
+                .subscribe('dragstart', function (data) {
+                  this.draggableStickyNote = data.widget;
+                })
+                .subscribe('dragend', function (data) {
+                  this.draggableStickyNote = null;
+                })
+
         });
 
 
@@ -95,8 +103,21 @@ var businessModelCanvas = SAGE2_App.extend({
   event: function (type, position, user, data, date) {
 
     // track sticky note author every pointer press
-    if (type == 'pointerPress')
+    if (type === 'pointerPress')
       this.author.name = user.label;
+
+    // start a drag operation
+    if (this.draggableStickyNote && type === 'pointerPress') {
+      this.dragging = true;
+
+    } else if (type === 'pointerMove' && this.dragging) {
+      console.log(position);
+      this.draggableStickyNote.left = position.x;
+      this.draggableStickyNote.top = position.y;
+
+    } else if (type === 'pointerRelease' && (data.button == 'left')) {
+      this.dragging = false;
+    }
   },
 
   quit: function () {

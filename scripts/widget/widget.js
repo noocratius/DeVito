@@ -61,7 +61,7 @@ define(['jquery'], function($){
     }
 
     /**
-     * returns dom representation of widget
+     * returns dom representation of widget component
      * @return {Element}
      */
     var _getDOM = function _getDOM() {

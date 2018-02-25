@@ -26,6 +26,7 @@ define(
        *
        * @extends Widget
        * @param {object} spec - spec to build the sticky-note widget
+       * @param {Element} [spec.element] - element representing sticky-note
        * @param {object} my - shared secrets between inheritance
        * @return {StickyNote}
        */
@@ -55,8 +56,8 @@ define(
         // set jQuery component
         my.$component = $(spec.element);
 
+        // sticky-note text in dom
         $note = $('.text', my.$component);
-
 
         /** @private {string} sticky-note identifier */
         var _id;
@@ -66,7 +67,6 @@ define(
 
         /** @private {string} */
         var _note;
-
 
         /**
          * set the sticky-note' note using markdown module 'showdown'
@@ -128,7 +128,7 @@ define(
         }
 
         /**
-         * set the sticky-note' text
+         * set the sticky-note' color
          * @param {string} color
          * @return {this}
          */
@@ -149,14 +149,47 @@ define(
           my.mediator.publish('click.edit', {'id': id});
         })
 
-        // appers and hide edit button on mouse hover
+        // make edit button appers or hide on mouse hover
         my.$component.on('mouseenter', function () {
           $editButton = $('.edit', this);
           $editButton.css('visibility', 'visible');
-        }).on('mouseleave', function () {
-          $editButton = $('.edit', this);
-          $editButton.css('visibility', 'hidden');
-        });
+        })
+          .on('mouseleave', function () {
+            $editButton = $('.edit', this);
+            $editButton.css('visibility', 'hidden');
+          });
+
+        var _this = this;
+
+        // initialize drag state
+        my.$component.data('drag', false);
+
+        // set draggable options
+        my.$component.on('mousedown', function (_) {
+          my.$component.data('drag', true);
+          my.mediator.publish('dragstart', {widget: _this});
+        })
+          .on('mousemove', function (_) {
+
+            if (my.$component.data('drag')) {
+              my.mediator.publish('drag');
+              console.log(my.$component.offset());
+              my.$component.offset({
+                top: _this.top,
+                left: _this.left
+              });
+            }
+          })
+          .on('mouseup', function (_) {
+            if (my.$component.data('drag')) {
+              my.mediator.publish('dragend');
+            }
+
+            my.$component.data('drag', false);
+          })
+          .on('dragstart', function (_) {
+            console.log('alooow');
+          });
 
         // set public interface
         this.getID = _getID;
