@@ -1,16 +1,22 @@
 /**
- * @fileoverview define a single canvas block class
+ * @fileoverview defines a single canvas block
  */
 
 'use strict';
 
+/**
+ * @module model
+ */
 define(function () {
   /**
-   * Representa um dos 9 elementos de bloco do canvas
+   * Represents a single canvas block, one of nine defined by business canvas
+   * model
    *
-   * @constructor
-   * @param {int} id - Identificador do bloco
-   * @param {string} name - Nome do elemento do bloco
+   * @class
+   * @alias module:model/canvas-element
+   *
+   * @param {int} id - block identifier
+   * @param {string} name - block name
    */
   function CanvasElement(id, name) {
     this.id = id;
@@ -19,9 +25,9 @@ define(function () {
   }
 
   /**
-   * Anexa um post-it ao elemento de canvas, no final do bloco
+   * attach a sticky-note to block canvas, at the end
    *
-   * @param {StickyNote} note - Post-it a ser anexado
+   * @param {module:model/sticky-note} note - sticky-note to be attached
    */
   CanvasElement.prototype.attachPostIt = function(note) {
     this.postIts.push(note);
@@ -29,10 +35,11 @@ define(function () {
   };
 
   /**
-   * Retorna um post-it de acordo com o seu identificador ou null caso não exista
+   * returns a sticky-note according to its identifier or null case it doens't
+   * exits
    *
-   * @param {int} id - Identificador do post-it
-   * @return {StickyNote | null}
+   * @param {int} id - sticky-note identifier
+   * @return {(module:model/sticky-note | null)}
    */
   CanvasElement.prototype.getPostIt = function (id) {
     for (var postIt of this.postIts) {
@@ -43,13 +50,13 @@ define(function () {
   }
 
   /**
-   * Remove um post-it pelo seu identificador
+   * remove a sticky-note from block by its identifier
    *
-   * @param {int} id - Identiicador do Post-it
+   * @param {int} id - sticky-note identifier
    */
   CanvasElement.prototype.deletePostIt = function (id) {
 
-    // lê a posição do post-it
+    // read sticky-note position
     for (var i = 0; i < this.postIts.length; i++) {
       if (this.postIts[i].id == id) {
         this.postIts.splice(i, 1);

@@ -10,14 +10,15 @@
 define(['jquery', './widget'], function($, Widget){
 
   /**
-   * Represents a box (textarea) of widget details object
-   * @constructor
-   * @extends Widget
+   * Represents a box (textarea) of widget details object specified in
+   * attachment box
+   * @class
+   * @alias module:widget/detail-box
+   * @extends module:widget/widget
    * @param {object} spec - specs to build the object uses in the inheritance
    * @param {object} my - shared secrets between inheritance
-   * @return {DetailBox}
    */
-  return function DetailBox(spec, my) {
+  function DetailBox(spec, my) {
     var dateTimeFormat;
 
     my = my || {};
@@ -47,7 +48,7 @@ define(['jquery', './widget'], function($, Widget){
     /**
      * set last modified date and modifies the related component in the view
      * @param {Date} lastModified
-     * @return {this}
+     * @return {module:widget/detail-box}
      */
     var _setLastModified = function _setLastModified(lastModified) {
       _lastModified = dateTimeFormat.format(lastModified);
@@ -59,7 +60,7 @@ define(['jquery', './widget'], function($, Widget){
     /**
      * sets created datetime and modifies the related component in the view
      * @param {Date} createdAt
-     * @return {this}
+     * @return {module:widget/detail-box}
      */
     var _setCreatedAt = function _setCreatedAt(createdAt) {
       _createdAt = dateTimeFormat.format(createdAt);
@@ -70,10 +71,9 @@ define(['jquery', './widget'], function($, Widget){
     }
 
     /**
-     * sets the sticky note author and modifies the related component in the
-     * view
+     * sets the sticky note author and modifies the related component in ui
      * @param {string} author
-     * @return {this}
+     * @return {module:widget/detail-box}
      */
     var _setAuthor = function _setAuthor(author) {
       _author = author;
@@ -84,7 +84,7 @@ define(['jquery', './widget'], function($, Widget){
 
     /**
      * show the component widget
-     * @return {this}
+     * @return {module:widget/detail-box}
      */
     var _show = function _show() {
       my.$component.show();
@@ -94,7 +94,7 @@ define(['jquery', './widget'], function($, Widget){
 
     /**
      * hides the component widget
-     * @return {this}
+     * @return {module:widget/detail-box}
      */
     var _close = function _close() {
       my.$component.hide();
@@ -111,4 +111,5 @@ define(['jquery', './widget'], function($, Widget){
 
   };
 
+  return DetailBox;
 });

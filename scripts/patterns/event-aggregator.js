@@ -1,5 +1,6 @@
 /**
  * @fileoverview defines publish/subscribe pattern into a aggregator object
+ * @todo FIXME -- improve documentation for callback arguments
  */
 
 /**
@@ -8,17 +9,17 @@
 define(function () {
 
   /**
-   * Constructor that extends into aggregator the publish/subscribe pattern and
-   * uses Mixin module to do so
+   * Constructor that can be extended or mixed defining a publish/subscribe
+   * pattern
    *
-   * @constructor
-   * @return {EventAggregator}
+   * @class
+   * @alias module:patterns/event-aggregator
    */
-  return function EventAggregator() {
+  function EventAggregator() {
 
     /**
      * topics registered in aggregator
-     * @private object
+     * @private {object}
      */
     var _registry = {};
 
@@ -28,7 +29,7 @@ define(function () {
      *
      * @param {string} string - topic to be published by aggregator
      * @param {*} [data] - data passed through callback by subscribe method
-     * @return {this}
+     * @return {module:patterns/event-aggregator}
      */
     var _publish = function _publish(topic, data) {
       var func, i;
@@ -53,10 +54,9 @@ define(function () {
      * Registry a topic with a handler which could be a string to be searched
      * on the object methods or a handler to be called when the topic happens
      *
-     * @callback handler
      * @param {string} topic - topic to subscribe
      * @param {(handler | string)} handler - handler to be executed
-     * @return {this}
+     * @return {module:patterns/event-aggregator}
      */
     var _subscribe = function _subscribe(topic, handler) {
 
@@ -73,10 +73,9 @@ define(function () {
      * Unregister a handler in a topic, a handler can be a string or a handler
      * reference.
      *
-     * @callback handler
      * @param {string} topic - topico to subscribe
      * @param {(handler | string)} handler - handler to be unsubscribe
-     * @return {this}
+     * @return {module:patterns/event-aggregator}
      */
     var _unsubscribe = function _unsubscribe(topic, handler) {
       if (_registry.hasOwnProperty(topic)) {
@@ -95,4 +94,5 @@ define(function () {
 
   };
 
+  return EventAggregator;
 });

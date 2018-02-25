@@ -1,17 +1,23 @@
 /**
- * @fileoverview Represents a canvas
+ * @fileoverview Represents a canvas model
  */
 
 'use strict';
 
+/**
+ * @module model
+ */
 define(['./canvas-element'], function (CanvasElement) {
 
   /**
    * Represents a business model canvas
    *
-   * @constructor
-   * @param {string} title - Canvas title
+   * @class
+   * @alias module:model/canvas
+   *
+   * @param {string} title - canvas title
    * @param {string} description - canvas description
+   * @return {module:model/canvas}
    */
   function Canvas(title, description) {
     this.title = title || '';
@@ -35,23 +41,27 @@ define(['./canvas-element'], function (CanvasElement) {
   }
 
   /**
-   * Anexa um post-it a um bloco do canvas, identificado por um id
+   * Attach a sticky-note to canvas block, passing a block id and sticky-note
+   * you wish to attach
    *
-   * @param {int} blockIdentifier - Identificador do bloco que será anexado
-   * @param {StickyNote} postIt - Post-It que será anexado
-   *
+   * @param {int} blockIdentifier - block identifier which will be attached
+   * @param {module:model/sticky-note} postIt - sticky-note to be attached
+   * @return {module:model/canvas}
    */
   Canvas.prototype.attachStickyNote = function (blockIdentifier, note) {
     if (blockIdentifier > 0 && blockIdentifier <= this.canvasElements.length) {
       this.canvasElements[blockIdentifier - 1].attachPostIt(note);
     }
+
+    return this;
   };
 
   /**
-   * Retorna um post-it de acordo com o seu identificador
+   * returns a sticky-note according to its identifier or null in case is not
+   * founded
    *
-   * @param {int} postIt - Identificador do post-it a ser procurado
-   * @return {StickyNote}
+   * @param {int} id - sticky-note' identifier to be looked for
+   * @return {(module:model/sticky-note | null)} sticky-note founded
    */
   Canvas.prototype.getPostIt = function (id) {
     var postIt = null;
@@ -65,12 +75,15 @@ define(['./canvas-element'], function (CanvasElement) {
   }
 
   /**
-   * Remove um post-it pelo seu identificador
+   * remove a sticky-note by its identifier
    *
-   * @param {StickyNote} postit - Identificador do post-it
+   * @param {module:model/sticky-note} postit - sticky-note' identifier
+   * @return {module:model/canvas}
    */
   Canvas.prototype.deletePostIt = function (postit) {
     this.canvasElements[postit.block.id - 1].deletePostIt(postit.id);
+
+    return this;
   }
 
   return Canvas;

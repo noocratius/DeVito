@@ -2,7 +2,6 @@
  * @fileoverview defines a colleague for sticky note attachment mediator
  */
 
-// jQuery(document).on('loaded.view', function (_, data) {
 'use strict';
 
 /**
@@ -13,13 +12,13 @@ define(['./widget'], function(Widget){
   /**
    * Represents a button widget, a clickable ui element
    *
-   * @constructor
-   * @extends Widget
+   * @class
+   * @alias module:widget/button
+   * @extends module:widget/widget
    * @param {object} spec - spec to build the colors widget
    * @param {object} my - secrets shared between inheritance
-   * @return {Button}
    */
-  return function Button(spec, my) {
+  function Button(spec, my) {
     my = my || {};
 
     // extends Widget object
@@ -33,5 +32,7 @@ define(['./widget'], function(Widget){
       _this.notify('click.' + _this.getName());
     });
   };
+
+  return Button;
 
 });

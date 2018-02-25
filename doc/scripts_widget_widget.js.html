@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scripts/widget/widget.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scripts/widget/widget.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview defines widget module to be extended, also is a colleague for
+ * mediator pattern.
+ */
+
+'use strict';
+
+/**
+ * @module widget
+ */
+define(['jquery'], function($){
+
+  /**
+   * Constructs a widget object, which all colleagues' mediators should
+   * inherits. Its name and jQuery object are build according to spec object
+   * and sets into my object to be used by its inheritance
+   *
+   * @class
+   * @alias module:widget/widget
+   * @param {object} spec - specs to build the widget object
+   * @param {object} spec.sage - sage app instance
+   * @param {string} spec.name - widget name
+   * @param {module:widget/mediator} spec.mediator - mediator to be notified by
+   *    state change
+   * @param {string} spec.selector - selector to build the widget with jQuery
+   *    object constructor
+   * @param {object} my - object to shared secrets in inheritance
+   */
+  function Widget(spec, my) {
+    var _name;
+
+    /** @protected {module:widget/mediator} */
+    my.mediator = spec.mediator;
+
+    /** @private {string} a widget name */
+    _name = spec.name;
+
+    my = my || {};
+
+    my.$component = $(spec.selector, spec.container);
+    my.element = spec.element || null;
+
+    /**
+     * returns the widget's name
+     * @return {string}
+     */
+    var _getName = function _getName() {
+      return _name;
+    }
+
+    /**
+     * Notifies a topic to mediator using according to publish/subscribe
+     * pattern
+     *
+     * @param {string} topic - event to be published
+     * @param {*} [data] - data passed though notification
+     * @return {module:widget/mediator}
+     */
+    var _notify = function _notify(topic, data) {
+      my.mediator.publish(topic, data);
+      return this;
+    }
+
+    /**
+     * returns dom representation of widget component
+     * @return {Element}
+     */
+    var _getDOM = function _getDOM() {
+      return my.$component.get(0);
+    }
+
+    this.getName = _getName;
+    this.notify = _notify;
+    this.getDOM = _getDOM;
+  };
+
+  return Widget;
+
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-model.html">model</a></li><li><a href="module-model_identifier.html">model/identifier</a></li><li><a href="module-patterns.html">patterns</a></li><li><a href="module-patterns_mixin.html">patterns/mixin</a></li><li><a href="module-plugin.html">plugin</a></li><li><a href="module-sage.html">sage</a></li><li><a href="module-widget.html">widget</a></li><li><a href="module-widget_new-state.html">widget/new-state</a></li><li><a href="module-widget_update-state.html">widget/update-state</a></li></ul><h3>Classes</h3><ul><li><a href="businessModelCanvas.html">businessModelCanvas</a></li><li><a href="module-model_canvas.html">model/canvas</a></li><li><a href="module-model_canvas-element.html">model/canvas-element</a></li><li><a href="module-model_sticky-note.html">model/sticky-note</a></li><li><a href="module-model_user.html">model/user</a></li><li><a href="module-patterns_event-aggregator.html">patterns/event-aggregator</a></li><li><a href="module-widget_alert.html">widget/alert</a></li><li><a href="module-widget_attachment-box.html">widget/attachment-box</a></li><li><a href="module-widget_attachment-state.html">widget/attachment-state</a></li><li><a href="module-widget_button.html">widget/button</a></li><li><a href="module-widget_canvas-group.html">widget/canvas-group</a></li><li><a href="module-widget_colors.html">widget/colors</a></li><li><a href="module-widget_detail-box.html">widget/detail-box</a></li><li><a href="module-widget_edit-box.html">widget/edit-box</a></li><li><a href="module-widget_mediator.html">widget/mediator</a></li><li><a href="module-widget_new-state.html">widget/new-state</a></li><li><a href="module-widget_sticky-note.html">widget/sticky-note</a></li><li><a href="module-widget_update-state.html">widget/update-state</a></li><li><a href="module-widget_widget.html">widget/widget</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CSS_PATH">CSS_PATH</a></li><li><a href="global.html#ENCODING">ENCODING</a></li><li><a href="global.html#HTML_PATH">HTML_PATH</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 25 2018 20:31:48 GMT-0300 (-03)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

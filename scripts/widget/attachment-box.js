@@ -1,11 +1,14 @@
 /**
  * @fileoverview defines a mediator. Widget Box for sticky note attachment
+ * options
+ * @todo document events fired properly
  */
 
 'use strict';
 
-// jQuery(document).on('loaded.view', function (_, data) {
-
+/**
+ * @module widget
+ */
 define(
     [
       'jquery',
@@ -27,16 +30,18 @@ define(
          * Represents a Mediator object, which extends Mediator, which manages
          * all its widgets of attachment box
          *
-         * @extends Mediator
+         * @extends module:widget/Mediator
+         * @class
+         * @alias module:widget/attachment-box
+         *
          * @param {object} spec - spec to build the mediator
-         * @param {AttachmentState} [spec.state=NewState] - specify the initial
-         *    box' state
+         * @param {module:widget/attachment-state} [spec.state=NewState] -
+         *    specify the initial box' state
          * @param {string} spec.selector - a selector, in css style, to build
-         *    the mediator object defined by the template html object
+         *    the mediator object specified by html template
          * @param {object} [my={}] - shared secrets between inheritance
-         * @return {AttachmentBox}
          */
-        return function AttachmentBox(spec, my) {
+        function AttachmentBox(spec, my) {
           var _this, _state, _id;
 
           my = my || {};
@@ -58,8 +63,8 @@ define(
           _this = this;
 
           /**
-           * Open the widget according to current state
-           * @return {this}
+           * open the widget according to current state
+           * @return {module:widget/attachment-box}
            */
           var _open = function _open() {
             new alert({sage: this.sage}).close();
@@ -71,7 +76,7 @@ define(
           /**
            * show the attachmento box mediator using the jQuery object to show
            * its component
-           * @return {this}
+           * @return {module:widget/attachment-box}
            */
           var _show = function _show() {
             my.$component.show();
@@ -79,8 +84,10 @@ define(
           }
 
           /**
-           * Creates the widgets and subscribe to its state changes
-           * @return {this}
+           * Creates the widgets and subscribe on states changes and fire events
+           * to sage app to respond to
+           *
+           * @return {module:widget/attachment-box}
            */
           var _createWidgets = function _createWidgets() {
             var closeButton, removeButton, editBox, details, colors;
@@ -158,9 +165,8 @@ define(
           }
 
           /**
-           * Close the component which attachment box belongs to and cancel
-           * the data
-           * @return {this}
+           * close the component which attachment box belongs to
+           * @return {module:widget/attachment-box}
            */
           var _close = function _close() {
             my.$component.hide();
@@ -168,9 +174,9 @@ define(
           }
 
           /**
-           * saves the post-it or update if the text is not empty
-           * FIXME - only saves if text it not empty
-           * @return {this}
+           * saves the sticky-note or update if the text is not empty
+           * @todo FIXME - only saves if text it not empty
+           * @return {module:widget/attachment-box}
            */
           var _save = function _save() {
 
@@ -190,9 +196,9 @@ define(
           }
 
           /**
-           * change the attachment state
-           * @param {AttachmentState} state - new state to be set
-           * @return {this}
+           * change the attachment state and return its reference
+           * @param {module:widget/attachment-state} state - new state to be set
+           * @return {module:widget/attachment-box}
            */
           var _changeState = function _changeState(state) {
             _state = state;
@@ -210,5 +216,6 @@ define(
 
         };
 
+        return AttachmentBox;
       }
 );

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scripts/widget/canvas-group.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scripts/widget/canvas-group.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview define widget colleage for mediator pattern
+ */
+
+'use strict';
+
+/**
+ * @module widget
+ */
+define(
+    [
+      'jquery',
+      './widget',
+      './sticky-note'
+    ],
+      function($, Widget, StickyNote){
+
+        /**
+         * Represents a single canvas element block, a colleague for sage app
+         * which mediates selected block
+         * @class
+         * @alias module:widget/canvas-group
+         * @extends module:widget/widget
+         * @param {object} spec - specs to build the object uses in the
+         *    inheritance
+         * @param {object} my - shared secrets between inheritance
+         * @return {CanvasGroup}
+         */
+        function CanvasGroup(spec, my) {
+          var _selected;
+
+          spec = spec || {};
+          my = my || {};
+
+          // extends widget object
+          Widget.call(this, spec, my);
+
+          /**
+           * returns the last selected canvas block
+           * @return {int}
+           */
+          var _getSelected = function _getSelected() {
+            return _selected;
+          }
+
+          /**
+           * returns the jQuery element repersenting the sticky-note
+           * @param {int} id - identifier to be search for
+           * @return {module:widget/sticky-note}
+           */
+          var _getStickyNoteWidget = function _getStickyNoteWidget(id) {
+
+            var $stickyNote = $('.post-it', my.$component).filter(function () {
+              return $(this).data('id') === id;
+            });
+
+            return new StickyNote({
+              selector: '.post-it',
+              container: my.$component,
+              name: 'sticky-note',
+              mediator: my.mediator,
+              element: $stickyNote
+            });
+          }
+
+
+          /**
+           * append a sticky-note to selected block
+           * @param {module:widget/sticky-note} stickyNote - sticky-note to be
+           *    appended
+           * @return {module:widget/canvas-group}
+           */
+          var _appendStickyNote = function _appendStickyNote(stickyNote) {
+
+            var $body, stickyNoteWidget;
+
+            stickyNoteWidget = new StickyNote({
+              selector: '.post-it',
+              container: my.$component,
+              name: 'sticky-note',
+              mediator: my.mediator
+            });
+
+            // fill data in the widget
+            stickyNoteWidget.setNote(stickyNote.note);
+            stickyNoteWidget.setColor(stickyNote.color);
+            stickyNoteWidget.setID(stickyNote.id);
+
+            $body =
+                $('.canvas-body-element', my.$component).filter(function (index, element) {
+                  return $(element).parent(my.$component).data('id') == _getSelected();
+                });
+
+            $body.append(stickyNoteWidget.getDOM());
+
+            return this;
+          }
+
+          /**
+           * updates a sticky-note on selected block specify by sticky-note' id
+           * @param {module:widget/sticky-note} stickyNote - sticky-note to be
+           *    updated
+           * @return {module:widget/canvas-group}
+           */
+          var _updateStickyNote = function _updateStickyNote(stickyNote) {
+            var stickyNoteWidget = _getStickyNoteWidget(stickyNote.id);
+
+            stickyNoteWidget.setNote(stickyNote.note);
+            stickyNoteWidget.setColor(stickyNote.color);
+
+            return this;
+          }
+
+          /**
+           * delete a sticky-note by its id
+           * @param {module:widget/sticky-note} stickyNote - sticky-note to be
+           *    deleted
+           * @return {module:widget/canvas-group}
+           */
+          var _removeStickyNote = function _removeStickyNote(stickyNote) {
+            $(_getStickyNoteWidget(stickyNote.id).getDOM()).remove();
+            return this;
+          }
+
+          var _this = this;
+
+          // set the selected when jQuery $component receive a click event
+          my.$component.click(function (_) {
+            _.stopPropagation();
+            _selected = $(this).data('id');
+            _this.notify('selected.canvas', {id: _selected});
+          });
+
+          // set public interface
+          this.getSelected = _getSelected;
+          this.appendStickyNote = _appendStickyNote;
+          this.updateStickyNote = _updateStickyNote;
+          this.removeStickyNote = _removeStickyNote;
+
+        };
+
+        return CanvasGroup;
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-model.html">model</a></li><li><a href="module-model_identifier.html">model/identifier</a></li><li><a href="module-patterns.html">patterns</a></li><li><a href="module-patterns_mixin.html">patterns/mixin</a></li><li><a href="module-plugin.html">plugin</a></li><li><a href="module-sage.html">sage</a></li><li><a href="module-widget.html">widget</a></li><li><a href="module-widget_new-state.html">widget/new-state</a></li><li><a href="module-widget_update-state.html">widget/update-state</a></li></ul><h3>Classes</h3><ul><li><a href="businessModelCanvas.html">businessModelCanvas</a></li><li><a href="module-model_canvas.html">model/canvas</a></li><li><a href="module-model_canvas-element.html">model/canvas-element</a></li><li><a href="module-model_sticky-note.html">model/sticky-note</a></li><li><a href="module-model_user.html">model/user</a></li><li><a href="module-patterns_event-aggregator.html">patterns/event-aggregator</a></li><li><a href="module-widget_alert.html">widget/alert</a></li><li><a href="module-widget_attachment-box.html">widget/attachment-box</a></li><li><a href="module-widget_attachment-state.html">widget/attachment-state</a></li><li><a href="module-widget_button.html">widget/button</a></li><li><a href="module-widget_canvas-group.html">widget/canvas-group</a></li><li><a href="module-widget_colors.html">widget/colors</a></li><li><a href="module-widget_detail-box.html">widget/detail-box</a></li><li><a href="module-widget_edit-box.html">widget/edit-box</a></li><li><a href="module-widget_mediator.html">widget/mediator</a></li><li><a href="module-widget_new-state.html">widget/new-state</a></li><li><a href="module-widget_sticky-note.html">widget/sticky-note</a></li><li><a href="module-widget_update-state.html">widget/update-state</a></li><li><a href="module-widget_widget.html">widget/widget</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CSS_PATH">CSS_PATH</a></li><li><a href="global.html#ENCODING">ENCODING</a></li><li><a href="global.html#HTML_PATH">HTML_PATH</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 25 2018 20:31:48 GMT-0300 (-03)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

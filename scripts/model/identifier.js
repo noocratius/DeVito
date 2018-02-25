@@ -1,23 +1,34 @@
 /**
- * @fileoverview defines a identifier module which generate random numbers
+ * @fileoverview defines a identifier module which generate random numbers each
+ * call
  */
 
 'use strict';
 
+/**
+ * @module model
+ */
 define(function () {
-  /** @private  identifier number which will be incremented each call */
+  /** @private {int} identifier number which will be incremented each call */
   var _base = 0;
 
-  /** @private  identifier prefix */
+  /** @private {string} identifier prefix */
   var _prefix = 'id_';
 
-  return {
+  /**
+   * A module representing a unique identifier which have a unique identifier
+   * and a prefix which can be changed by calling
+   * {@link module:model/identifier.setPrefix}
+   *
+   * @exports model/identifier
+   */
+  var identifier = {
 
     /**
-     * Defines new prefix
+     * defines new prefix for all generated next identifiers
      *
      * @param {string} prefix
-     * @return {this}
+     * @return {module:model/identifier}
      */
     setPrefix: function (prefix) {
       _prefix = prefix;
@@ -25,7 +36,8 @@ define(function () {
     },
 
     /**
-     * Gera um novo identificador a cada chamada
+     * generates a new identifier each call. Each call a internal numeric value
+     * will be incremented thus provinding a unique number
      *
      * @return {string}
      */
@@ -33,4 +45,6 @@ define(function () {
       return _prefix + _base++;
     }
   };
+
+  return identifier;
 });

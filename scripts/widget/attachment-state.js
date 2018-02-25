@@ -10,39 +10,41 @@ define(function(){
 
   /**
    * Represents a state object for attachment mediator
-   * @constructor
+   * @class
+   * @alias module:widget/attachment-state
    * @param {object} spec - specs to build the state object
-   * @param {StickyNote} spec.stickyNote - sticky-note to work with state
+   * @param {module:model/sticky-note} spec.stickyNote - sticky-note to work with state
    * @param {object} [my={}] - secrets shared between inheritance
-   * @return {AttachmentState}
    */
-  return function AttachmentState(spec, my) {
+  function AttachmentState(spec, my) {
     my = my || {};
 
     // set protected variables
     my.stickyNote = spec.stickyNote;
 
     /**
-     * Opens the widget and set apropriated widgets
+     * opens the widget and set apropriated widgets
      * @abstract
-     * @param {AttachmentBox} box - attachment box which can see its widgets
-     * @return {this}
+     * @param {module:widget/attachment-box} box - attachment box which can see
+     *    its widgets
+     * @return {module:widget/attachment-state}
      */
     var _open = function _open(box) { }
 
     /**
      * Closes the apropriated widgets and save the attachment
      * @abstract
-     * @param {AttachmentBox} box - attachment box which can see its widgets
-     * @return {this}
+     * @param {module:widget/attachment-box} box - attachment box which can see
+     *    its widgets
+     * @return {module:widget/attachment-state}
      */
     var _save = function _save(box) { }
 
 
     /**
      * sets sticky-note to be worked its state
-     * @param {StickyNote} stickyNote
-     * @return {this}
+     * @param {module:model/sticky-note} stickyNote
+     * @return {module:widget/attachment-state}
      */
     var _setStickyNote = function _setStickyNote(stickyNote) {
       my.stickyNote = stickyNote;
@@ -56,4 +58,6 @@ define(function(){
     this.setStickyNote = _setStickyNote;
 
   }
+
+  return AttachmentState;
 });

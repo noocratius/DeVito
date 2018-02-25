@@ -15,20 +15,21 @@ define(['jquery'], function($){
    * inherits. Its name and jQuery object are build according to spec object
    * and sets into my object to be used by its inheritance
    *
-   * @constructs
+   * @class
+   * @alias module:widget/widget
    * @param {object} spec - specs to build the widget object
    * @param {object} spec.sage - sage app instance
    * @param {string} spec.name - widget name
-   * @param {Mediator} spec.mediator - mediator to be notified by state change
+   * @param {module:widget/mediator} spec.mediator - mediator to be notified by
+   *    state change
    * @param {string} spec.selector - selector to build the widget with jQuery
    *    object constructor
    * @param {object} my - object to shared secrets in inheritance
-   * @return {Widget}
    */
-  return function Widget(spec, my) {
+  function Widget(spec, my) {
     var _name;
 
-    /** @protected {Mediator} */
+    /** @protected {module:widget/mediator} */
     my.mediator = spec.mediator;
 
     /** @private {string} a widget name */
@@ -53,7 +54,7 @@ define(['jquery'], function($){
      *
      * @param {string} topic - event to be published
      * @param {*} [data] - data passed though notification
-     * @return {this}
+     * @return {module:widget/mediator}
      */
     var _notify = function _notify(topic, data) {
       my.mediator.publish(topic, data);
@@ -73,5 +74,6 @@ define(['jquery'], function($){
     this.getDOM = _getDOM;
   };
 
+  return Widget;
 
 });

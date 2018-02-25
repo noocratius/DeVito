@@ -19,12 +19,13 @@ define(
   /**
    * Represents a state which attachment box can be when a new sticky-note is
    * being inserted
-   * @constructor
-   * @extends AttachmentState
+   * @class
+   * @alias module:widget/update-state
+   * @extends module:widget/attachment-state
    * @param {object} spec - specs to build the object uses in the inheritance
-   * @param {StickyNote} spec.stickyNote - sticky-note to be updated
+   * @param {module:widget/sticky-note} spec.stickyNote - sticky-note to be
+   *    updated
    * @param {object} my - shared secrets between inheritance
-   * @return {UpdateState}
    */
   var _UpdateState = function _UpdateState(spec, my) {
     my = my || {};
@@ -35,8 +36,9 @@ define(
     /**
      * Opens the widget and set apropriated widgets
      * @override
-     * @param {AttachmentBox} box - attachment box which can see its widgets
-     * @return {this}
+     * @param {module:widget/attachment-box} box - attachment box which can see
+     *    its widgets
+     * @return {module:widget/update-state}
      */
     var _open = function _open(box) {
       box.show();
@@ -60,10 +62,11 @@ define(
 
     /**
      * Closes the apropriated widgets and save the attachment
-     * FIXME - verify for not changed properties
+     * @todo FIXME - verify for particular nor changed properties
      * @override
-     * @param {AttachmentBox} box - attachment box which can see its widgets
-     * @return {this}
+     * @param {module:widget/attachment-box} box - attachment box which can see
+     *    its widgets
+     * @return {module:widget/update-state}
      */
     var _save = function _save(box) {
       var text, color;
@@ -114,12 +117,20 @@ define(
   /**
    * returns the singleton object for state lazyly initiation
    *
+   * @exports module:widget/update-state
    * @param {object} spec - specs to build the state object
-   * @param {model.StickyNote} spec.stickyNote - sticky-note to work with state
+   * @param {module:model/sticky-note} spec.stickyNote - sticky-note to work with state
    * @param {object} [my={}] - secrets shared between inheritance
-   * @return {AttachmentState}
+   * @return {module:widget/attachment-state}
    */
   var _static = {
+
+    /**
+     * returns a singleton of {@link module:widget/update-state}
+     * @param {object} spec - specs to build update-state
+     * @param {object} my - shared secrets between inheritance
+     * @return {module:widget/update-state}
+     */
     getInstance: function (spec, my) {
 
       if (!_instance) {

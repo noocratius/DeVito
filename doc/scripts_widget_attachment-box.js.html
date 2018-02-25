@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scripts/widget/attachment-box.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scripts/widget/attachment-box.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview defines a mediator. Widget Box for sticky note attachment
+ * options
+ * @todo document events fired properly
+ */
+
+'use strict';
+
+/**
+ * @module widget
+ */
+define(
+    [
+      'jquery',
+      'model/sticky-note',
+      './mediator',
+      './new-state',
+      './alert',
+      './button',
+      './colors',
+      './detail-box',
+      './edit-box'
+    ],
+      function(
+          $, StickyNote, Mediator, NewState, alert, Button, Colors,
+              DetailBox, EditBox
+      ){
+
+        /**
+         * Represents a Mediator object, which extends Mediator, which manages
+         * all its widgets of attachment box
+         *
+         * @extends module:widget/Mediator
+         * @class
+         * @alias module:widget/attachment-box
+         *
+         * @param {object} spec - spec to build the mediator
+         * @param {module:widget/attachment-state} [spec.state=NewState] -
+         *    specify the initial box' state
+         * @param {string} spec.selector - a selector, in css style, to build
+         *    the mediator object specified by html template
+         * @param {object} [my={}] - shared secrets between inheritance
+         */
+        function AttachmentBox(spec, my) {
+          var _this, _state, _id;
+
+          my = my || {};
+
+          // extends mediator class
+          Mediator.call(this, spec, my);
+
+          /** @private {AttachmentState} box state according to state pattern */
+          _state = spec.state || new NewState.getInstance({
+            stickyNote: new StickyNote()
+          });
+
+          /** @private {int} identifier of sticky-note currently being used */
+          _id = -1;
+
+          my.view = this.sage.element;
+          my.$component = $(spec.selector, my.view);
+
+          _this = this;
+
+          /**
+           * open the widget according to current state
+           * @return {module:widget/attachment-box}
+           */
+          var _open = function _open() {
+            new alert({sage: this.sage}).close();
+            _state.open(this);
+
+            return this;
+          };
+
+          /**
+           * show the attachmento box mediator using the jQuery object to show
+           * its component
+           * @return {module:widget/attachment-box}
+           */
+          var _show = function _show() {
+            my.$component.show();
+            return this;
+          }
+
+          /**
+           * Creates the widgets and subscribe on states changes and fire events
+           * to sage app to respond to
+           *
+           * @return {module:widget/attachment-box}
+           */
+          var _createWidgets = function _createWidgets() {
+            var closeButton, removeButton, editBox, details, colors;
+
+            // create the widgets
+            closeButton = new Button({
+              mediator: this,
+              name: 'close',
+              selector: '.close',
+              container: my.$component
+            });
+
+            removeButton = new Button({
+              mediator: this,
+              name: 'remove',
+              selector: '.details > .remove',
+              container: my.$component
+            });
+
+            details = new DetailBox({
+              mediator: this,
+              name: 'details',
+              selector: '.details',
+              container: my.$component
+            });
+
+            colors = new Colors({
+              mediator: this,
+              name: 'color',
+              selector: '.colors-options .color',
+              container: my.$component
+            });
+
+            editBox = new EditBox({
+              mediator: this,
+              name: 'editbox',
+              selector: '.post-it',
+              container: my.$component
+            });
+
+            // define getter method for widgets
+            my.getter({
+              'closeButton': closeButton,
+              'removeButton': removeButton,
+              'details': details,
+              'colors': colors,
+              'editBox': editBox
+            });
+
+            // subscribe to events the mediator should operantes on
+            this.subscribe('click.close', function () {
+              this.getEditBox().setText('');
+              this.getDetails().close();
+              this.close();
+
+              // alert the user widget was closed
+              new alert({sage: this.sage}).show('Sticky-note closed, nothing was saved');
+            })
+              .subscribe('click.remove', function () {
+                this.publish('click.close');
+                this.sage.publish('delete.sticky-note', {id: this.id});
+              })
+              .subscribe('change.color', function (data) {
+                this.getEditBox().setColor(data.color);
+              })
+              .subscribe('save', 'save');
+
+            // save the widget' data when clicks inside container
+            my.$component.click(function (_) {
+              _.stopPropagation();
+              _this.publish('save');
+            });
+
+            return this;
+          }
+
+          /**
+           * close the component which attachment box belongs to
+           * @return {module:widget/attachment-box}
+           */
+          var _close = function _close() {
+            my.$component.hide();
+            return this;
+          }
+
+          /**
+           * saves the sticky-note or update if the text is not empty
+           * @todo FIXME - only saves if text it not empty
+           * @return {module:widget/attachment-box}
+           */
+          var _save = function _save() {
+
+            // save only non empty note
+            if (this.getEditBox().getText()) {
+              _state.save(this);
+            } else {
+              // closes the widget and its details if it's open
+              this.close();
+              this.getDetails().close();
+
+              // alert the user about saving empty note
+              new alert({sage: this.sage}).show('Can\'t save empty note.');
+            }
+
+            return this;
+          }
+
+          /**
+           * change the attachment state and return its reference
+           * @param {module:widget/attachment-state} state - new state to be set
+           * @return {module:widget/attachment-box}
+           */
+          var _changeState = function _changeState(state) {
+            _state = state;
+
+            return this;
+          }
+
+          this.id = _id;
+          this.open = _open;
+          this.show = _show;
+          this.createWidgets = _createWidgets;
+          this.close = _close;
+          this.save = _save;
+          this.changeState = _changeState;
+
+        };
+
+        return AttachmentBox;
+      }
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-model.html">model</a></li><li><a href="module-model_identifier.html">model/identifier</a></li><li><a href="module-patterns.html">patterns</a></li><li><a href="module-patterns_mixin.html">patterns/mixin</a></li><li><a href="module-plugin.html">plugin</a></li><li><a href="module-sage.html">sage</a></li><li><a href="module-widget.html">widget</a></li><li><a href="module-widget_new-state.html">widget/new-state</a></li><li><a href="module-widget_update-state.html">widget/update-state</a></li></ul><h3>Classes</h3><ul><li><a href="businessModelCanvas.html">businessModelCanvas</a></li><li><a href="module-model_canvas.html">model/canvas</a></li><li><a href="module-model_canvas-element.html">model/canvas-element</a></li><li><a href="module-model_sticky-note.html">model/sticky-note</a></li><li><a href="module-model_user.html">model/user</a></li><li><a href="module-patterns_event-aggregator.html">patterns/event-aggregator</a></li><li><a href="module-widget_alert.html">widget/alert</a></li><li><a href="module-widget_attachment-box.html">widget/attachment-box</a></li><li><a href="module-widget_attachment-state.html">widget/attachment-state</a></li><li><a href="module-widget_button.html">widget/button</a></li><li><a href="module-widget_canvas-group.html">widget/canvas-group</a></li><li><a href="module-widget_colors.html">widget/colors</a></li><li><a href="module-widget_detail-box.html">widget/detail-box</a></li><li><a href="module-widget_edit-box.html">widget/edit-box</a></li><li><a href="module-widget_mediator.html">widget/mediator</a></li><li><a href="module-widget_new-state.html">widget/new-state</a></li><li><a href="module-widget_sticky-note.html">widget/sticky-note</a></li><li><a href="module-widget_update-state.html">widget/update-state</a></li><li><a href="module-widget_widget.html">widget/widget</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CSS_PATH">CSS_PATH</a></li><li><a href="global.html#ENCODING">ENCODING</a></li><li><a href="global.html#HTML_PATH">HTML_PATH</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 25 2018 20:31:48 GMT-0300 (-03)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

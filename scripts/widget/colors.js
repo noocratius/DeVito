@@ -10,15 +10,16 @@
 define(['jquery', './widget'], function($, Widget){
 
   /**
-   * Represents a widget colleague for attachment mediator
+   * Represents a widget colleague for attachment mediator, which treats
+   * management of color selection on attachment box
    *
-   * @constructor
-   * @extends Widget
+   * @class
+   * @alias module:widget/colors
+   * @extends module:widget/widget
    * @param {object} spec - spec to build the colors widget
    * @param {object} my - secrets shared between inheritance
-   * @return {Colors}
    */
-  return function Colors(spec, my) {
+  function Colors(spec, my) {
     var _this;
     my = my || {};
 
@@ -42,4 +43,5 @@ define(['jquery', './widget'], function($, Widget){
 
   }
 
+  return Colors;
 });

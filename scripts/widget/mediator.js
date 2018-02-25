@@ -5,6 +5,9 @@
 
 'use strict';
 
+/**
+ * @module widget
+ */
 define(['patterns/event-aggregator'], function (EventAggregator) {
 
   /**
@@ -12,14 +15,14 @@ define(['patterns/event-aggregator'], function (EventAggregator) {
    * and extends publish/subscribe pattern to listen its colleagues change'
    * states
    *
-   * @constructor
-   * @extends EventAggregator
+   * @class
+   * @alias module:widget/mediator
+   * @extends module:patterns/event-aggregator
    * @param {object} [spec] - specification to build the mediators
    * @param {object} [spec.sage] - sage app instance
    * @param {object} [my={}] - shared secrets between extended mediators
-   * @return {Mediator}
    */
-  return function Mediator(spec, my) {
+  function Mediator(spec, my) {
     var _this;
     my = my || {};
 
@@ -31,14 +34,14 @@ define(['patterns/event-aggregator'], function (EventAggregator) {
     /**
      * Open the widget mediator and start the colleagues management
      * @abstract
-     * @return {this}
+     * @return {module:widget/mediator}
      */
     var _open = function _open() { }
 
     /**
      * Creates necessary colleagues (widgets) for the mediator to manages
      * @abstract
-     * @return {this}
+     * @return {module:widget/mediator}
      */
     var _createWidgets = function _createWidgets() { }
 
@@ -46,7 +49,7 @@ define(['patterns/event-aggregator'], function (EventAggregator) {
      * Defines a getter method for widget element. So receiving a object,
      * named widget, which is used to define in its inheritance the widgets.
      * also defining the getters.
-     * @this represents the mediator object
+     * @this {module:widget/mediator} the mediator object
      * @example usage of method getter
      *   my.getter({
      *    'closeButton': _closeButton,
@@ -56,9 +59,8 @@ define(['patterns/event-aggregator'], function (EventAggregator) {
      *     'editBox': _editBox
      *   });
      *
-     * @protected
+     * //@protected
      * @param {object} widget - specs to build the getters
-     * @return {}
      */
     var _getter = function _getter(widgets) {
 
@@ -88,4 +90,5 @@ define(['patterns/event-aggregator'], function (EventAggregator) {
 
   };
 
+  return Mediator;
 });

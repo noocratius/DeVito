@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scripts/widget/update-state.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scripts/widget/update-state.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview defines a state subclass according to state pattern
+ */
+
+'use strict';
+
+/**
+ * @module widget
+ */
+define(
+    [
+      'jquery',
+      './widget',
+      './attachment-state',
+      './alert'
+    ],
+      function($, Widget, AttachmentState, alert){
+
+  /**
+   * Represents a state which attachment box can be when a new sticky-note is
+   * being inserted
+   * @class
+   * @alias module:widget/update-state
+   * @extends module:widget/attachment-state
+   * @param {object} spec - specs to build the object uses in the inheritance
+   * @param {module:widget/sticky-note} spec.stickyNote - sticky-note to be
+   *    updated
+   * @param {object} my - shared secrets between inheritance
+   */
+  var _UpdateState = function _UpdateState(spec, my) {
+    my = my || {};
+
+    // extends attachment state and call its constructor
+    AttachmentState.call(this, spec, my);
+
+    /**
+     * Opens the widget and set apropriated widgets
+     * @override
+     * @param {module:widget/attachment-box} box - attachment box which can see
+     *    its widgets
+     * @return {module:widget/update-state}
+     */
+    var _open = function _open(box) {
+      box.show();
+
+      // fill edti box widget
+      box.getEditBox()
+          .setText(my.stickyNote.note).setColor(my.stickyNote.color);
+
+      // fill detail box widget
+      box.getDetails()
+          .show()
+          .setAuthor(my.stickyNote.author.name)
+          .setCreatedAt(my.stickyNote.createdAt)
+          .setLastModified(my.stickyNote.lastModified);
+
+      // set sitcky-note' id in mediator
+      box.id = my.stickyNote.id;
+
+      return this;
+    }
+
+    /**
+     * Closes the apropriated widgets and save the attachment
+     * @todo FIXME - verify for particular nor changed properties
+     * @override
+     * @param {module:widget/attachment-box} box - attachment box which can see
+     *    its widgets
+     * @return {module:widget/update-state}
+     */
+    var _save = function _save(box) {
+      var text, color;
+
+      text = box.getEditBox().getText();
+      color = box.getEditBox().getColor();
+
+      // close and empty the edit box
+      box.close();
+
+      box.getEditBox()
+          .setText('');
+
+      // closes the detail box
+      box.getDetails()
+          .close();
+
+      //FIXME-- verify this code coupling
+      box.id = -1;
+
+      // only update if data didn't change
+      if (text != my.stickyNote.note || color != my.stickyNote.color) {
+
+        // update sticky-note and sends event to sage app
+        my.stickyNote.note = text;
+        my.stickyNote.color = color;
+        my.stickyNote.lastModified = new Date();
+        box.sage.publish('update.sticky-note', {stickyNote: my.stickyNote});
+
+      } else {
+        // alert the user what happened
+        new alert({sage: box.sage}).show('Sticky-note not updated: Data not changed')
+      }
+
+      return this;
+    }
+
+    // set public interface
+    this.open = _open;
+    this.save = _save;
+
+  };
+
+
+  // singleton instance
+  var _instance;
+
+  /**
+   * returns the singleton object for state lazyly initiation
+   *
+   * @exports module:widget/update-state
+   * @param {object} spec - specs to build the state object
+   * @param {module:model/sticky-note} spec.stickyNote - sticky-note to work with state
+   * @param {object} [my={}] - secrets shared between inheritance
+   * @return {module:widget/attachment-state}
+   */
+  var _static = {
+
+    /**
+     * returns a singleton of {@link module:widget/update-state}
+     * @param {object} spec - specs to build update-state
+     * @param {object} my - shared secrets between inheritance
+     * @return {module:widget/update-state}
+     */
+    getInstance: function (spec, my) {
+
+      if (!_instance) {
+        _instance = new _UpdateState(spec, my);
+      }
+
+      return _instance.setStickyNote(spec.stickyNote);
+    }
+  };
+
+  return _static;
+
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-model.html">model</a></li><li><a href="module-model_identifier.html">model/identifier</a></li><li><a href="module-patterns.html">patterns</a></li><li><a href="module-patterns_mixin.html">patterns/mixin</a></li><li><a href="module-plugin.html">plugin</a></li><li><a href="module-sage.html">sage</a></li><li><a href="module-widget.html">widget</a></li><li><a href="module-widget_new-state.html">widget/new-state</a></li><li><a href="module-widget_update-state.html">widget/update-state</a></li></ul><h3>Classes</h3><ul><li><a href="businessModelCanvas.html">businessModelCanvas</a></li><li><a href="module-model_canvas.html">model/canvas</a></li><li><a href="module-model_canvas-element.html">model/canvas-element</a></li><li><a href="module-model_sticky-note.html">model/sticky-note</a></li><li><a href="module-model_user.html">model/user</a></li><li><a href="module-patterns_event-aggregator.html">patterns/event-aggregator</a></li><li><a href="module-widget_alert.html">widget/alert</a></li><li><a href="module-widget_attachment-box.html">widget/attachment-box</a></li><li><a href="module-widget_attachment-state.html">widget/attachment-state</a></li><li><a href="module-widget_button.html">widget/button</a></li><li><a href="module-widget_canvas-group.html">widget/canvas-group</a></li><li><a href="module-widget_colors.html">widget/colors</a></li><li><a href="module-widget_detail-box.html">widget/detail-box</a></li><li><a href="module-widget_edit-box.html">widget/edit-box</a></li><li><a href="module-widget_mediator.html">widget/mediator</a></li><li><a href="module-widget_new-state.html">widget/new-state</a></li><li><a href="module-widget_sticky-note.html">widget/sticky-note</a></li><li><a href="module-widget_update-state.html">widget/update-state</a></li><li><a href="module-widget_widget.html">widget/widget</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CSS_PATH">CSS_PATH</a></li><li><a href="global.html#ENCODING">ENCODING</a></li><li><a href="global.html#HTML_PATH">HTML_PATH</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 25 2018 20:31:48 GMT-0300 (-03)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -4,17 +4,23 @@
 
 'use strict';
 
+/**
+ * @module model
+ */
 define(['./identifier'], function (Identifier) {
+
   /**
-   * Representa um Post-it, lembrete que é anexado ao canvas
+   * Represents a sticky-note which can be attached to canvas
    *
-   * @constructor
-   * @param {string} note - Texto do post-it
-   * @param {int} color - Cor do post-it
-   * @param {User} author - Autor do Post-it
-   * @param {CanvasElement} block - Elemento de Canvas no qual foi anexado
+   * @class
+   * @alias module:model/sticky-note
+   * @param {string} note - sticky-note' text
+   * @param {int} color - sticky-note color
+   * @param {module:model/user} author - sticky-note author
+   * @param {module:model/canvas-element} block - canvas block which will be
+   *    attached
    */
-  return function StickyNote(note, color, author, block) {
+  function StickyNote(note, color, author, block) {
     this.note = note || '';
     this.color = color || 'FFE079';
     this.createdAt = new Date();
@@ -24,5 +30,7 @@ define(['./identifier'], function (Identifier) {
     this.block = block || null;
 
   }
+
+  return StickyNote;
 
 });

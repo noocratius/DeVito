@@ -18,12 +18,13 @@ define(
     /**
      * Represents a state which attachment box can be when a new sticky-note is
      * being inserted
-     * @constructor
-     * @extends AttachmentState
+     * @class
+     * @alias module:widget/new-state
+     * @extends module:widget/attachment-state
      * @param {object} spec - specs to build the object uses in the inheritance
-     * @param {StickyNote} spec.stickyNote - sticky-note the state works on
+     * @param {module:widget/sticky-note} spec.stickyNote - sticky-note the
+     *    state works on
      * @param {object} my - shared secrets between inheritance
-     * @return {NewState}
      */
     var _NewState = function _NewState(spec, my) {
       my = my || {};
@@ -34,8 +35,8 @@ define(
       /**
        * Opens the widget and set apropriated widgets
        * @override
-       * @param {AttachmentBox} box - attachment box which can see its widgets
-       * @return {this}
+       * @param {module:widget/attachment-box} box - attachment box which can see its widgets
+       * @return {module:widget/new-state}
        */
       var _open = function _open(box) {
         box.show();
@@ -49,8 +50,9 @@ define(
       /**
        * Closes the apropriated widgets and save the attachment
        * @override
-       * @param {AttachmentBox} box - attachment box which can see its widgets
-       * @return {this}
+       * @param {module:widget/attachment-box} box - attachment box which can
+       *    see its widgets
+       * @return {module:widget/new-state}
        */
       var _save = function _save(box) {
         // fill the sticky-note data
@@ -82,10 +84,10 @@ define(
 
     /**
      * returns the singleton object for state lazyly initiation
-     *
+     * @exports module:widget/new-state
      * @param {object} [spec={}] - specs to build the state object
      * @param {object} [my={}] - secrets shared between inheritance
-     * @return {AttachmentState}
+     * @return {module:widget/new-state}
      */
     var _static = {
 

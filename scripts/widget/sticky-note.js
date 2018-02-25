@@ -18,19 +18,24 @@ define(
     ],
     function($, sage, showdown, Widget, EventAggregator){
 
-      /** @const {string} TEMPLATE defines sticky-note template path */
+      /**
+       * @const {string} TEMPLATE_PATH defines sticky-note template path
+       * @package
+       */
       const TEMPLATE_PATH = sage.resrcPath + 'view/html/post-it.html';
 
       /**
        * Represents a sticky-note widget
        *
-       * @extends Widget
+       * @class
+       * @alias module:widget/sticky-note
+       * @extends module:widget/widget
+       * @extends module:patterns/event-aggregator
        * @param {object} spec - spec to build the sticky-note widget
        * @param {Element} [spec.element] - element representing sticky-note
        * @param {object} my - shared secrets between inheritance
-       * @return {StickyNote}
        */
-      return function StickyNote(spec, my) {
+      function StickyNote(spec, my) {
         var template, $note, $editButton;
 
         my = my || {};
@@ -71,7 +76,7 @@ define(
         /**
          * set the sticky-note' note using markdown module 'showdown'
          * @param {string} note
-         * @return {this}
+         * @return {module:widget/sticky-note}
          */
         var _setNote = function _setNote(note) {
           _note = note;
@@ -82,7 +87,6 @@ define(
 
           return this;
         }
-
 
         /**
          * returns sticky-note' note
@@ -95,9 +99,9 @@ define(
         }
 
         /**
-         * set the sticky-note' id
+         * set the sticky-note id
          * @param {string} text
-         * @return {this}
+         * @return {module:widget/sticky-note}
          */
         var _setID = function _setID(id) {
           my.$component.data('id', id);
@@ -107,7 +111,7 @@ define(
         }
 
         /**
-         * returns sticky-note' id
+         * returns sticky-note id
          * @return {int}
          */
         var _getID = function _getID() {
@@ -118,7 +122,7 @@ define(
 
 
         /**
-         * returns sticky-note' color
+         * returns sticky-note color
          * @return {string}
          */
         var _getColor = function _getColor() {
@@ -128,9 +132,9 @@ define(
         }
 
         /**
-         * set the sticky-note' color
+         * set the sticky-note color
          * @param {string} color
-         * @return {this}
+         * @return {module:widget/sticky-note}
          */
         var _setColor = function _setColor(color) {
           my.$component.css('background-color', color);
@@ -201,5 +205,6 @@ define(
 
       }
 
+      return StickyNote;
     }
 );

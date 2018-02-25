@@ -1,5 +1,6 @@
 /**
- * @fileoverview load a html file with its related script and stylesheets
+ * @fileoverview load a html file and its related stylesheets and returns
+ * through sage applicationRPC method
  *
  */
 
@@ -8,63 +9,65 @@
 var fs = require('fs');
 var path = require('path');
 
-/** @const string */
+/**
+ * @const {string}
+ * @package
+ */
 const ENCODING = 'utf8';
 
-/** @const string */
+/**
+ * @const {string}
+ * @package
+ */
 const HTML_PATH = path.join(path.dirname(__filename), 'view', 'html');
 
-/** @const string */
-const JS_PATH = path.join(path.dirname(__filename), 'view', 'js');
-
-/** @const string */
+/**
+ * @const {string}
+ * @package
+ */
 const CSS_PATH =
     path.join(path.dirname(__filename), 'view', 'stylesheets', 'css');
 
 /**
-  * O módulo faz uso do framework SAGE2 e node.js para receber a view que deseja
-  * carregar fazendo uso da estrutura da aplicação para carregar os scripts,
-  * html e stylesheets necessárias, que podem ser encontradas respectivamente
-  * em view/js, view/html e view/stylesheets/css. Assim o módulo faz uso do
-  * node.js para carregar os arquivos e envia-los via broadcast
+  * this module uses sage framework and node.js to receive a html file you wish
+  * to load into the application, using its architecture via applicationRPC call.
+  * HTML and Stylesheets being loaded can be found respectively in view/html and
+  * view/stylesheet/css. Thus processRequest makes use of node.js to load theses
+  * files and send via broadcast.
   *
   * @module plugin
   * @param {object} wsio
   * @param {object} data
-  * @param {string} data.query.view
-  * @param {string} data.query.script
-  * @param {string} data.query.style
-  * @param {string} data.query.data
+  * @param {string} data.query.view - html file name
+  * @param {string} data.query.style - style file name
+  * @param {string} data.query.data - aditional data to share between call
   * @param {object} config
-  * @return {undefined}
   */
 function processRequest(wsio, data, config) {
 
-  // nome dos arquivos a serem carregados
+  // file names
   var view = data.query.view || 'index';
-  var script = data.query.script || '';
   var style = data.query.style || '';
 
-  // dados anexado do procedimento a ser chamado
+  // attached data shared between applicationRPC call
   var args = data.query.data || {};
 
-  // dados enviados via broadcast, definido pelo framework SAGE2
+  // data sent via broadcast, defined by sage framework processRequest method
   var broadcastData = {
     app: data.app,
     func: data.func,
     data: {
       content: '',
-      script:  '',
       style: '',
       data: args
     }
   };
 
-  // caminho absoluto dos arquivos
+  // absolute path for html and stylesheets
   view = path.join(HTML_PATH, view) + '.html';
   style = path.join(CSS_PATH, style) + '.css';
-  script = path.join(JS_PATH, script) + '.js';
 
+  // read html file and stylesheet by node modules
   fs.readFile(view, ENCODING, function (err, content) {
     if (!err) {
       broadcastData.data.content = content;
@@ -74,15 +77,9 @@ function processRequest(wsio, data, config) {
       } catch (err) {
         broadcastData.data.style = '';
       }
-
-      try {
-        broadcastData.data.script = fs.readFileSync(script, ENCODING);
-      } catch (err) {
-        broadcastData.data.script = '';
-      }
     }
 
-    // envia a mensagem via broadcast pelo SAGE2
+    // broadcast message via sage method
     if (data.broadcast == true) {
       module.parent.exports.broadcast('broadcast', broadcastData);
     } else {

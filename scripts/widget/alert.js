@@ -10,12 +10,14 @@
 define(['jquery'], function ($) {
 
   /**
-   * Represents a Alert class to show messages to users
+   * Represents a alert class to show messages to users
+   *
+   * @class
+   * @alias module:widget/alert
    *
    * @param {object} spec - specs to build the alert widget
    * @param {object} spec.sage - sage app instance
    * @param {object} [my={}] - shared secrets between inheritance instances
-   * @return {Alert}
    */
   function Alert(spec, my) {
     var $alert, $closeButton, $text, _time;
@@ -48,26 +50,32 @@ define(['jquery'], function ($) {
     });
 
     /**
-     * mostra a mensagem de alerta no canvas
-     * TODO -- implement alert type
+     * show a alert message in canvas
+     * @todo TODO -- implement alert type
      * @param {string} message - message to show the users
      * @param {string} type - message type
+     * @return {module:widget/alert}
      */
     var _show = function _show(message, type) {
       $text.text(message);
       $alert.fadeIn();
       $alert.trigger('close', _time);
+
+      return this;
     }
 
     /**
-     * Fecha o alerta de acordo com o tempo especificado em milisegundos
+     * closes the widget according to time passed as argument
      *
-     * @param {int} time - Tempo, em milisegundos, que deve fechar o alerta
+     * @param {int} time - time, in miliseconds, which should close the alert
+     * @return {module:widget/alert}
      */
     var _close = function _close(time) {
       var timeOut = time || 0;
 
       $alert.trigger('close', timeOut);
+
+      return this;
     }
 
 

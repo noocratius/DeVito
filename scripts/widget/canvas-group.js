@@ -18,14 +18,15 @@ define(
         /**
          * Represents a single canvas element block, a colleague for sage app
          * which mediates selected block
-         * @constructor
-         * @extends Widget
+         * @class
+         * @alias module:widget/canvas-group
+         * @extends module:widget/widget
          * @param {object} spec - specs to build the object uses in the
          *    inheritance
          * @param {object} my - shared secrets between inheritance
          * @return {CanvasGroup}
          */
-        return function CanvasGroup(spec, my) {
+        function CanvasGroup(spec, my) {
           var _selected;
 
           spec = spec || {};
@@ -36,6 +37,7 @@ define(
 
           /**
            * returns the last selected canvas block
+           * @return {int}
            */
           var _getSelected = function _getSelected() {
             return _selected;
@@ -43,9 +45,8 @@ define(
 
           /**
            * returns the jQuery element repersenting the sticky-note
-           * @private
            * @param {int} id - identifier to be search for
-           * @return {widget.StickyNote}
+           * @return {module:widget/sticky-note}
            */
           var _getStickyNoteWidget = function _getStickyNoteWidget(id) {
 
@@ -65,8 +66,9 @@ define(
 
           /**
            * append a sticky-note to selected block
-           * @param {StickyNote} stickyNote - sticky-note to be appended
-           * @return {this}
+           * @param {module:widget/sticky-note} stickyNote - sticky-note to be
+           *    appended
+           * @return {module:widget/canvas-group}
            */
           var _appendStickyNote = function _appendStickyNote(stickyNote) {
 
@@ -96,8 +98,9 @@ define(
 
           /**
            * updates a sticky-note on selected block specify by sticky-note' id
-           * @param {model.StickyNote} stickyNote - sticky-note to be updated
-           * @return {this}
+           * @param {module:widget/sticky-note} stickyNote - sticky-note to be
+           *    updated
+           * @return {module:widget/canvas-group}
            */
           var _updateStickyNote = function _updateStickyNote(stickyNote) {
             var stickyNoteWidget = _getStickyNoteWidget(stickyNote.id);
@@ -110,8 +113,9 @@ define(
 
           /**
            * delete a sticky-note by its id
-           * @param {StickyNote} stickyNote - sticky-note to be deleted
-           * @return {this}
+           * @param {module:widget/sticky-note} stickyNote - sticky-note to be
+           *    deleted
+           * @return {module:widget/canvas-group}
            */
           var _removeStickyNote = function _removeStickyNote(stickyNote) {
             $(_getStickyNoteWidget(stickyNote.id).getDOM()).remove();
@@ -135,4 +139,5 @@ define(
 
         };
 
+        return CanvasGroup;
 });

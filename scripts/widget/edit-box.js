@@ -11,23 +11,23 @@ define(['./widget'], function(Widget){
 
   /**
    * Represents a box for editing purposes, normally represented by a input
-   * element on the DOM. It's a colleague object for the AttachmentBox
-   * mediator
+   * element on the DOM. It is a colleague object for the
+   * {@link module:widget/attachment-box} mediator
    *
-   * @constructor
-   * @extends Widget
+   * @class
+   * @alias module:widget/edit-box
+   * @extends module:widget/widget
    * @param {object} spec - specs to build the object buy its inheritance
    * @param {object} my - shared secrets between inheritance
-   * @return {EditBox}
    */
-  return function EditBox(spec, my) {
+  function EditBox(spec, my) {
 
     my = my || {};
 
     /** @private {string} color of box, also the sticky note */
     var _color;
 
-    /** @private string text being edited */
+    /** @private {string} text being edited */
     var _text;
 
     // extends Widget object
@@ -36,7 +36,7 @@ define(['./widget'], function(Widget){
     /**
      * sets the color of the box
      * @param {string} color - color to be set
-     * @return {this}
+     * @return {module:widget/edit-box}
      */
     var _setColor = function _setColor(color) {
       _color = color;
@@ -46,8 +46,8 @@ define(['./widget'], function(Widget){
     }
 
     /**
-     * gets the color of the box
-     * @return {this}
+     * returns the color of the box
+     * @return {module:widget/edit-box}
      */
     var _getColor = function _getColor() {
       return _color;
@@ -56,7 +56,7 @@ define(['./widget'], function(Widget){
     /**
      * sets the text in the box
      * @param {string} text - text to be set
-     * @return {this}
+     * @return {module:widget/edit-box}
      */
     var _setText = function _setText(text) {
       _text = text;
@@ -90,4 +90,5 @@ define(['./widget'], function(Widget){
 
   };
 
+  return EditBox;
 });
